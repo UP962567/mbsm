@@ -5,10 +5,13 @@ import { Modal } from '@/components/ui/model';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-hot-toast';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import axios from 'axios';
 
 
 const formSchema = z.object({
@@ -17,6 +20,7 @@ const formSchema = z.object({
 
 export const StoreModal = () => {
     const storeModal = useStoreModal();
+    const [ loading, setLoading ] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -26,8 +30,20 @@ export const StoreModal = () => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
-        // TODO Create Store Mutation
+        setLoading(true);
+        
+        try{
+            setLoading(true);
+
+            const response = await axios.post('/api/stores', values);
+
+            toast.success("Store created successfully.");
+
+        } catch (error) {
+            toast.error("Something went wrong.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -48,15 +64,15 @@ export const StoreModal = () => {
                                 <FormItem> 
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder='Unit name' {...field} />
+                                        <Input disabled={loading} placeholder='Unit name' {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
 
                             <div className='pt-6 space-x-2 flex items-center justify-end 2-full'>
-                                <Button variant='destructive' onClick={storeModal.onClose}>Cancel</Button>
-                                <Button variant='secondary' type="submit">Continue</Button>
+                                <Button disabled={loading} variant='destructive' onClick={storeModal.onClose}>Cancel</Button>
+                                <Button disabled={loading} variant='secondary' type="submit">Continue</Button>
                             </div>
 
                         </form>
