@@ -19,7 +19,7 @@ const Navbar = async () => {
     })
 
     return (
-        <div className="birder-b">
+        <div className="border-b border-solid border-blue-700">
             <div className="flex h-16 items-center px-4">
                 <StoreSwithcer items={stores}/>
                 <MainNav className="mx-6" />
