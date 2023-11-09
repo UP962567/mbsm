@@ -18,6 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { on } from "events";
 import { ApiAlert } from "@/components/ui/api-alert";
+import { useOrigin } from "@/hooks/use-origin";
 
 interface SettingsFormProps {
     initialData: Store;
@@ -34,6 +35,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const origin = useOrigin();
 
     const form = useForm<SettingsFromValues>({
         resolver: zodResolver(formSchema),
