@@ -22,7 +22,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     const params = useParams();
 
     const onCopy = (id: string) => {
-        navigator.clipboard.writeText(`/api/${params.storeId}/billboards/${data.id}`);
+        navigator.clipboard.writeText(`${data.id}`);
         toast.success("Billboard ID copied.");
     }
 
