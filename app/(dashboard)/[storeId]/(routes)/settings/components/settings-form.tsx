@@ -9,14 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Store } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { on } from "events";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 
@@ -104,7 +103,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="name">Name</FormLabel>
+                                    <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input disabled={loading} placeholder="Store name" {...field} />
                                     </FormControl>
