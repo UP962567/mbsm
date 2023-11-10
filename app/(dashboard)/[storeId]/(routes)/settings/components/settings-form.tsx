@@ -72,7 +72,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     return (
         <>
             <AlertModal 
-                isOpne={open}
+                isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onDelete}
                 loading={loading}
@@ -80,7 +80,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
             <div className="flex justify-between items-center">
                 <Heading
                     title="Settings"
-                    descriptions="Manage your store settings"
+                    description="Manage your store settings"
                 />
                 <Button
                     disabled={loading}
@@ -123,7 +123,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
 
             <Separator />
 
-            <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/api/${params.storeId}`} variant="public"/>
+            <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/api/stores/${params.storeId}`} variant="public"/>
         </>
     )
 }
