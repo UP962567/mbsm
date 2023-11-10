@@ -51,13 +51,13 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const size = await prismadb.size.delete({
+    const color = await prismadb.color.delete({
       where: {
         id: params.colorId,
       }
     });
   
-    return NextResponse.json(size);
+    return NextResponse.json(color);
   } catch (error) {
     console.log('[COLOR_DELETE]', error);
     return new NextResponse("Internal error", { status: 500 });

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Size } from "@prisma/client"
+import { Color } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -32,7 +32,7 @@ const formSchema = z.object({
 type ColorFormValues = z.infer<typeof formSchema>
 
 interface ColorFormProps {
-  initialData: Size | null;
+  initialData: Color | null;
 };
 
 export const ColorForm: React.FC<ColorFormProps> = ({
@@ -61,7 +61,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/colors/${params.sizeId}`, data);
+        await axios.patch(`/api/${params.storeId}/colors/${params.colorId}`, data);
       } else {
         await axios.post(`/api/${params.storeId}/colors`, data);
       }
@@ -78,7 +78,7 @@ export const ColorForm: React.FC<ColorFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/colors/${params.sizeId}`);
+      await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`);
       router.refresh();
       router.push(`/${params.storeId}/colors`);
       toast.success('Colors deleted.');
