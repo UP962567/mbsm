@@ -1,25 +1,31 @@
 import prismadb from "@/lib/prismadb";
 
-import { BillboardForm } from "./components/billboard-form";
+import { CategoryForm } from "./components/category-form";
 
-const BillboardPage = async ({
+const CategoryPage = async ({
   params
 }: {
-  params: { billboardId: string }
+  params: { categoryId: string, storeId: string }
 }) => {
-  const billboard = await prismadb.billboard.findUnique({
+  const category = await prismadb.category.findUnique({
     where: {
-      id: params.billboardId
+      id: params.categoryId
+    }
+  });
+
+  const billboards = await prismadb.billboard.findMany({
+    where: {
+      storeId: params.storeId
     }
   });
 
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardForm initialData={billboard} />
+        <CategoryForm billboards={billboards} initialData={category} />
       </div>
     </div>
   );
 }
 
-export default BillboardPage;
+export default CategoryPage;
