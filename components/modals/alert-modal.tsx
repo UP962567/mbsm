@@ -6,13 +6,13 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 
 interface AlertModalProps {
-    isOpne: boolean;
+    isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
     loading: boolean;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({ isOpne, onClose, onConfirm, loading }) => {
+export const AlertModal: React.FC<AlertModalProps> = ({ isOpen, onClose, onConfirm, loading }) => {
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({ isOpne, onClose, onConfi
         <Modal
             title="Are you sure?"
             description="This action cannot be undone."
-            isOpen={isOpne}
+            isOpen={isOpen}
             onClose={onClose}
         >
             <div className="pt-6 space-x-2 flex items-center justify-end w-full">
