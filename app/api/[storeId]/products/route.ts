@@ -9,13 +9,17 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived } = body;
+        const { name, description, price, categoryId, colorId, sizeId, zcategoryId, images, isFeatured, isArchived } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
         if (!name) return new NextResponse("Missing name", { status: 400 });
+
+        if (!description) return new NextResponse("Missing description", { status: 400 });
+
+        if (!zcategoryId) return new NextResponse("Missing zcategoryId", { status: 400 });
 
         if (!price) return new NextResponse("Missing price", { status: 400 });
 
@@ -41,10 +45,12 @@ export async function POST(
         const product = await prismadb.product.create({
             data: {
                 name,
+                description,
                 price,
                 categoryId,
                 colorId,
                 sizeId,
+                zcategoryId,
                 images: {
                     createMany: {
                         data: [
@@ -75,6 +81,7 @@ export async function GET(
         const categoryId = searchParams.get('categoryId') || undefined;
         const colorId = searchParams.get('colorId') || undefined;
         const sizeId = searchParams.get('sizeId') || undefined;
+        const zcategoryId = searchParams.get('zcategoryId') || undefined;
         const isFeatured = searchParams.get('isFeatured');
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
@@ -86,6 +93,7 @@ export async function GET(
                 categoryId,
                 colorId,
                 sizeId,
+                zcategoryId,
                 isFeatured: isFeatured ? true : undefined,
                 isArchived: false,
             },

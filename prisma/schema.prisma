@@ -12,17 +12,20 @@ datasource db {
 }
 
 model Store {
-  id         String      @id @default(cuid())
-  name       String
-  userId     String
+  id     String @id @default(cuid())
+  name   String
+  userId String
+
   billboards Billboard[] @relation("StoreToBillboard")
   category   Category[]  @relation("StoreToCategory")
   sizes      Size[]      @relation("StoreToSize")
   colors     Color[]     @relation("StoreToColor")
   products   Product[]   @relation("StoreToProduct")
   orders     Order[]     @relation("StoreToOrder")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @default(now()) @updatedAt
+  zcategory  ZCategory[] @relation("StoreToZcategory")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Billboard {
@@ -58,39 +61,48 @@ model Category {
 }
 
 model Size {
-  id        String    @id @default(cuid())
-  storeId   String
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
-  products  Product[]
-  name      String
-  value     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
+  id String @id @default(cuid())
+
+  storeId String
+  store   Store  @relation("StoreToSize", fields: [storeId], references: [id])
+
+  products Product[]
+
+  name  String
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([storeId])
 }
 
 model Color {
-  id        String    @id @default(cuid())
-  storeId   String
-  store     Store     @relation("StoreToColor", fields: [storeId], references: [id])
-  products  Product[]
-  name      String
-  value     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
+  id String @id @default(cuid())
+
+  storeId String
+  store   Store  @relation("StoreToColor", fields: [storeId], references: [id])
+
+  products Product[]
+
+  name  String
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([storeId])
 }
 
 model Product {
-  id         String  @id @default(cuid())
-  name       String
-  price      Decimal @default(0)
-  isFeatured Boolean @default(false)
-  isArchived Boolean @default(false)
-  images     Image[]
-  orders     OrderItem[]
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  price       Decimal     @default(0)
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
+  images      Image[]
+  orders      OrderItem[]
 
   categoryId String
   category   Category @relation("CateToProduct", fields: [categoryId], references: [id])
@@ -104,21 +116,41 @@ model Product {
   colorId String
   color   Color  @relation(fields: [colorId], references: [id])
 
+  zcategoryId String
+  zcategory   ZCategory @relation(fields: [zcategoryId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  @@index([zcategoryId])
   @@index([storeId])
   @@index([categoryId])
   @@index([sizeId])
   @@index([colorId])
 }
 
+model ZCategory {
+  id    String @id @default(cuid())
+  name  String
+  value String
+
+  products Product[]
+
+  storeId String
+  store   Store  @relation("StoreToZcategory", fields: [storeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
 model Image {
-  id        String   @id @default(cuid())
-  url       String
-  
+  id  String @id @default(cuid())
+  url String
+
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -127,30 +159,30 @@ model Image {
 }
 
 model Order {
-  id         String   @id @default(cuid())
+  id         String      @id @default(cuid())
   orderItems OrderItem[]
-  isPaid     Boolean  @default(false)
-  phone      String  @default("")
-  address    String  @default("")
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
 
-  storeId    String
-  store      Store    @relation("StoreToOrder",fields: [storeId], references: [id])
+  storeId String
+  store   Store  @relation("StoreToOrder", fields: [storeId], references: [id])
 
-  total      Decimal  @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
+  total     Decimal  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([storeId])
 }
 
 model OrderItem {
-  id         String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  orderId   String
-  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Category, Color, Image, Product, Size } from "@prisma/client"
+import { Category, Color, Image, Product, Size, ZCategory } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -30,11 +30,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
   name: z.string().min(1),
+  description: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
   sizeId: z.string().min(1),
   colorId: z.string().min(1),
+  zcategoryId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
 });
@@ -48,10 +50,11 @@ interface ProductFormProps {
   categories: Category[];
   sizes: Size[];
   colors: Color[];
+  zcategories: ZCategory[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
-  initialData, categories, sizes, colors
+  initialData, categories, sizes, colors, zcategories
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -60,7 +63,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit product' : 'Create product';
-  const description = initialData ? 'Edit a product.' : 'Add a new product';
+  const descriptions = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
 
@@ -71,11 +74,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       price: parseFloat(String(initialData?.price)),
     } : {
       name: '',
+      description: '',
       images: [],
       price: 0,
       categoryId: '',
       sizeId: '',
       colorId: '',
+      zcategoryId: '',
       isFeatured: false,
       isArchived: false,
     }
@@ -123,7 +128,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         loading={loading}
       />
       <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
+        <Heading title={title} description={descriptions} />
         {initialData && (
           <Button
             disabled={loading}
@@ -170,6 +175,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Products description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
             <FormField
               control={form.control}
               name="price"
@@ -188,7 +209,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Category Navbar</FormLabel>
                   <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -253,6 +274,33 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {sizes.map((data) => (
+                        <SelectItem key={data.id} value={data.id} style={{ backgroundColor: data.value }}>
+                          {data.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="zcategoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category Future</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a Category Future">
+
+                        </SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {zcategories.map((data) => (
                         <SelectItem key={data.id} value={data.id} style={{ backgroundColor: data.value }}>
                           {data.name}
                         </SelectItem>

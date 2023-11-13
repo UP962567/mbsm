@@ -16,7 +16,8 @@ const ProductsPage = async ({
         include: {
             category: true,
             size: true,
-            color: true
+            color: true,
+            zcategory: true
         },
         orderBy: {
             createdAt: 'desc'
@@ -26,12 +27,14 @@ const ProductsPage = async ({
     const formatedProducts: ProductColumn[] = products.map((item) => ({
         id: item.id,
         name: item.name,
+        description: item.description,
         isFeatured: item.isFeatured,
         isArchived: item.isArchived,
         price: formatter.format(item.price.toNumber()),
         category: item.category.name,
         size: item.size.name,
         color: item.color.value,
+        zcategory: item.zcategory.value,
         createdAt: format(item.createdAt, 'MMMM do, yyyy')
     }));
 
