@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
 import { Category, Color, Image, Product, Size, ZCategory } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
+import { Select as Select1, SelectSection, SelectItem as SelectItem1 } from "@nextui-org/react";
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -285,6 +286,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
+
             <FormField
               control={form.control}
               name="zcategoryId"
@@ -311,6 +313,19 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+
+            {/* <Select1
+              label="Favorite Animal"
+              placeholder="Select an animal"
+              selectionMode="multiple"
+              className="max-w-xs"
+            >
+              {zcategories.map((animal) => (
+                <SelectItem key={animal.value} value={animal.value}>
+                  {animal.name}
+                </SelectItem>
+              ))}
+            </Select1> */}
 
             <FormField
               control={form.control}

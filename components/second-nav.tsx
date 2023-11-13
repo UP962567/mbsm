@@ -22,6 +22,11 @@ export function SecondNav({
     const params = useParams();
     const routes = [
         {
+            href: `/${params.storeId}/tags`,
+            label: "Tags",
+            active: pathname === `/${params.storeId}/tags`,
+        },
+        {
             href: `/${params.storeId}/sizes`,
             label: "Sizes",
             active: pathname === `/${params.storeId}/sizes`,
