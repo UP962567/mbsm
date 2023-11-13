@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Category, Color, Image, Product, Size, ZCategory } from "@prisma/client"
+import { Category, Color, Image, Product, Size, Tag, ZCategory } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 import { Select as Select1, SelectSection, SelectItem as SelectItem1 } from "@nextui-org/react";
 
@@ -62,6 +62,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState([]);
+
 
   const title = initialData ? 'Edit product' : 'Create product';
   const descriptions = initialData ? 'Edit a product.' : 'Add a new product';
@@ -97,6 +99,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       }
       router.refresh();
       router.push(`/${params.storeId}/products`);
+
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
@@ -314,19 +317,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
-            {/* <Select1
-              label="Favorite Animal"
-              placeholder="Select an animal"
-              selectionMode="multiple"
-              className="max-w-xs"
-            >
-              {zcategories.map((animal) => (
-                <SelectItem key={animal.value} value={animal.value}>
-                  {animal.name}
-                </SelectItem>
-              ))}
-            </Select1> */}
-
             <FormField
               control={form.control}
               name="isFeatured"
@@ -335,7 +325,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      // @ts-ignore
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>

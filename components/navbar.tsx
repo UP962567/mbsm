@@ -23,7 +23,7 @@ const Navbar = async () => {
     }
 
     if (organizationId !== "org_2XzTkZZfgnh78732dC7OwwJNxG1") {
-        userId && redirect("/sign-in")
+        redirect("/noadmin")
     }
 
     const stores = await prismadb.store.findMany({

@@ -104,7 +104,7 @@ model Product {
   isArchived  Boolean        @default(false)
   images      Image[]
   orders      OrderItem[]
-  tags        ProductToTag[]
+  tags        Tag[]
 
   categoryId String
   category   Category @relation("CateToProduct", fields: [categoryId], references: [id])
@@ -131,25 +131,13 @@ model Product {
   @@index([colorId])
 }
 
-model ProductToTag {
-  tag        Tag      @relation(fields: [tagId], references: [id])
-  tagId      String // relation scalar field (used in the `@relation` attribute above)
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String // relation scalar field (used in the `@relation` attribute above)
-  assignedAt DateTime @default(now())
-  assignedBy String
-
-  @@id([tagId, productId])
-  @@index([productId])
-  @@index([tagId])
-}
-
 model Tag {
   id    String @id @default(cuid())
   name  String
   value String
 
-  products ProductToTag[]
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   storeId String
   store   Store  @relation("StoreToTag", fields: [storeId], references: [id])
@@ -158,6 +146,7 @@ model Tag {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([storeId])
+  @@index([productId])
 }
 
 model ZCategory {
