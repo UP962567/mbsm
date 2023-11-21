@@ -8,7 +8,7 @@ import React, { useState } from "react";
 
 const Sidebar = () => {
     const [toggleCollapse, setToggleCollapse] = useState(true);
-    const [isCollapsible, setIsCollapsible] = useState(false);
+    const [isCollapsible, setIsCollapsible] = useState(true);
     const params = useParams();
 
 
@@ -40,7 +40,7 @@ const Sidebar = () => {
 
 
     const onMouseOver = () => {
-        setIsCollapsible(!isCollapsible);
+        setIsCollapsible(isCollapsible);
     };
 
     const handleSidebarToggle = () => {

@@ -8,7 +8,7 @@ import React, { useState } from "react";
 
 const SidebarHotel = () => {
     const [toggleCollapse, setToggleCollapse] = useState(true);
-    const [isCollapsible, setIsCollapsible] = useState(false);
+    const [isCollapsible, setIsCollapsible] = useState(true);
     const params = useParams();
     const pathname = usePathname();
 
@@ -41,7 +41,7 @@ const SidebarHotel = () => {
 
 
     const onMouseOver = () => {
-        setIsCollapsible(!isCollapsible);
+        setIsCollapsible(isCollapsible);
     };
 
     const handleSidebarToggle = () => {

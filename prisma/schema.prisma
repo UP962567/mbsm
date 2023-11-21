@@ -20,9 +20,25 @@ enum StoreType {
   OTHER
 }
 
+enum SoldCurrencyType {
+  LEKE
+  DOLLAR
+  EURO
+  POUND
+  OTHER
+}
+
+enum UniteType {
+  cope
+  kg
+  person
+  m3
+  liter
+}
+
 model Store {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id     Int       @id @default(autoincrement())
+  uuid   String    @unique @default(cuid())
   name   String
   type   StoreType
   userId String
@@ -35,14 +51,15 @@ model Store {
   orders     Order[]     @relation("StoreToOrder")
   zcategory  ZCategory[] @relation("StoreToZcategory")
   tags       Tag[]       @relation("StoreToTag")
+  sales      Sales[]     @relation("StoreToSales")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Billboard {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id         Int        @id @default(autoincrement())
+  uuid       String     @unique @default(cuid())
   storeId    String
   store      Store      @relation("StoreToBillboard", fields: [storeId], references: [uuid])
   label      String
@@ -55,8 +72,8 @@ model Billboard {
 }
 
 model Category {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
   name String
 
   storeId String
@@ -75,8 +92,8 @@ model Category {
 }
 
 model Size {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   storeId String
   store   Store  @relation("StoreToSize", fields: [storeId], references: [uuid])
@@ -93,8 +110,8 @@ model Size {
 }
 
 model Color {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   storeId String
   store   Store  @relation("StoreToColor", fields: [storeId], references: [uuid])
@@ -111,14 +128,14 @@ model Color {
 }
 
 model Product {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   name        String
   description String
-  price       Decimal        @default(0)
-  isFeatured  Boolean        @default(false)
-  isArchived  Boolean        @default(false)
+  price       Decimal     @default(0)
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
   images      Image[]
   orders      OrderItem[]
   tags        Tag[]
@@ -149,8 +166,8 @@ model Product {
 }
 
 model Tag {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   name  String
   value String
@@ -169,8 +186,8 @@ model Tag {
 }
 
 model ZCategory {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   name  String
   value String
@@ -187,8 +204,8 @@ model ZCategory {
 }
 
 model Image {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   url String
 
@@ -201,9 +218,32 @@ model Image {
   @@index([productId])
 }
 
+model Sales {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  Category     String?
+  ItemID       Int?
+  ItemName     String?
+  Unit         UniteType?
+  SaleDate     DateTime?
+  Price        Decimal?
+  Quantity     Int?
+  TotalPrice   Decimal?
+  SoldCurrency SoldCurrencyType?
+
+  storeId String
+  store   Store  @relation("StoreToSales", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
 model Order {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   orderItems OrderItem[]
   isPaid     Boolean     @default(false)
@@ -221,8 +261,8 @@ model Order {
 }
 
 model OrderItem {
-  id     Int @id @default(autoincrement())
-  uuid   String @default(cuid()) @unique
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [uuid], onDelete: Cascade)
