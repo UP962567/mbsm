@@ -20,7 +20,7 @@ export default async function Setuplayout({
     });
 
     if (store) {
-        redirect(`/${store.id}`)
+        redirect(`/${store.uuid}`)
     }
 
     return (

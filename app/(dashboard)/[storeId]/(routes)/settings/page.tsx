@@ -19,7 +19,7 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
 
     const store = await prismadb.store.findFirst({
         where: {
-            id: params.storeId,
+            uuid: params.storeId,
             userId
         }
     });

@@ -9,7 +9,7 @@ const ZisePage = async ({
 }) => {
   const size = await prismadb.size.findUnique({
     where: {
-      id: params.sizeId
+      uuid: params.sizeId
     }
   });
 

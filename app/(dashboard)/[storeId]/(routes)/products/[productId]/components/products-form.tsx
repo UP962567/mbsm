@@ -224,7 +224,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem key={category.id} value={category.uuid}>
                           {category.name}
                         </SelectItem>
                       ))}
@@ -251,7 +251,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {colors.map((data) => (
-                        <SelectItem key={data.id} value={data.id}>
+                        <SelectItem key={data.id} value={data.uuid}>
                           {data.name}
                         </SelectItem>
                       ))}
@@ -278,7 +278,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {sizes.map((data) => (
-                        <SelectItem key={data.id} value={data.id} style={{ backgroundColor: data.value }}>
+                        <SelectItem key={data.id} value={data.uuid} style={{ backgroundColor: data.value }}>
                           {data.name}
                         </SelectItem>
                       ))}
@@ -306,7 +306,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {zcategories.map((data) => (
-                        <SelectItem key={data.id} value={data.id} style={{ backgroundColor: data.value }}>
+                        <SelectItem key={data.id} value={data.uuid} style={{ backgroundColor: data.value }}>
                           {data.name}
                         </SelectItem>
                       ))}

@@ -11,9 +11,20 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum StoreType {
+  STORE
+  HOTEL
+  RESTAURANT
+  CAFE
+  BAR
+  OTHER
+}
+
 model Store {
-  id     String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
   name   String
+  type   StoreType
   userId String
 
   billboards Billboard[] @relation("StoreToBillboard")
@@ -30,9 +41,10 @@ model Store {
 }
 
 model Billboard {
-  id         String     @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
   storeId    String
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
+  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [uuid])
   label      String
   imageUrl   String
   categories Category[]
@@ -43,14 +55,15 @@ model Billboard {
 }
 
 model Category {
-  id   String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
   name String
 
   storeId String
-  store   Store  @relation("StoreToCategory", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToCategory", fields: [storeId], references: [uuid])
 
   billboardId String
-  billboard   Billboard @relation(fields: [billboardId], references: [id])
+  billboard   Billboard @relation(fields: [billboardId], references: [uuid])
 
   products Product[] @relation("CateToProduct")
 
@@ -62,10 +75,11 @@ model Category {
 }
 
 model Size {
-  id String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
 
   storeId String
-  store   Store  @relation("StoreToSize", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToSize", fields: [storeId], references: [uuid])
 
   products Product[]
 
@@ -79,10 +93,11 @@ model Size {
 }
 
 model Color {
-  id String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
 
   storeId String
-  store   Store  @relation("StoreToColor", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToColor", fields: [storeId], references: [uuid])
 
   products Product[]
 
@@ -96,7 +111,9 @@ model Color {
 }
 
 model Product {
-  id          String         @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
+
   name        String
   description String
   price       Decimal        @default(0)
@@ -107,19 +124,19 @@ model Product {
   tags        Tag[]
 
   categoryId String
-  category   Category @relation("CateToProduct", fields: [categoryId], references: [id])
+  category   Category @relation("CateToProduct", fields: [categoryId], references: [uuid])
 
   storeId String
-  store   Store  @relation("StoreToProduct", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToProduct", fields: [storeId], references: [uuid])
 
   sizeId String
-  size   Size   @relation(fields: [sizeId], references: [id])
+  size   Size   @relation(fields: [sizeId], references: [uuid])
 
   colorId String
-  color   Color  @relation(fields: [colorId], references: [id])
+  color   Color  @relation(fields: [colorId], references: [uuid])
 
   zcategoryId String
-  zcategory   ZCategory @relation(fields: [zcategoryId], references: [id])
+  zcategory   ZCategory @relation(fields: [zcategoryId], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -132,15 +149,17 @@ model Product {
 }
 
 model Tag {
-  id    String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
+
   name  String
   value String
 
   productId String?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product? @relation(fields: [productId], references: [uuid], onDelete: Cascade)
 
   storeId String
-  store   Store  @relation("StoreToTag", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToTag", fields: [storeId], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -150,14 +169,16 @@ model Tag {
 }
 
 model ZCategory {
-  id    String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
+
   name  String
   value String
 
   products Product[]
 
   storeId String
-  store   Store  @relation("StoreToZcategory", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToZcategory", fields: [storeId], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -166,11 +187,13 @@ model ZCategory {
 }
 
 model Image {
-  id  String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
+
   url String
 
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [uuid], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -179,14 +202,16 @@ model Image {
 }
 
 model Order {
-  id         String      @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
+
   orderItems OrderItem[]
   isPaid     Boolean     @default(false)
   phone      String      @default("")
   address    String      @default("")
 
   storeId String
-  store   Store  @relation("StoreToOrder", fields: [storeId], references: [id])
+  store   Store  @relation("StoreToOrder", fields: [storeId], references: [uuid])
 
   total     Decimal  @default(0)
   createdAt DateTime @default(now())
@@ -196,13 +221,14 @@ model Order {
 }
 
 model OrderItem {
-  id String @id @default(cuid())
+  id     Int @id @default(autoincrement())
+  uuid   String @default(cuid()) @unique
 
   orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order   Order  @relation(fields: [orderId], references: [uuid], onDelete: Cascade)
 
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [uuid])
 
   @@index([orderId])
   @@index([productId])

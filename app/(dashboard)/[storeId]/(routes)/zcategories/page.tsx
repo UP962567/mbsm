@@ -18,7 +18,7 @@ const PCPage = async ({
     });
 
     const formated: Column[] = pC.map((item) => ({
-        id: item.id,
+        uuid: item.uuid,
         name: item.name,
         value: item.value,
         createdAt: format(item.createdAt, 'MMMM do, yyyy')

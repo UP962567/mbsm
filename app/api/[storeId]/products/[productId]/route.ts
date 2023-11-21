@@ -14,7 +14,7 @@ export async function GET(
 
     const product = await prismadb.product.findUnique({
       where: {
-        id: params.productId
+        uuid: params.productId
       },
       include: {
         images: true,
@@ -50,7 +50,7 @@ export async function DELETE(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -61,7 +61,7 @@ export async function DELETE(
 
     const product = await prismadb.product.deleteMany({
       where: {
-        id: params.productId,
+        uuid: params.productId,
       }
     });
   
@@ -110,7 +110,7 @@ export async function PATCH(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -121,7 +121,7 @@ export async function PATCH(
 
     await prismadb.product.update({
       where: {
-        id: params.productId,
+        uuid: params.productId,
       },
       data: {
         name,
@@ -141,7 +141,7 @@ export async function PATCH(
 
     const product = await prismadb.product.update({
       where: {
-        id: params.productId,
+        uuid: params.productId,
       },
       data: {
         images: {

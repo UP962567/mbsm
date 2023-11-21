@@ -14,7 +14,7 @@ export async function GET(
 
     const size = await prismadb.size.findUnique({
       where: {
-        id: params.sizeId
+        uuid: params.sizeId
       }
     });
   
@@ -42,7 +42,7 @@ export async function DELETE(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -53,7 +53,7 @@ export async function DELETE(
 
     const size = await prismadb.size.delete({
       where: {
-        id: params.sizeId,
+        uuid: params.sizeId,
       }
     });
   
@@ -94,7 +94,7 @@ export async function PATCH(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -105,7 +105,7 @@ export async function PATCH(
 
     const size = await prismadb.size.update({
       where: {
-        id: params.sizeId,
+        uuid: params.sizeId,
       },
       data: {
         name,

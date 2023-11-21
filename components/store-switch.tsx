@@ -26,7 +26,7 @@ export default function StoreSwithcer({
 
     const formattedItems = items.map((item) => ({
         label: item.name,
-        value: item.id,
+        value: item.uuid,
     }));
 
     const currentStore = formattedItems.find((item) => item.value === params.storeId);

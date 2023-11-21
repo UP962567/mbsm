@@ -14,7 +14,7 @@ export async function GET(
 
     const pusher = await prismadb.tag.findUnique({
       where: {
-        id: params.tagId
+        uuid: params.tagId
       }
     });
   
@@ -42,7 +42,7 @@ export async function DELETE(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -53,7 +53,7 @@ export async function DELETE(
 
     const pusher = await prismadb.tag.delete({
       where: {
-        id: params.tagId,
+        uuid: params.tagId,
       }
     });
   
@@ -94,7 +94,7 @@ export async function PATCH(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -105,7 +105,7 @@ export async function PATCH(
 
     const pusher = await prismadb.tag.update({
       where: {
-        id: params.tagId,
+        uuid: params.tagId,
       },
       data: {
         name,

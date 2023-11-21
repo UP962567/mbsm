@@ -17,7 +17,7 @@ export async function PATCH(
 
         const store = await prismadb.store.updateMany({
             where: {
-                id: params.storeId,
+                uuid: params.storeId,
                 userId
             },
             data: {
@@ -46,13 +46,13 @@ export async function DELETE(
 
         const store = await prismadb.store.deleteMany({
             where: {
-                id: params.storeId,
+                uuid: params.storeId,
                 userId
             }
         });
 
         return NextResponse.json(store)
-        
+
     } catch (error) {
         console.log("[STORE_DELETE_C3]", error)
         return new NextResponse('Internal server error', { status: 500 })
@@ -62,21 +62,21 @@ export async function DELETE(
 export async function GET(
     req: Request,
     { params }: { params: { storeId: string } }
-  ) {
+) {
     try {
-      if (!params.storeId) {
-        return new NextResponse("Store id is required", { status: 400 });
-      }
-  
-      const store = await prismadb.store.findUnique({
-        where: {
-          id: params.storeId
+        if (!params.storeId) {
+            return new NextResponse("Store id is required", { status: 400 });
         }
-      });
-    
-      return NextResponse.json(store);
+
+        const store = await prismadb.store.findUnique({
+            where: {
+                uuid: params.storeId
+            }
+        });
+
+        return NextResponse.json(store);
     } catch (error) {
-      console.log('[STORE_GET]', error);
-      return new NextResponse("Internal error", { status: 500 });
+        console.log('[STORE_GET]', error);
+        return new NextResponse("Internal error", { status: 500 });
     }
-  };
+};

@@ -9,7 +9,7 @@ const ColorPage = async ({
 }) => {
   const data = await prismadb.tag.findUnique({
     where: {
-      id: params.tagId
+      uuid: params.tagId
     }
   });
 

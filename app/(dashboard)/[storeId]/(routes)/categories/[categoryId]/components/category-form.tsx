@@ -147,7 +147,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {billboards.map((billboard) => (
-                        <SelectItem key={billboard.id} value={billboard.id}>
+                        <SelectItem key={billboard.id} value={billboard.uuid}>
                           {billboard.label}
                         </SelectItem>
                       ))}

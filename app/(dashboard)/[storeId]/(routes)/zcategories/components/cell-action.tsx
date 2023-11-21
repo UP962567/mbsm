@@ -33,7 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/zcategories/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/zcategories/${data.uuid}`);
       toast.success('ZPC deleted.');
       router.refresh();
     } catch (error) {
@@ -44,8 +44,8 @@ export const CellAction: React.FC<CellActionProps> = ({
     }
   };
 
-  const onCopy = (id: string) => {
-    navigator.clipboard.writeText(id);
+  const onCopy = (uuid: string) => {
+    navigator.clipboard.writeText(uuid);
     toast.success('Colors ID copied to clipboard.');
   }
 
@@ -67,12 +67,12 @@ export const CellAction: React.FC<CellActionProps> = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
+            onClick={() => onCopy(data.uuid)}
           >
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/${params.storeId}/zcategories/${data.id}`)}
+            onClick={() => router.push(`/${params.storeId}/zcategories/${data.uuid}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

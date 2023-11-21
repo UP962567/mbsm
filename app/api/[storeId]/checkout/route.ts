@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const order = await prismadb.order.update({
       where: {
-        id: session?.metadata?.orderId,
+        uuid: session?.metadata?.orderId,
       },
       data: {
         isPaid: true,
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
 
     await prismadb.product.updateMany({
       where: {
-        id: {
+        uuid: {
           in: [...productIds],
         },
       },

@@ -9,7 +9,7 @@ const ColorPage = async ({
 }) => {
   const size = await prismadb.color.findUnique({
     where: {
-      id: params.colorId
+      uuid: params.colorId
     }
   });
 

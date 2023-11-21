@@ -9,7 +9,7 @@ const CategoryPage = async ({
 }) => {
   const category = await prismadb.category.findUnique({
     where: {
-      id: params.categoryId
+      uuid: params.categoryId
     }
   });
 

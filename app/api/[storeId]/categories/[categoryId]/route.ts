@@ -14,7 +14,7 @@ export async function GET(
 
     const category = await prismadb.category.findUnique({
       where: {
-        id: params.categoryId,
+        uuid: params.categoryId,
       },
       include: {
         billboard: true,
@@ -45,7 +45,7 @@ export async function DELETE(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -56,7 +56,7 @@ export async function DELETE(
 
     const category = await prismadb.category.delete({
       where: {
-        id: params.categoryId,
+        uuid: params.categoryId,
       }
     });
   
@@ -97,7 +97,7 @@ export async function PATCH(
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        uuid: params.storeId,
         userId,
       }
     });
@@ -108,7 +108,7 @@ export async function PATCH(
 
     const category = await prismadb.category.update({
       where: {
-        id: params.categoryId,
+        uuid: params.categoryId,
       },
       data: {
         name,

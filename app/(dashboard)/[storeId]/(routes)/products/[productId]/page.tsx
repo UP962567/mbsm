@@ -9,7 +9,7 @@ const ProductPage = async ({
 }) => {
   const billboard = await prismadb.product.findUnique({
     where: {
-      id: params.productId
+      uuid: params.productId
     },
     include: {
       images: true,

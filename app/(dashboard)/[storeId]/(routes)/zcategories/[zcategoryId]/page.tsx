@@ -9,7 +9,7 @@ const ColorPage = async ({
 }) => {
   const data = await prismadb.zCategory.findUnique({
     where: {
-      id: params.zcategoryId
+      uuid: params.zcategoryId
     }
   });
 
