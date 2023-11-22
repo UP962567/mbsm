@@ -44,7 +44,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     const onSubmit = async (data: SettingsFromValues) => {
         try {
             setLoading(true);
-            await axios.patch(`/api/stores/${params.storeId}`, data);
+            await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/stores/${params.storeId}`, data);
             router.refresh();
             toast.success("Store updated successfully.");
         } catch (error) {
@@ -57,7 +57,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/stores/${params.storeId}`);
+            await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/stores/${params.storeId}`);
             router.refresh();
             router.push('/');
             toast.success("Store deleted successfully.");
@@ -123,7 +123,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
 
             <Separator />
 
-            <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/api/stores/${params.storeId}`} variant="public"/>
+            <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/${process.env.NEXT_PUBLIC_API_URL}/stores/${params.storeId}`} variant="public"/>
         </>
     )
 }

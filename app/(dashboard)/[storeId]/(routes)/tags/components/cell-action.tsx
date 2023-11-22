@@ -33,7 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/tags/${data.id}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/tags/${data.uuid}`);
       toast.success('Tag deleted.');
       router.refresh();
     } catch (error) {
@@ -67,12 +67,12 @@ export const CellAction: React.FC<CellActionProps> = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => onCopy(data.id)}
+            onClick={() => onCopy(data.uuid)}
           >
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/${params.storeId}/tags/${data.id}`)}
+            onClick={() => router.push(`/${params.storeId}/tags/${data.uuid}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

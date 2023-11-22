@@ -17,7 +17,7 @@ const ProductsPage = async ({
             category: true,
             size: true,
             color: true,
-            zcategory: true
+            tag: true,
         },
         orderBy: {
             createdAt: 'desc'
@@ -34,7 +34,7 @@ const ProductsPage = async ({
         category: item.category.name,
         size: item.size.name,
         color: item.color.value,
-        zcategory: item.zcategory.value,
+        tag: item.tag.value,
         createdAt: format(item.createdAt, 'MMMM do, yyyy')
     }));
 

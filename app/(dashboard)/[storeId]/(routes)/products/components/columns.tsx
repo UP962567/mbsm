@@ -11,9 +11,9 @@ export type ProductColumn = {
   size: string
   category: string
   color: string
+  tag: string
   isFeatured: boolean
   isArchived: boolean
-  zcategory: string
   createdAt: string;
 }
 
@@ -43,8 +43,8 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Category",
   },
   {
-    accessorKey: "zcategory",
-    header: "ZCategory",
+    accessorKey: "tag",
+    header: "Tag",
   },
   {
     accessorKey: "size",

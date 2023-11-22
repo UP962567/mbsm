@@ -22,7 +22,7 @@ export async function GET(
         size: true,
         category: true,
         store: true,
-        zcategory: true,
+        tag: true,
       }
     });
   
@@ -80,7 +80,7 @@ export async function PATCH(
   try {   
     const body = await req.json();
 
-    const { name, description, price, categoryId, zcategoryId, colorId, sizeId, images, isFeatured, isArchived } = body;
+    const { name, description, price, categoryId, zcategoryId, colorId, sizeId, tagId, images, isFeatured, isArchived } = body;
 
     const { userId } = auth();
 
@@ -99,6 +99,8 @@ export async function PATCH(
     if (!colorId) return new NextResponse("Missing colorId", { status: 400 });
 
     if (!sizeId) return new NextResponse("Missing sizeId", { status: 400 });
+
+    if (!tagId) return new NextResponse("Missing tagId", { status: 400 });
 
     if (!images || !images.length) return new NextResponse("Missing Image", { status: 400 });
 
@@ -130,7 +132,7 @@ export async function PATCH(
         categoryId,
         colorId,
         sizeId,
-        zcategoryId,
+        tagId,
         images: {
           deleteMany: {}
         },

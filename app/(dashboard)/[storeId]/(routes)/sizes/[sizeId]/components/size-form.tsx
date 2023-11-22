@@ -61,12 +61,12 @@ export const SizeForm: React.FC<SizeFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, data);
+        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/sizes/${params.sizeId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/sizes`, data);
+        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/sizes`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/sizes`);
+      // router.push(`/${params.storeId}/sizes`);
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
@@ -78,7 +78,7 @@ export const SizeForm: React.FC<SizeFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/sizes/${params.sizeId}`);
       router.refresh();
       router.push(`/${params.storeId}/sizes`);
       toast.success('Sizes deleted.');

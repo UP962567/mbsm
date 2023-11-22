@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import axios from 'axios';
+import { UserButton } from '@clerk/nextjs';
 
 
 const formSchema = z.object({
@@ -92,7 +93,6 @@ export const StoreModal = () => {
                                 <Button disabled={loading} variant='destructive' onClick={storeModal.onClose}>Cancel</Button>
                                 <Button disabled={loading} variant='secondary' type="submit">Continue</Button>
                             </div>
-
                         </form>
                     </Form>
                 </div>

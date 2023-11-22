@@ -14,10 +14,7 @@ datasource db {
 enum StoreType {
   STORE
   HOTEL
-  RESTAURANT
-  CAFE
-  BAR
-  OTHER
+  FARM
 }
 
 enum SoldCurrencyType {
@@ -49,7 +46,6 @@ model Store {
   colors     Color[]     @relation("StoreToColor")
   products   Product[]   @relation("StoreToProduct")
   orders     Order[]     @relation("StoreToOrder")
-  zcategory  ZCategory[] @relation("StoreToZcategory")
   tags       Tag[]       @relation("StoreToTag")
   sales      Sales[]     @relation("StoreToSales")
 
@@ -138,10 +134,12 @@ model Product {
   isArchived  Boolean     @default(false)
   images      Image[]
   orders      OrderItem[]
-  tags        Tag[]
 
   categoryId String
   category   Category @relation("CateToProduct", fields: [categoryId], references: [uuid])
+
+  tagId String
+  tag   Tag    @relation("TagToProduct", fields: [tagId], references: [uuid])
 
   storeId String
   store   Store  @relation("StoreToProduct", fields: [storeId], references: [uuid])
@@ -152,13 +150,10 @@ model Product {
   colorId String
   color   Color  @relation(fields: [colorId], references: [uuid])
 
-  zcategoryId String
-  zcategory   ZCategory @relation(fields: [zcategoryId], references: [uuid])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@index([zcategoryId])
+  @@index([tagId])
   @@index([storeId])
   @@index([categoryId])
   @@index([sizeId])
@@ -172,30 +167,10 @@ model Tag {
   name  String
   value String
 
-  productId String?
-  product   Product? @relation(fields: [productId], references: [uuid], onDelete: Cascade)
+  products Product[] @relation("TagToProduct")
 
   storeId String
   store   Store  @relation("StoreToTag", fields: [storeId], references: [uuid])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@index([storeId])
-  @@index([productId])
-}
-
-model ZCategory {
-  id   Int    @id @default(autoincrement())
-  uuid String @unique @default(cuid())
-
-  name  String
-  value String
-
-  products Product[]
-
-  storeId String
-  store   Store  @relation("StoreToZcategory", fields: [storeId], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

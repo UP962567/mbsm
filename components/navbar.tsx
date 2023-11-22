@@ -5,52 +5,59 @@ import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { SecondNav } from "./second-nav";
-import { Separator } from "./ui/separator";
 
 const Navbar = async () => {
     const { userId } = auth();
-    const userUI = auth();
-    const userIdOrg = auth().sessionClaims?.organization;
-
-    const organizationId = userIdOrg ? Object.keys(userIdOrg)[0] : '';
-
-    // DELETE THIS
-    // console.log("USer: ", userUI)
-    // console.log("Organi: ", userIdOrg)
 
     if (!userId) {
         redirect("/sign-in")
-    }
-
-    if (organizationId !== "org_2XzTkZZfgnh78732dC7OwwJNxG1") {
-        redirect("/noadmin")
     }
 
     const stores = await prismadb.store.findMany({
         where: {
             userId: userId,
         },
-    })
+    });
 
-    return (
-        <div className="border-b border-solid border-blue-700">
-            <div className="flex h-16 items-center px-4">
+    const userIdOrg = auth().sessionClaims?.organization;
 
-                <StoreSwithcer items={stores} />
-                <MainNav className="mx-6" />
+    const organizationUserCh = 'org_2XzdMdgMgTlwzjqimSW1OMKoKYU' as keyof typeof userIdOrg; 
+    const organizationAdminCh = 'org_2XzTkZZfgnh78732dC7OwwJNxG1' as keyof typeof userIdOrg;
 
-                <div className="ml-auto flex items-center space-x-4">
-                    <Link href="/admin">
-                        <Button variant="destructive" size="sm">
-                            Admin
-                        </Button>
-                    </Link>
-                    <UserButton afterSignOutUrl="/" />
+    console.log(userIdOrg)
+
+    if (userIdOrg && userIdOrg[organizationAdminCh] === "admin" || userIdOrg && userIdOrg[organizationAdminCh] === "basic_member") {
+        return (
+            <div className="border-b border-solid border-blue-700">
+                <div className="flex h-16 items-center px-4">
+    
+                    <StoreSwithcer items={stores} />
+    
+                    <MainNav className="mx-6" />
+    
+                    <div className="ml-auto flex items-center space-x-4">
+                        <Link href="/admin"><Button variant="destructive" size="sm">Admin</Button></Link>
+                        <UserButton afterSignOutUrl="/" />
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    } else if (userIdOrg && userIdOrg[organizationUserCh] === "basic_member") {
+        return (
+            <div className="border-b border-solid border-blue-700">
+                <div className="flex h-16 items-center px-4">
+    
+                    <MainNav className="mx-6" />
+    
+                    <div className="ml-auto flex items-center space-x-4">
+                        <UserButton afterSignOutUrl="/" />
+                    </div>
+                </div>
+            </div>
+        );
+    } else {
+        redirect("/noadmin")
+    }
 }
 
 export default Navbar;

@@ -7,9 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Category, Color, Image, Product, Size, Tag, ZCategory } from "@prisma/client"
+import { Category, Color, Image, Product, Size, Tag } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
-import { Select as Select1, SelectSection, SelectItem as SelectItem1 } from "@nextui-org/react";
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -37,7 +36,7 @@ const formSchema = z.object({
   categoryId: z.string().min(1),
   sizeId: z.string().min(1),
   colorId: z.string().min(1),
-  zcategoryId: z.string().min(1),
+  tagId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
 });
@@ -51,19 +50,17 @@ interface ProductFormProps {
   categories: Category[];
   sizes: Size[];
   colors: Color[];
-  zcategories: ZCategory[];
+  tags: Tag[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
-  initialData, categories, sizes, colors, zcategories
+  initialData, categories, sizes, colors, tags
 }) => {
   const params = useParams();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [values, setValues] = useState([]);
-
 
   const title = initialData ? 'Edit product' : 'Create product';
   const descriptions = initialData ? 'Edit a product.' : 'Add a new product';
@@ -83,7 +80,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       categoryId: '',
       sizeId: '',
       colorId: '',
-      zcategoryId: '',
+      tagId: '',
       isFeatured: false,
       isArchived: false,
     }
@@ -93,9 +90,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data);
+        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/products/${params.productId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/products`, data);
+        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/products`, data);
       }
       router.refresh();
       router.push(`/${params.storeId}/products`);
@@ -111,7 +108,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/products/${params.productId}`);
       router.refresh();
       router.push(`/${params.storeId}/products`);
       toast.success('Product deleted.');
@@ -125,12 +122,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   return (
     <>
+
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
         loading={loading}
       />
+
       <div className="flex items-center justify-between">
         <Heading title={title} description={descriptions} />
         {initialData && (
@@ -144,7 +143,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           </Button>
         )}
       </div>
+
       <Separator />
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
           <FormField
@@ -165,6 +166,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               </FormItem>
             )}
           />
+
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -194,7 +196,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
-
             <FormField
               control={form.control}
               name="price"
@@ -208,6 +209,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="categoryId"
@@ -289,23 +291,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
-
             <FormField
               control={form.control}
-              name="zcategoryId"
+              name="tagId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category Future</FormLabel>
+                  <FormLabel>Size</FormLabel>
                   <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a Category Future">
+                        <SelectValue defaultValue={field.value} placeholder="Select a size">
 
                         </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {zcategories.map((data) => (
+                      {tags.map((data) => (
                         <SelectItem key={data.id} value={data.uuid} style={{ backgroundColor: data.value }}>
                           {data.name}
                         </SelectItem>
@@ -365,6 +366,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           </Button>
         </form>
       </Form>
+
     </>
   );
 };

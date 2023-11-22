@@ -19,7 +19,6 @@ const Sidebar = () => {
         { id: 4, label: "Tags", icon: Tags, link: `/${params.storeId}/tags`, },
         { id: 5, label: "Sizes", icon: Ruler, link: `/${params.storeId}/sizes`, },
         { id: 6, label: "Colors", icon: Palette, link: `/${params.storeId}/colors`, },
-        { id: 7, label: "ZCategories", icon: Video, link: `/${params.storeId}/zcategories`, },
     ];
 
 

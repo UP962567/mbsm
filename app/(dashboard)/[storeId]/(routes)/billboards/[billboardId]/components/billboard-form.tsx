@@ -62,9 +62,9 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/billboards/${params.billboardId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/billboards`, data);
+        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/billboards`, data);
       }
       router.refresh();
       router.push(`/${params.storeId}/billboards`);
@@ -79,7 +79,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/billboards/${params.billboardId}`);
       router.refresh();
       router.push(`/${params.storeId}/billboards`);
       toast.success('Billboard deleted.');

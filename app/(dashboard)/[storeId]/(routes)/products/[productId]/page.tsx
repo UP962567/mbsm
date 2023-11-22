@@ -34,11 +34,6 @@ const ProductPage = async ({
     }
   });
 
-  const zcategories = await prismadb.zCategory.findMany({
-    where: {
-      storeId: params.storeId
-    }
-  });
 
   const tags = await prismadb.tag.findMany({
     where: {
@@ -54,7 +49,7 @@ const ProductPage = async ({
         categories={categories}
         sizes={sizes}
         colors={colors}
-        zcategories={zcategories}
+        tags={tags}
         />
       </div>
     </div>

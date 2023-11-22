@@ -61,12 +61,12 @@ export const Former: React.FC<FormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/tags/${params.tagId}`, data);
+        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/tags/${params.tagId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/tags`, data);
+        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/tags`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/tags`);
+      // router.push(`/${params.storeId}/tags`);
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
@@ -74,11 +74,12 @@ export const Former: React.FC<FormProps> = ({
       setLoading(false);
     }
   };
+  
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/tags/${params.tagId}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/tags/${params.tagId}`);
       router.refresh();
       router.push(`/${params.storeId}/tags`);
       toast.success('Tag deleted.');

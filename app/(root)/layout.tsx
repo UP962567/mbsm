@@ -23,9 +23,27 @@ export default async function Setuplayout({
         redirect(`/${store.uuid}`)
     }
 
-    return (
-        <>
-            {children}
-        </>
-    )
+    const userIdOrg = auth().sessionClaims?.organization;
+
+    const organizationUserCh = 'org_2XzdMdgMgTlwzjqimSW1OMKoKYU' as keyof typeof userIdOrg;
+    const organizationAdminCh = 'org_2XzTkZZfgnh78732dC7OwwJNxG1' as keyof typeof userIdOrg;
+
+
+    if (userIdOrg && userIdOrg[organizationAdminCh] === "admin" || userIdOrg && userIdOrg[organizationAdminCh] === "basic_member") {
+        return (
+            <>
+                {children}
+            </>
+        )
+
+    } else if (userIdOrg && userIdOrg[organizationUserCh] === "basic_member") {
+        return (
+            <>
+                {children}
+            </>
+        )
+    }
+    else {
+        redirect("/noadmin")
+    }
 }
