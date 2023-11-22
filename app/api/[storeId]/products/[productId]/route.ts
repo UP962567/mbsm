@@ -80,7 +80,7 @@ export async function PATCH(
   try {   
     const body = await req.json();
 
-    const { name, description, price, categoryId, zcategoryId, colorId, sizeId, tagId, images, isFeatured, isArchived } = body;
+    const { name, description, price, categoryId, colorId, sizeId, tagId, images, isFeatured, isArchived } = body;
 
     const { userId } = auth();
 
@@ -89,8 +89,6 @@ export async function PATCH(
     if (!name) return new NextResponse("Missing name", { status: 400 });
 
     if (!description) return new NextResponse("Missing description", { status: 400 });
-
-    if (!zcategoryId) return new NextResponse("Missing Category Future", { status: 400 });
 
     if (!price) return new NextResponse("Missing price", { status: 400 });
 
