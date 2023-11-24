@@ -12,10 +12,14 @@ export default async function Setuplayout({
     if (!userId) {
         redirect('/sign-in')
     }
-
+    
     const store = await prismadb.store.findFirst({
         where: {
-            userId
+            StoreToUser: {
+                some: {
+                    userId: userId
+                }
+            }
         }
     });
 
@@ -23,20 +27,21 @@ export default async function Setuplayout({
         redirect(`/${store.uuid}`)
     }
 
-    const userIdOrg = auth().sessionClaims?.organization;
+    const user = await prismadb.user.findUnique({
+        where: {
+            uuid: userId
+        }
+    });
 
-    const organizationUserCh = 'org_2XzdMdgMgTlwzjqimSW1OMKoKYU' as keyof typeof userIdOrg;
-    const organizationAdminCh = 'org_2XzTkZZfgnh78732dC7OwwJNxG1' as keyof typeof userIdOrg;
 
-
-    if (userIdOrg && userIdOrg[organizationAdminCh] === "admin" || userIdOrg && userIdOrg[organizationAdminCh] === "basic_member") {
+    if (user?.role === "ADMIN") {
         return (
             <>
                 {children}
             </>
         )
 
-    } else if (userIdOrg && userIdOrg[organizationUserCh] === "basic_member") {
+    } else if (user?.role === "USER") {
         return (
             <>
                 {children}

@@ -13,12 +13,12 @@ export async function POST(
         if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
         if (!name) return new NextResponse("Missing name", { status: 400 });
+        if (!type) return new NextResponse("Missing type", { status: 400 });
 
         const store = await prismadb.store.create({
             data: {
                 name,
                 type,
-                userId,
             },
         });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { ArrowRightLeft, BookCheck, PackageIcon, Palette, Presentation, Ruler, Tags, Video } from "lucide-react";
+import { ArrowRightLeft, BookCheck, Presentation } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -16,11 +16,6 @@ const SidebarHotel = () => {
     const menuItems = [
         { id: 1, label: "Billboards", icon: Presentation, link: `/${params.storeId}/billboards` },
         { id: 2, label: "Categories", icon: BookCheck, link: `/${params.storeId}/categories` },
-        // { id: 3, label: "Products", icon: PackageIcon, link: `/${params.storeId}/products`, },
-        // { id: 4, label: "Tags", icon: Tags, link: `/${params.storeId}/tags`, },
-        // { id: 5, label: "Sizes", icon: Ruler, link: `/${params.storeId}/sizes`, },
-        // { id: 6, label: "Colors", icon: Palette, link: `/${params.storeId}/colors`, },
-        // { id: 7, label: "ZCategories", icon: Video, link: `/${params.storeId}/zcategories`, },
     ];
 
 

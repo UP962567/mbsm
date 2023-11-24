@@ -17,7 +17,7 @@ export async function GET(
         uuid: params.sizeId
       }
     });
-  
+
     return NextResponse.json(size);
   } catch (error) {
     console.log('[SIZE_GET]', error);
@@ -43,7 +43,11 @@ export async function DELETE(
     const storeByUserId = await prismadb.store.findFirst({
       where: {
         uuid: params.storeId,
-        userId,
+        StoreToUser: {
+          some: {
+            userId: userId
+          }
+        },
       }
     });
 
@@ -56,7 +60,7 @@ export async function DELETE(
         uuid: params.sizeId,
       }
     });
-  
+
     return NextResponse.json(size);
   } catch (error) {
     console.log('[BILLBOARD_DELETE]', error);
@@ -69,13 +73,13 @@ export async function PATCH(
   req: Request,
   { params }: { params: { sizeId: string, storeId: string } }
 ) {
-  try {   
+  try {
     const { userId } = auth();
 
     const body = await req.json();
-    
+
     const { name, value } = body;
-    
+
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
@@ -95,7 +99,11 @@ export async function PATCH(
     const storeByUserId = await prismadb.store.findFirst({
       where: {
         uuid: params.storeId,
-        userId,
+        StoreToUser: {
+          some: {
+            userId: userId
+          }
+        },
       }
     });
 
@@ -112,7 +120,7 @@ export async function PATCH(
         value,
       }
     });
-  
+
     return NextResponse.json(size);
   } catch (error) {
     console.log('[SIZE_PATCH]', error);

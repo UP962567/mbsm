@@ -1,15 +1,13 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { useStoreModal } from '@/hooks/use-store-modal';
 import { Store } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Check, ChevronsUpDown, PlusCircle, Store as StoreIcon } from 'lucide-react';
+import { Check, ChevronsUpDown, Store as StoreIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command';
-import { auth } from '@clerk/nextjs';
-import Link from 'next/link';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -21,7 +19,6 @@ export default function StoreSwithcer({
     className,
     items = [],
 }: StoreSwitcherProps) {
-    const storeModal = useStoreModal();
     const params = useParams();
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -59,8 +56,8 @@ export default function StoreSwithcer({
                 <Command>
                     <CommandList>
                         <CommandInput placeholder='Search store ...' />
-                        <CommandEmpty> No Store Found!!! </CommandEmpty>
-                        <CommandGroup heading="Stores">
+                        <CommandEmpty> No Store Found! </CommandEmpty>
+                        <CommandGroup heading="Stores: ">
                             {formattedItems.map((store) => (
                                 <CommandItem key={store.value} onSelect={() => onStoreSelect(store)} className='text-sm'>
                                     <StoreIcon calcMode="mr-2 h-4 h-4" />
@@ -77,7 +74,7 @@ export default function StoreSwithcer({
                             ))}
                         </CommandGroup>
                     </CommandList>
-                    <CommandSeparator />
+                    {/* <CommandSeparator />
                     <CommandList>
                         <CommandGroup>
                             <CommandItem onSelect={() => {
@@ -88,7 +85,7 @@ export default function StoreSwithcer({
                                 Create Store
                             </CommandItem>
                         </CommandGroup>
-                    </CommandList>
+                    </CommandList> */}
                 </Command>
             </PopoverContent>
         </Popover>

@@ -13,51 +13,39 @@ const Navbar = async () => {
         redirect("/sign-in")
     }
 
+    const user = await prismadb.user.findUnique({
+        where: {
+            uuid: userId
+        }
+    });
+
     const stores = await prismadb.store.findMany({
         where: {
-            userId: userId,
+            StoreToUser: {
+                some: {
+                    userId: userId
+                }
+            }
         },
     });
 
-    const userIdOrg = auth().sessionClaims?.organization;
 
-    const organizationUserCh = 'org_2XzdMdgMgTlwzjqimSW1OMKoKYU' as keyof typeof userIdOrg; 
-    const organizationAdminCh = 'org_2XzTkZZfgnh78732dC7OwwJNxG1' as keyof typeof userIdOrg;
+    return (
+        <div className="border-b border-solid border-blue-700">
+            <div className="flex h-16 items-center px-4">
 
-    console.log(userIdOrg)
+                <StoreSwithcer items={stores} />
 
-    if (userIdOrg && userIdOrg[organizationAdminCh] === "admin" || userIdOrg && userIdOrg[organizationAdminCh] === "basic_member") {
-        return (
-            <div className="border-b border-solid border-blue-700">
-                <div className="flex h-16 items-center px-4">
-    
-                    <StoreSwithcer items={stores} />
-    
-                    <MainNav className="mx-6" />
-    
-                    <div className="ml-auto flex items-center space-x-4">
-                        <Link href="/admin"><Button variant="destructive" size="sm">Admin</Button></Link>
-                        <UserButton afterSignOutUrl="/" />
-                    </div>
+                <MainNav className="mx-6" />
+
+                <div className="ml-auto flex items-center space-x-4">
+                    {user?.role === "ADMIN" ? <Link href="/admin"><Button variant="destructive" size="sm">Admin</Button></Link> : null}
+                    <UserButton afterSignOutUrl="/" />
                 </div>
             </div>
-        );
-    } else if (userIdOrg && userIdOrg[organizationUserCh] === "basic_member") {
-        return (
-            <div className="border-b border-solid border-blue-700">
-                <div className="flex h-16 items-center px-4">
-    
-                    <MainNav className="mx-6" />
-    
-                    <div className="ml-auto flex items-center space-x-4">
-                        <UserButton afterSignOutUrl="/" />
-                    </div>
-                </div>
-            </div>
-        );
-    } else {
-        redirect("/noadmin")
-    }
+        </div>
+    );
+
 }
 
 export default Navbar;

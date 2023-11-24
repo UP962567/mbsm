@@ -3,7 +3,7 @@ import LeftbarHotel from "@/components/leftbar-hotel";
 import Navbar from "@/components/navbar";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs"
-import { redirect, useParams } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function Dashboardlayout({
     children,
@@ -22,7 +22,11 @@ export default async function Dashboardlayout({
     const store = await prismadb.store.findFirst({
         where: {
             uuid: params.storeId,
-            userId,
+            StoreToUser: {
+                some: {
+                    userId: userId
+                }
+            }
         },
     });
 
@@ -30,7 +34,6 @@ export default async function Dashboardlayout({
         redirect('/')
     }
 
-    // console.log("Test ", store.type)
 
     const storeType = store.type;
 

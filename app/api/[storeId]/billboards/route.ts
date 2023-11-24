@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(
     req: Request,
-    { params }: { params: { storeId: string}}
+    { params }: { params: { storeId: string } }
 ) {
     try {
         const body = await req.json();
@@ -24,7 +24,11 @@ export async function POST(
         const storeByUserId = await prismadb.store.findFirst({
             where: {
                 uuid: params.storeId,
-                userId
+                StoreToUser: {
+                    some: {
+                        userId: userId
+                    }
+                }
             },
         });
 
@@ -48,7 +52,7 @@ export async function POST(
 
 export async function GET(
     req: Request,
-    { params }: { params: { storeId: string}}
+    { params }: { params: { storeId: string } }
 ) {
     try {
 

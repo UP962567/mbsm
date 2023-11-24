@@ -12,8 +12,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import axios from 'axios';
-import { UserButton } from '@clerk/nextjs';
-
 
 const formSchema = z.object({
     name: z.string().min(3, 'Store name must be at least 3 characters long.'),
@@ -21,6 +19,7 @@ const formSchema = z.object({
 })
 
 export const StoreModal = () => {
+
     const storeModal = useStoreModal();
     const [loading, setLoading] = useState(false);
 
@@ -35,19 +34,23 @@ export const StoreModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setLoading(true);
 
-        try {
-            setLoading(true);
+        if (values.type === "STORE" || values.type === "HOTEL" || values.type === "FARM") {
+            try {
+                setLoading(true);
 
-            const response = await axios.post('/api/stores', values);
+                const response = await axios.post('/api/stores', values);
 
-            toast.success("Store created successfully.");
+                toast.success("Store created successfully.");
 
-            window.location.assign(`/${response.data.id}`);
+                window.location.assign(`/${response.data.id}`);
 
-        } catch (error) {
-            toast.error("Something went wrong.");
-        } finally {
-            setLoading(false);
+            } catch (error) {
+                toast.error("Something went wrong.");
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            toast.error('Invalid type.');
         }
     }
 
@@ -83,7 +86,7 @@ export const StoreModal = () => {
                                     <FormItem>
                                         <FormLabel>Type</FormLabel>
                                         <FormControl>
-                                            <Input disabled={loading} placeholder='STORE, HOTEL, RESTAURANT' {...field} />
+                                            <Input disabled={loading} placeholder='STORE, HOTEL, FARM' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

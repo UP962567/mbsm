@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { ArrowRightLeft, BookCheck, PackageIcon, Palette, Presentation, Ruler, Tags, Video } from "lucide-react";
+import { ArrowRightLeft, BookCheck, PackageIcon, Palette, Presentation, Ruler, Tags } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
