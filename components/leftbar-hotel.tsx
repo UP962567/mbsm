@@ -1,21 +1,22 @@
 "use client";
 
 import classNames from "classnames";
-import { ArrowRightLeft, BookCheck, Presentation } from "lucide-react";
+import { ArrowRightLeft, Bath, BookOpenCheck, Calendar, Workflow } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 const SidebarHotel = () => {
     const [toggleCollapse, setToggleCollapse] = useState(true);
     const [isCollapsible, setIsCollapsible] = useState(true);
     const params = useParams();
-    const pathname = usePathname();
 
 
     const menuItems = [
-        { id: 1, label: "Billboards", icon: Presentation, link: `/${params.storeId}/billboards` },
-        { id: 2, label: "Categories", icon: BookCheck, link: `/${params.storeId}/categories` },
+        { id: 1, label: "Calendar", icon: Calendar, link: `/${params.storeId}/calendar` },
+        { id: 2, label: "Floor", icon: Workflow, link: `/${params.storeId}/floors` },
+        { id: 3, label: "Room", icon: Bath, link: `/${params.storeId}/rooms` },
+        { id: 4, label: "Booking", icon: BookOpenCheck, link: `/${params.storeId}/bookings` },
     ];
 
 

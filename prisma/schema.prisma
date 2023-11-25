@@ -44,10 +44,10 @@ enum UserType {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  uuid     String @unique @default(cuid())
-  email    String @unique
-  username String @unique
+  id       Int      @id @default(autoincrement())
+  uuid     String   @unique @default(cuid())
+  email    String   @unique
+  username String   @unique
   password String
   name     String
   phone    String
@@ -56,13 +56,14 @@ model User {
 
   StoreToUser StoreToUser[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now()) @updatedAt
+  CalendarBooking CalendarBooking[]
 }
 
 model StoreToUser {
   id      Int    @id @default(autoincrement())
-  uuid     String @unique @default(cuid())
+  uuid    String @unique @default(cuid())
   userId  String
   user    User   @relation(fields: [userId], references: [uuid])
   storeId String
@@ -86,6 +87,10 @@ model Store {
   products   Product[]   @relation("StoreToProduct")
   orders     Order[]     @relation("StoreToOrder")
   tags       Tag[]       @relation("StoreToTag")
+
+  CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
+  CalendarRoom    CalendarRoom[]    @relation("RoomToStore")
+  CalendarBooking CalendarBooking[] @relation("BookingToStore")
 
   StoreToUser StoreToUser[]
 
@@ -264,4 +269,71 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model CalendarFloor {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name  String
+  value String
+
+  floors CalendarRoom[]
+
+  storeId String
+  store   Store  @relation("FloorToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
+model CalendarRoom {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  title String
+  slug  String
+  price Decimal @default(0)
+
+  floorId String?
+  floor   CalendarFloor? @relation(fields: [floorId], references: [uuid])
+
+  storeId String
+  store   Store  @relation("RoomToStore", fields: [storeId], references: [uuid])
+
+  bookings CalendarBooking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([floorId])
+  @@index([storeId])
+}
+
+model CalendarBooking {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  title String
+
+  group String
+  room   CalendarRoom @relation(fields: [group], references: [uuid])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [uuid])
+
+  storeId String
+  store   Store  @relation("BookingToStore", fields: [storeId], references: [uuid])
+
+  start_time DateTime
+  end_time   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([group])
+  @@index([userId])
+  @@index([storeId])
 }
