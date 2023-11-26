@@ -3,11 +3,13 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import moment from "moment";
 import Timeline from 'react-calendar-timeline';
 import axios from 'axios';
-import { Button } from '@/components/ui/button';
-import { useParams } from 'next/navigation';
+import { Button as ButtonUI } from '@/components/ui/button';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Separator } from '@/components/ui/separator';
+
 
 const CalendarCode = ({ params }) => {
-    
+    const [loading, setLoading] = useState(false);
     const [visibleTimeStart, setVisibleTimeStart] = useState();
     const [visibleTimeEnd, setVisibleTimeEnd] = useState();
     const [open, setOpen] = useState(false);
@@ -47,7 +49,7 @@ const CalendarCode = ({ params }) => {
     };
 
     const handleItemClick = (itemId, _, time) => {
-        console.log("Clicked: " + itemId, moment(time).format() + " --- " + Date());
+        console.log("Clicked: " + itemId, moment(time).format());
     };
 
     const handleItemSelect = (itemId, _, time) => {
@@ -63,7 +65,8 @@ const CalendarCode = ({ params }) => {
     };
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////// editing eding
+    //////////////////////////////////////////////////////////////////////////////////////////////// Get Data
+
     const [item, setItems] = useState([]);
     const [groups, setGroups] = useState([]);
 
@@ -86,6 +89,8 @@ const CalendarCode = ({ params }) => {
             .catch(err => console.log(err));
     };
 
+    //////////////////////////////////////////////////////////////////////////////////////////////// Modify Data
+
     const itemer = item.map((item) => {
         return {
             id: item.id,
@@ -97,12 +102,7 @@ const CalendarCode = ({ params }) => {
         }
     });
 
-    console.log("Items: ", item)
-    console.log("Groups: ", groups)
-    console.log("Itemer: ", itemer)
-
-
-
+    //////////////////////////////////////////////////////////////////////////////////////////////// Get Data End
 
     const onPrevClick = () => {
         const zoom = visibleTimeEnd - visibleTimeStart;
@@ -155,6 +155,19 @@ const CalendarCode = ({ params }) => {
         setOpen(false);
     };
 
+    const onSubmit = async () => {
+        try {
+            setLoading(true);
+            await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`, data);
+            toast.success("Booking created successfully");
+        } catch (error) {
+            toast.error('Something went wrong: ' + error?.response?.data?.message || 'Something went wrong');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const handleSubmitCreate = async () => {
         axios
             .post(process.env.REACT_APP_API_KEY + 'addcalendar', productDataCreate)
@@ -173,12 +186,12 @@ const CalendarCode = ({ params }) => {
         <div className="h-10 w-[560px]">
             <div className="flex items-center justify-between m-4">
                 <div className="space-x-2">
-                    <Button variant="default" onClick={onPrevClick}>{"<< Month"}</Button>
-                    <Button onClick={onTodayClick}>{"| Present |"}</Button>
-                    <Button variant="default" onClick={onNextClick}>{"Month >>"}</Button>
+                    <ButtonUI variant="default" onClick={onPrevClick}>{"<< Month"}</ButtonUI>
+                    <ButtonUI onClick={onTodayClick}>{"| Present |"}</ButtonUI>
+                    <ButtonUI variant="default" onClick={onNextClick}>{"Month >>"}</ButtonUI>
                 </div>
                 <div>
-                    <Button variant="green" onClick={() => { }}>{"Create"}</Button>
+                    <ButtonUI variant="green" onClick={handleOpenCreateClick}>{"Create"}</ButtonUI>
                 </div>
             </div>
             <div className="">
@@ -204,6 +217,65 @@ const CalendarCode = ({ params }) => {
                     //////////////////// Code Editor End
                     />
                 </React.StrictMode>
+
+                <Dialog id='createbooking' open={openTop} onClose={(event) => setOpenTop(false)}>
+                    <DialogTitle fontSize={24}>Create Booking</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText fontSize={14}>
+                            Please Enter the <b><u>Start date</u></b> and <b><u>End date</u></b>
+                        </DialogContentText>
+
+                        <Separator />
+
+                        <div className='flex-col-1'>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="title"
+                                label="Enter Room ID (Like: 204)"
+                                type="number"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => setDataGroup(event.target.value)}
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="title"
+                                label="Enter Comment (client: Maliq Dyrma)"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => setDataTitle(event.target.value)}
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="start_date"
+                                label=""
+                                value={time}
+                                type="date"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => setDataStart(event.target.value)}
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="end_date"
+                                label=""
+                                type="date"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => setDataEnd(event.target.value)}
+                            />
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={(event) => setOpenTop(false)}>Cancel</Button>
+                        <Button onClick={(event) => handleSubmitCreate()}>Sent</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div>
     )

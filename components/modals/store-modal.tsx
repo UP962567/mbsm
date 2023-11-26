@@ -38,7 +38,7 @@ export const StoreModal = () => {
             try {
                 setLoading(true);
 
-                const response = await axios.post('/api/stores', values);
+                const response = await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/stores`, values);
 
                 toast.success("Store created successfully.");
 
