@@ -4,39 +4,26 @@ import { NextResponse } from "next/server";
 
 export async function POST(
     req: Request,
-    { params }: { params: { storeId: string } }
+    { params }: { params: { storeId: string}}
 ) {
     try {
         const body = await req.json();
 
-        const { id, title, price, slug, floorId } = body;
+        const { title, group, start_time, end_time } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
-        if (!title) return new NextResponse("Missing name", { status: 400 });
+        if (!title) return new NextResponse("Missing data", { status: 400 });
 
-        if (!price) return new NextResponse("Missing description", { status: 400 });
+        if (!group) return new NextResponse("Missing data", { status: 400 });
 
-        if (!slug) return new NextResponse("Missing tag", { status: 400 });
+        if (!start_time) return new NextResponse("Missing data", { status: 400 });
 
-        if (!price) return new NextResponse("Missing price", { status: 400 });
-
-        if (!floorId) return new NextResponse("Missing categoryId", { status: 400 });
+        if (!end_time) return new NextResponse("Missing data", { status: 400 });
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
-
-
-        const checkId = await prismadb.calendarRoom.findFirst({
-            where: {
-                id: id,
-            }
-        });
-
-        if (checkId) {
-            return new NextResponse("ID already exists", { status: 400 });
-        }
 
         const storeByUserId = await prismadb.store.findFirst({
             where: {
@@ -51,53 +38,48 @@ export async function POST(
 
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const product = await prismadb.calendarRoom.create({
+        const product = await prismadb.calendarBooking.create({
             data: {
-                id,
                 title,
-                slug,
-                price,
-                floorId,
+                group,
+                start_time,
+                end_time,
                 storeId: params.storeId,
+                userId: userId,
             },
         });
 
         return NextResponse.json(product);
     }
     catch (error) {
-        console.log('[CAL_ROOM_POST_C1]', error);
+        console.log('[CAL_BOOKING_POST_C1]', error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
 
 export async function GET(
     req: Request,
-    { params }: { params: { storeId: string } }
+    { params }: { params: { storeId: string}}
 ) {
     try {
         const { searchParams } = new URL(req.url);
-        const floorId = searchParams.get('floorId') || undefined;
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
 
-        const products = await prismadb.calendarRoom.findMany({
+        const products = await prismadb.calendarBooking.findMany({
             where: {
                 storeId: params.storeId,
-                floorId: floorId || undefined,
-            },
-            include: {
-                floor: true
             },
             orderBy: {
-                id: 'asc'
+                createdAt: 'desc'
             }
         });
 
         return NextResponse.json(products);
     }
     catch (error) {
-        console.log('[CAL_ROOMS_GET_C1]', error);
+        console.log('[CAL_BOOKINGS_GET_C1]', error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }

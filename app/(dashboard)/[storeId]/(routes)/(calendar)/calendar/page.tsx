@@ -2,15 +2,17 @@
 
 import CalendarCode from "./components/calendar-code";
 import React from 'react';
-import { Button } from '@/components/ui/button';
 
 
-
-const Calendar = () => {
+const Calendar = async ({
+    params
+  }: {
+    params: { storeId: string }
+  }) => {
 
     return (
         <div className='w-full'>
-            <CalendarCode />
+            <CalendarCode params={params}/>
         </div>
     )
 }

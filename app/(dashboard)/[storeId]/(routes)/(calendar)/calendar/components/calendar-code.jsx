@@ -4,13 +4,10 @@ import moment from "moment";
 import Timeline from 'react-calendar-timeline';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
+import { useParams } from 'next/navigation';
 
-
-const CalendarCode = () => {
-
-
-    //////////////////////////////////////////////////////////////////////// editing
-
+const CalendarCode = ({ params }) => {
+    
     const [visibleTimeStart, setVisibleTimeStart] = useState();
     const [visibleTimeEnd, setVisibleTimeEnd] = useState();
     const [open, setOpen] = useState(false);
@@ -76,18 +73,36 @@ const CalendarCode = () => {
     }, [])
 
     const fetchData = () => {
-        fetch(process.env.REACT_APP_API_KEY + 'calendar')
+        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`)
             .then(res => res.json())
             .then(data => setItems(data))
             .catch(err => console.log(err));
     };
 
     const fetchGroup = () => {
-        fetch(process.env.REACT_APP_API_KEY + 'rooms_group_calendar')
+        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/rooms`)
             .then(res => res.json())
             .then(data => setGroups(data))
             .catch(err => console.log(err));
     };
+
+    const itemer = item.map((item) => {
+        return {
+            id: item.id,
+            group: item.group,
+            title: item.title,
+            start_time: moment(item.start_time),
+            end_time: moment(item.end_time),
+            className: "Group" + item.group,
+        }
+    });
+
+    console.log("Items: ", item)
+    console.log("Groups: ", groups)
+    console.log("Itemer: ", itemer)
+
+
+
 
     const onPrevClick = () => {
         const zoom = visibleTimeEnd - visibleTimeStart;
@@ -122,7 +137,8 @@ const CalendarCode = () => {
         start_time: dataStart,
         end_time: dataEnd,
         group: dataGroup,
-        className: "Group" + dataGroup,
+        canMove: false,
+        className: "bg-green-500",
     };
 
     const handleSubmit = async () => {
@@ -154,7 +170,7 @@ const CalendarCode = () => {
     };
 
     return (
-        <div>
+        <div className="h-10 w-[560px]">
             <div className="flex items-center justify-between m-4">
                 <div className="space-x-2">
                     <Button variant="default" onClick={onPrevClick}>{"<< Month"}</Button>
@@ -165,11 +181,11 @@ const CalendarCode = () => {
                     <Button variant="green" onClick={() => { }}>{"Create"}</Button>
                 </div>
             </div>
-            <div className="top">
+            <div className="">
                 <React.StrictMode>
                     <Timeline
                         groups={groups}
-                        items={item}
+                        items={itemer}
                         defaultTimeStart={moment().add(-2, 'day')}
                         defaultTimeEnd={moment().add(2, 'day')}
 

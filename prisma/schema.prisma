@@ -318,8 +318,8 @@ model CalendarBooking {
 
   title String
 
-  group String
-  room   CalendarRoom @relation(fields: [group], references: [uuid])
+  group Int
+  room  CalendarRoom @relation(fields: [group], references: [id])
 
   userId String
   user   User   @relation(fields: [userId], references: [uuid])

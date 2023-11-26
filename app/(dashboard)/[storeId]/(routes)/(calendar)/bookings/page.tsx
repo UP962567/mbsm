@@ -2,28 +2,28 @@ import { format } from "date-fns";
 import prismadb from "@/lib/prismadb";
 import { Column } from "./components/columns";
 import { Client } from "./components/client";
-import { formatter } from "@/lib/utils";
+import { n_formatter } from "@/lib/utils";
 
 const PCPage = async ({
     params
 }: {
     params: {storeId: string;}
 }) => {
-    const pC = await prismadb.calendarRoom.findMany({
+    const pC = await prismadb.calendarBooking.findMany({
         where: {
             storeId: params.storeId
         },
         orderBy: {
-            id: 'asc'
+            createdAt: 'desc'
         }
     });
 
     const formated: Column[] = pC.map((item) => ({
         uuid: item.uuid,
-        name: item.title,
-        slug: item.slug,
-        price: formatter.format(item.price.toNumber()),
-        floorId: item.floorId || 'N/A',
+        title: item.title,
+        group: n_formatter.format(item.group),
+        start_time: format(item.start_time, 'MMMM do, yyyy'),
+        end_time: format(item.end_time, 'MMMM do, yyyy'),
         createdAt: format(item.createdAt, 'MMMM do, yyyy')
     }));
 

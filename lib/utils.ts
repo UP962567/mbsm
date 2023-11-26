@@ -9,3 +9,9 @@ export const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 })
+
+
+export const n_formatter = new Intl.NumberFormat("en-US", {
+  style: "decimal",
+  maximumFractionDigits: 0,
+})

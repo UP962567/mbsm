@@ -26,6 +26,7 @@ import { AlertModal } from "@/components/modals/alert-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const formSchema = z.object({
+  id: z.coerce.number().min(1),
   title: z.string().min(1),
   slug: z.string().min(1),
   price: z.coerce.number().min(1),
@@ -60,9 +61,10 @@ export const Former: React.FC<FormProps> = ({
       price: parseFloat(String(initialData?.price)),
       floorId: initialData?.floorId ?? undefined,
     } : {
+      id: 303,
       title: '',
-      slug: '',
-      price: 0,
+      slug: 'Room ',
+      price: 50,
       floorId: ''
     }
   });
@@ -126,6 +128,21 @@ export const Former: React.FC<FormProps> = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
           <div className="md:grid md:grid-cols-3 gap-8">
+
+          <FormField
+              control={form.control}
+              name="id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Room Number</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Should be only number (404)" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="title"
