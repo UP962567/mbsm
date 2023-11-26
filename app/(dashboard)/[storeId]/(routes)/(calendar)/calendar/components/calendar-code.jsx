@@ -1,12 +1,14 @@
+/* eslint-disable no-console */
+
 import React, { useEffect, useState } from 'react';
 import 'react-calendar-timeline/lib/Timeline.css';
 import moment from "moment";
 import Timeline from 'react-calendar-timeline';
 import axios from 'axios';
 import { Button as ButtonUI } from '@/components/ui/button';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Separator } from '@/components/ui/separator';
-
+import { toast } from "react-hot-toast"
 
 const CalendarCode = ({ params }) => {
     const [loading, setLoading] = useState(false);
@@ -99,6 +101,8 @@ const CalendarCode = ({ params }) => {
             start_time: moment(item.start_time),
             end_time: moment(item.end_time),
             className: "Group" + item.group,
+            selectedBgColor: 'rgba(225, 166, 244, 1)',
+            bgColor: 'rgba(225, 166, 244, 0.6)',
         }
     });
 
@@ -134,11 +138,10 @@ const CalendarCode = ({ params }) => {
 
     const productDataCreate = {
         title: dataTitle,
-        start_time: dataStart,
-        end_time: dataEnd,
-        group: dataGroup,
-        canMove: false,
-        className: "bg-green-500",
+        start_time: moment(dataStart).toISOString(),
+        end_time: moment(dataEnd).toISOString(),
+        group: parseInt(dataGroup),
+        className: "Group" + groupId,
     };
 
     const handleSubmit = async () => {
@@ -155,36 +158,25 @@ const CalendarCode = ({ params }) => {
         setOpen(false);
     };
 
-    const onSubmit = async () => {
+    const handleSubmitCreate = async () => {
         try {
             setLoading(true);
-            await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`, data);
+            await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`, productDataCreate);
             toast.success("Booking created successfully");
         } catch (error) {
-            toast.error('Something went wrong: ' + error?.response?.data?.message || 'Something went wrong');
+            console.error(error);
+            toast.error("Error creating booking");
         } finally {
+            fetchData()
             setLoading(false);
+            setOpenTop(false);
         }
     };
 
 
-    const handleSubmitCreate = async () => {
-        axios
-            .post(process.env.REACT_APP_API_KEY + 'addcalendar', productDataCreate)
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-                // Handle error: display error message or take other actions
-            });
-        fetchData();
-        setOpenTop(false);
-    };
-
     return (
-        <div className="h-10 w-[560px]">
-            <div className="flex items-center justify-between m-4">
+        <div className="col-span-2">
+            <div className="flex items-center justify-between m-4 ">
                 <div className="space-x-2">
                     <ButtonUI variant="default" onClick={onPrevClick}>{"<< Month"}</ButtonUI>
                     <ButtonUI onClick={onTodayClick}>{"| Present |"}</ButtonUI>
@@ -194,6 +186,7 @@ const CalendarCode = ({ params }) => {
                     <ButtonUI variant="green" onClick={handleOpenCreateClick}>{"Create"}</ButtonUI>
                 </div>
             </div>
+            <br />
             <div className="">
                 <React.StrictMode>
                     <Timeline
@@ -205,7 +198,7 @@ const CalendarCode = ({ params }) => {
                         //////////////////// Code Editor Start
                         visibleTimeStart={visibleTimeStart}
                         visibleTimeEnd={visibleTimeEnd}
-                        sidebarWidth={150}
+                        sidebarWidth={75}
                         onCanvasClick={handleCanvasClick}
                         onCanvasDoubleClick={handleCanvasDoubleClick}
                         onCanvasContextMenu={handleCanvasContextMenu}
@@ -231,7 +224,7 @@ const CalendarCode = ({ params }) => {
                             <TextField
                                 autoFocus
                                 margin="dense"
-                                id="title"
+                                id="group"
                                 label="Enter Room ID (Like: 204)"
                                 type="number"
                                 fullWidth
@@ -278,6 +271,7 @@ const CalendarCode = ({ params }) => {
                 </Dialog>
             </div>
         </div>
+
     )
 }
 

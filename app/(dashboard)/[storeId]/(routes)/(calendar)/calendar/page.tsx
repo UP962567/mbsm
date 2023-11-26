@@ -1,7 +1,5 @@
 "use client"
-
 import CalendarCode from "./components/calendar-code";
-import React from 'react';
 
 
 const Calendar = async ({

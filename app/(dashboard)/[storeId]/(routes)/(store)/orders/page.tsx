@@ -9,6 +9,14 @@ const OrdersPage = async ({
 }: {
     params: {storeId: string;}
 }) => {
+    const store = await prismadb.store.findFirst({
+        where: {
+            uuid: params.storeId
+        }
+    });
+
+    console.log(store?.type)
+
     const order = await prismadb.order.findMany({
         where: {
             storeId: params.storeId
