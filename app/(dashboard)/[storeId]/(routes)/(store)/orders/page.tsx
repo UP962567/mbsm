@@ -33,6 +33,7 @@ const OrdersPage = async ({
         }
     });
 
+// WORKING
 
     if (store?.type === "STORE") {
         const formatedOrders: OrderColumn[] = order.map((item) => ({
