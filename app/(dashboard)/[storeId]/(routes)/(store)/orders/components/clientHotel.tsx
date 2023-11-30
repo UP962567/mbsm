@@ -5,13 +5,13 @@ import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
-import { columns, OrderColumn } from "./columns";
+import { columnsHotel, OrderColumnHotel } from "./columnsHotel";
 
-interface OrderClientProps {
-  data: OrderColumn[];
+interface OrderClientHotelProps {
+  data: OrderColumnHotel[];
 }
 
-export const OrderClient: React.FC<OrderClientProps> = ({
+export const OrderClientHotel: React.FC<OrderClientHotelProps> = ({
   data
 }) => {
   const params = useParams();
@@ -19,9 +19,9 @@ export const OrderClient: React.FC<OrderClientProps> = ({
 
   return (
     <>
-      <Heading title={`Orders (${data.length})`} description="Manage orders for your store" />
+      <Heading title={`Orders H(${data.length})`} description="Manage orders for your store" />
       <Separator />
-      <DataTable searchKey="products" columns={columns} data={data} />
+      <DataTable searchKey="title" columns={columnsHotel} data={data} />
     </>
   );
 };
