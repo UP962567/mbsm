@@ -67,11 +67,13 @@ const OrdersPage = async ({
                 </div>
             </div>
         );
+        
     } else if (store?.type === "HOTEL") {
         const formatedOrders: OrderColumnHotel[] = orderHotel.map((item) => ({
             uuid: item.uuid,
             title: item.title,
             group: n_formatter.format(item.group),
+            totalPrice: formatter.format(Number(item.totalPrice)),
             start_time: format(item.start_time, 'MMMM do, yyyy'),
             end_time: format(item.end_time, 'MMMM do, yyyy'),
             createdAt: format(item.createdAt, 'MMMM do, yyyy')

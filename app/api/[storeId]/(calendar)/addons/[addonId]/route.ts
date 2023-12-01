@@ -5,33 +5,29 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { bookingId: string } }
+  { params }: { params: { addonId: string } }
 ) {
   try {
-    if (!params.bookingId) {
+    if (!params.addonId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
 
-    const product = await prismadb.calendarBooking.findUnique({
+    const product = await prismadb.calendarAddon.findUnique({
       where: {
-        uuid: params.bookingId
-      },
-      include: {
-        room: true,
-        calendarAddon: true
+        uuid: params.addonId
       }
     });
 
     return NextResponse.json(product);
   } catch (error) {
-    console.log('[CAL_BOOKING_GET]', error);
+    console.log('[CAL_ADDON_GET]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { bookingId: string, storeId: string } }
+  { params }: { params: { addonId: string, storeId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -40,7 +36,7 @@ export async function DELETE(
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!params.bookingId) {
+    if (!params.addonId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
 
@@ -59,15 +55,15 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.calendarBooking.deleteMany({
+    const product = await prismadb.calendarAddon.deleteMany({
       where: {
-        uuid: params.bookingId,
+        uuid: params.addonId,
       }
     });
 
     return NextResponse.json(product);
   } catch (error) {
-    console.log('[CAL_BOOKING_DELETE]', error);
+    console.log('[CAL_ADDON_DELETE]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -75,12 +71,12 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { bookingId: string, storeId: string } }
+  { params }: { params: { addonId: string, storeId: string } }
 ) {
   try {
     const body = await req.json();
 
-    const { title, group, start_time, end_time, totalPrice, clients, addonId } = body;
+    const { title, price } = body;
 
     const { userId } = auth();
 
@@ -88,19 +84,8 @@ export async function PATCH(
 
     if (!title) return new NextResponse("Missing data", { status: 400 });
 
-    if (!group) return new NextResponse("Missing data", { status: 400 });
-
-    if (!start_time) return new NextResponse("Missing data", { status: 400 });
-
-    if (!end_time) return new NextResponse("Missing data", { status: 400 });
-
-    if (!totalPrice) return new NextResponse("Missing total Price", { status: 400 })
 
     if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
-    
-    if (!clients) return new NextResponse("Missing data", { status: 400 });
-
-    if (!addonId) return new NextResponse("Missing data", { status: 400 });
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
@@ -117,24 +102,19 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.calendarBooking.update({
+    const product = await prismadb.calendarAddon.update({
       where: {
-        uuid: params.bookingId,
+        uuid: params.addonId,
       },
       data: {
         title,
-        group,
-        start_time,
-        end_time,
-        totalPrice,
-        clients,
-        addonId
+        price
       }
     });
 
     return NextResponse.json(product);
   } catch (error) {
-    console.log('[CLA_BOOKING_PATCH]', error);
+    console.log('[CLA_ADDON_PATCH]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };

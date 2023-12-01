@@ -9,25 +9,13 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { title, group, start_time, end_time, totalPrice, clients, addonId } = body;
+        const { title, price } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
         if (!title) return new NextResponse("Missing data", { status: 400 });
-
-        if (!group) return new NextResponse("Missing data", { status: 400 });
-
-        if (!start_time) return new NextResponse("Missing data", { status: 400 });
-
-        if (!end_time) return new NextResponse("Missing data", { status: 400 });
-
-        if (!clients) return new NextResponse("Missing data", { status: 400 });
-
-        if (!addonId) return new NextResponse("Missing data", { status: 400 });
-
-        if (!totalPrice) return new NextResponse("Missing total Price", { status: 400 })
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
@@ -44,24 +32,18 @@ export async function POST(
 
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const product = await prismadb.calendarBooking.create({
+        const product = await prismadb.calendarAddon.create({
             data: {
                 title,
-                group,
-                start_time,
-                end_time,
+                price,
                 storeId: params.storeId,
-                userId: userId,
-                totalPrice,
-                clients,
-                addonId
             },
         });
 
         return NextResponse.json(product);
     }
     catch (error) {
-        console.log('[CAL_BOOKING_POST_C1]', error);
+        console.log('[CAL_ADDON_POST_C1]', error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
@@ -71,12 +53,10 @@ export async function GET(
     { params }: { params: { storeId: string}}
 ) {
     try {
-        const { searchParams } = new URL(req.url);
-
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
 
-        const products = await prismadb.calendarBooking.findMany({
+        const products = await prismadb.calendarAddon.findMany({
             where: {
                 storeId: params.storeId,
             },
@@ -88,7 +68,7 @@ export async function GET(
         return NextResponse.json(products);
     }
     catch (error) {
-        console.log('[CAL_BOOKINGS_GET_C1]', error);
+        console.log('[CAL_ADDON_GET_C1]', error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }

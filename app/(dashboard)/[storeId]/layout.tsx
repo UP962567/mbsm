@@ -1,5 +1,5 @@
 import Leftbar from "@/components/leftbar";
-import LeftbarHotel from "@/components/leftbar-hotel";
+import LeftbarHotel from "@/components/hotel-leftbar";
 import Navbar from "@/components/navbar";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs"

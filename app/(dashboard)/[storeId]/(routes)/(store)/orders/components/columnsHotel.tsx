@@ -9,6 +9,7 @@ export type OrderColumnHotel = {
   start_time: string
   end_time: string
   createdAt: string;
+  totalPrice: string;
 }
 
 export const columnsHotel: ColumnDef<OrderColumnHotel>[] = [
@@ -27,5 +28,9 @@ export const columnsHotel: ColumnDef<OrderColumnHotel>[] = [
   {
     accessorKey: "end_time",
     header: "End Time",
+  },
+  {
+    accessorKey: "totalPrice",
+    header: "Price",
   },
 ]

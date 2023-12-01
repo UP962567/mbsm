@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { ArrowRightLeft, Bath, BookOpenCheck, Calendar, Workflow } from "lucide-react";
+import { ArrowRightLeft, Bath, BookOpenCheck, Calendar, PackagePlus, Workflow } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
@@ -17,6 +17,7 @@ const SidebarHotel = () => {
         { id: 2, label: "Floor", icon: Workflow, link: `/${params.storeId}/floors` },
         { id: 3, label: "Room", icon: Bath, link: `/${params.storeId}/rooms` },
         { id: 4, label: "Booking", icon: BookOpenCheck, link: `/${params.storeId}/bookings` },
+        { id: 5, label: "Addon", icon: PackagePlus, link: `/${params.storeId}/addons` },
     ];
 
 

@@ -54,11 +54,35 @@ model User {
   address  String
   role     UserType @default(NONE)
 
-  StoreToUser StoreToUser[]
-
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @default(now()) @updatedAt
+  StoreToUser     StoreToUser[]
   CalendarBooking CalendarBooking[]
+  UserHotelFilter UserHotelFilter[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model UserHotelFilter {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [uuid])
+
+  storeId String
+  store   Store  @relation("UHFilterToStore", fields: [storeId], references: [uuid])
+
+  total_revenue   Boolean @default(true)
+  monthly_revenue Boolean @default(true)
+  total_booking   Boolean @default(true)
+  total_rooms     Boolean @default(true)
+  total_clients   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userId])
+  @@index([storeId])
 }
 
 model StoreToUser {
@@ -80,17 +104,19 @@ model Store {
   type   StoreType
   userId String?
 
-  billboards Billboard[] @relation("StoreToBillboard")
-  category   Category[]  @relation("StoreToCategory")
-  sizes      Size[]      @relation("StoreToSize")
-  colors     Color[]     @relation("StoreToColor")
-  products   Product[]   @relation("StoreToProduct")
-  orders     Order[]     @relation("StoreToOrder")
-  tags       Tag[]       @relation("StoreToTag")
+  billboards      Billboard[]       @relation("StoreToBillboard")
+  category        Category[]        @relation("StoreToCategory")
+  sizes           Size[]            @relation("StoreToSize")
+  colors          Color[]           @relation("StoreToColor")
+  products        Product[]         @relation("StoreToProduct")
+  orders          Order[]           @relation("StoreToOrder")
+  tags            Tag[]             @relation("StoreToTag")
+  userHotelFilter UserHotelFilter[] @relation("UHFilterToStore")
 
   CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
   CalendarRoom    CalendarRoom[]    @relation("RoomToStore")
   CalendarBooking CalendarBooking[] @relation("BookingToStore")
+  CalendarAddon   CalendarAddon[]   @relation("AddonToStore")
 
   StoreToUser StoreToUser[]
 
@@ -312,6 +338,24 @@ model CalendarRoom {
   @@index([storeId])
 }
 
+model CalendarAddon {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  title String
+  price Decimal @default(0)
+
+  storeId String
+  store   Store  @relation("AddonToStore", fields: [storeId], references: [uuid])
+
+  booking CalendarBooking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
 model CalendarBooking {
   id   Int    @id @default(autoincrement())
   uuid String @unique @default(cuid())
@@ -327,8 +371,14 @@ model CalendarBooking {
   storeId String
   store   Store  @relation("BookingToStore", fields: [storeId], references: [uuid])
 
+  addonId       String?
+  calendarAddon CalendarAddon? @relation(fields: [addonId], references: [uuid])
+
   start_time DateTime
   end_time   DateTime
+
+  totalPrice Decimal @default(0)
+  clients    Int?    @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -336,4 +386,5 @@ model CalendarBooking {
   @@index([group])
   @@index([userId])
   @@index([storeId])
+  @@index([addonId])
 }

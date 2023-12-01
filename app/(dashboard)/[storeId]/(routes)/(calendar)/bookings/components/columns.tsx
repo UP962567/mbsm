@@ -7,6 +7,8 @@ export type Column = {
   uuid: string
   title: string
   group: string
+  clients: string
+  addonId: string
   start_time: string
   end_time: string
   createdAt: string;
@@ -20,6 +22,14 @@ export const columns: ColumnDef<Column>[] = [
   {
     accessorKey: "group",
     header: "Group",
+  },
+  {
+    accessorKey: "clients",
+    header: "People +8",
+  },
+  {
+    accessorKey: "addonId",
+    header: "Packet",
   },
   {
     accessorKey: "start_time",

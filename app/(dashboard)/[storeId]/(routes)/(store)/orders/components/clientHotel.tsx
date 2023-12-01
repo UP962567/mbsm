@@ -19,7 +19,7 @@ export const OrderClientHotel: React.FC<OrderClientHotelProps> = ({
 
   return (
     <>
-      <Heading title={`Orders H(${data.length})`} description="Manage orders for your store" />
+      <Heading title={`Orders(${data.length})`} description="Manage orders for your Hotel" />
       <Separator />
       <DataTable searchKey="title" columns={columnsHotel} data={data} />
     </>

@@ -9,12 +9,9 @@ const PCPage = async ({
 }: {
     params: {storeId: string;}
 }) => {
-    const pC = await prismadb.calendarBooking.findMany({
+    const pC = await prismadb.calendarAddon.findMany({
         where: {
             storeId: params.storeId
-        },
-        include: {
-            calendarAddon: true
         },
         orderBy: {
             createdAt: 'desc'
@@ -24,12 +21,7 @@ const PCPage = async ({
     const formated: Column[] = pC.map((item) => ({
         uuid: item.uuid,
         title: item.title,
-        group: n_formatter.format(item.group),
-        addonId: item.calendarAddon?.title || "No addon",
-        clients: n_formatter.format(item.clients ?? 0),
-        start_time: format(item.start_time, 'MMMM do, yyyy'),
-        end_time: format(item.end_time, 'MMMM do, yyyy'),
-        createdAt: format(item.createdAt, 'MMMM do, yyyy')
+        price: n_formatter.format(item.price.toNumber()),
     }));
 
     return (
