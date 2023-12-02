@@ -61,8 +61,8 @@ export const Former: React.FC<FormProps> = ({
       price: parseFloat(String(initialData?.price)),
       floorId: initialData?.floorId ?? undefined,
     } : {
-      id: 303,
-      title: '',
+      id: 101,
+      title: '101',
       slug: 'Room ',
       price: 50,
       floorId: ''

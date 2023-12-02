@@ -56,13 +56,13 @@ model User {
 
   StoreToUser     StoreToUser[]
   CalendarBooking CalendarBooking[]
-  UserHotelFilter UserHotelFilter[]
+  UserFilter      UserFilter[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-model UserHotelFilter {
+model UserFilter {
   id   Int    @id @default(autoincrement())
   uuid String @unique @default(cuid())
 
@@ -72,11 +72,15 @@ model UserHotelFilter {
   storeId String
   store   Store  @relation("UHFilterToStore", fields: [storeId], references: [uuid])
 
-  total_revenue   Boolean @default(true)
-  monthly_revenue Boolean @default(true)
-  total_booking   Boolean @default(true)
-  total_rooms     Boolean @default(true)
-  total_clients   Boolean @default(true)
+  type StoreType
+
+  hotel_total_revenue   Boolean @default(true)
+  hotel_total_booking   Boolean @default(true)
+  hotel_total_rooms     Boolean @default(true)
+  hotel_total_clients   Boolean @default(true)
+  hotel_monthly_revenue Boolean @default(true)
+  hotel_monthly_booking Boolean @default(true)
+  hotel_monthly_clients Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -104,14 +108,14 @@ model Store {
   type   StoreType
   userId String?
 
-  billboards      Billboard[]       @relation("StoreToBillboard")
-  category        Category[]        @relation("StoreToCategory")
-  sizes           Size[]            @relation("StoreToSize")
-  colors          Color[]           @relation("StoreToColor")
-  products        Product[]         @relation("StoreToProduct")
-  orders          Order[]           @relation("StoreToOrder")
-  tags            Tag[]             @relation("StoreToTag")
-  userHotelFilter UserHotelFilter[] @relation("UHFilterToStore")
+  billboards Billboard[]  @relation("StoreToBillboard")
+  category   Category[]   @relation("StoreToCategory")
+  sizes      Size[]       @relation("StoreToSize")
+  colors     Color[]      @relation("StoreToColor")
+  products   Product[]    @relation("StoreToProduct")
+  orders     Order[]      @relation("StoreToOrder")
+  tags       Tag[]        @relation("StoreToTag")
+  userFilter UserFilter[] @relation("UHFilterToStore")
 
   CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
   CalendarRoom    CalendarRoom[]    @relation("RoomToStore")

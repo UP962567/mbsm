@@ -16,8 +16,8 @@ const SidebarHotel = () => {
         { id: 1, label: "Calendar", icon: Calendar, link: `/${params.storeId}/calendar` },
         { id: 2, label: "Floor", icon: Workflow, link: `/${params.storeId}/floors` },
         { id: 3, label: "Room", icon: Bath, link: `/${params.storeId}/rooms` },
-        { id: 4, label: "Booking", icon: BookOpenCheck, link: `/${params.storeId}/bookings` },
-        { id: 5, label: "Addon", icon: PackagePlus, link: `/${params.storeId}/addons` },
+        { id: 4, label: "Addon", icon: PackagePlus, link: `/${params.storeId}/addons` },
+        { id: 5, label: "Booking", icon: BookOpenCheck, link: `/${params.storeId}/bookings` },
     ];
 
 

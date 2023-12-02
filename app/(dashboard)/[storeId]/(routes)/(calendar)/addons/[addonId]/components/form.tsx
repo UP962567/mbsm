@@ -1,11 +1,10 @@
 "use client"
 
 import axios from "axios"
-import { format } from "date-fns"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { CalendarIcon, Trash } from "lucide-react"
+import { Trash } from "lucide-react"
 import { CalendarAddon } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 

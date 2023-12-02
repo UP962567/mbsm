@@ -79,7 +79,7 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { id, title, slug, price, floorId } = body;
+    const { title, slug, price, floorId } = body;
 
     const { userId } = auth();
 
@@ -95,15 +95,6 @@ export async function PATCH(
 
     if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
-    const checkId = await prismadb.calendarRoom.findFirst({
-      where: {
-        id: id,
-      }
-    });
-
-    if(checkId) {
-      return new NextResponse("ID already exists", { status: 400 });
-    }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
@@ -119,19 +110,6 @@ export async function PATCH(
     if (!storeByUserId) {
       return new NextResponse("Unauthorized", { status: 405 });
     }
-
-    await prismadb.calendarRoom.update({
-      where: {
-        uuid: params.roomId,
-      },
-      data: {
-        id,
-        title,
-        slug,
-        price,
-        floorId,
-      }
-    });
 
     const product = await prismadb.calendarRoom.update({
       where: {
