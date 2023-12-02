@@ -9,24 +9,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 
 import { Overview } from "@/components/overview";
-import { DropdownMenuCheckboxes } from "@/components/hotel-check";
+import { HotelDropdownMenuCheckboxes } from "@/components/hotel-check";
 
 import { formatter } from "@/lib/utils";
 import prismadb from "@/lib/prismadb";
 
-import { getTotalRevenue } from "@/actions/get-store-total-revenue";
-import { getSalesCount } from "@/actions/get-store-sales-count";
-import { getGraphRevenue } from "@/actions/get-store-graph-revenue";
-import { getStockCount } from "@/actions/get-store-stock-count";
+import { getTotalRevenue } from "@/actions/store/get-store-total-revenue";
+import { getSalesCount } from "@/actions/store/get-store-sales-count";
+import { getGraphRevenue } from "@/actions/store/get-store-graph-revenue";
+import { getStockCount } from "@/actions/store/get-store-stock-count";
 
-import { getRoomsCount } from "@/actions/get-hotel-rooms-count";
-import { getBookingCount } from "@/actions/get-hotel-booking-count";
-import { getTotalHotelRevenue } from "@/actions/get-hotel-revenue";
-import { getGraphHotelRevenue } from "@/actions/get-hotel-graph-revenue";
-import { getTotalMonthRevenue } from "@/actions/get-hotel-month-revenue";
-import { getTotalHotelClients } from "@/actions/get-hotel-clients-count";
-import { getTotalMonthClients } from "@/actions/get-hotel-month-client";
-import { getTotalMonthBooknig } from "@/actions/get-hotel-month-booking";
+import { getRoomsCount } from "@/actions/hotel/get-hotel-rooms-count";
+import { getBookingCount } from "@/actions/hotel/get-hotel-booking-count";
+import { getTotalHotelRevenue } from "@/actions/hotel/get-hotel-revenue";
+import { getGraphHotelRevenue } from "@/actions/hotel/get-hotel-graph-revenue";
+import { getTotalMonthRevenue } from "@/actions/hotel/get-hotel-month-revenue";
+import { getTotalHotelClients } from "@/actions/hotel/get-hotel-clients-count";
+import { getTotalMonthClients } from "@/actions/hotel/get-hotel-month-client";
+import { getTotalMonthBooknig } from "@/actions/hotel/get-hotel-month-booking";
+import { StoreDropdownMenuCheckboxes } from "@/components/store-check";
+import { getCountCategory } from "@/actions/store/get-store-category-count";
+import { getCountSize } from "@/actions/store/get-store-size-count";
+import { getCountColor } from "@/actions/store/get-store-color-count";
+import { getCountTag } from "@/actions/store/get-store-tag-count";
 
 
 interface DashboardPageProps {
@@ -53,25 +58,29 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
 
   const filters = await prismadb.userFilter.findUnique({
     where: {
-      storeId: params.storeId,
-      userId: userId || undefined,
       uuid: userId,
-      type: store?.type
     }
   });
 
+  console.log(filters)
+
+  // STORE
   const totalRevenue = await getTotalRevenue(params.storeId);
   const graphRevenue = await getGraphRevenue(params.storeId);
   const salesCount = await getSalesCount(params.storeId);
   const stockCount = await getStockCount(params.storeId);
+  const categoryCount = await getCountCategory(params.storeId);
+  const sizeCount = await getCountSize(params.storeId);
+  const colorCount = await getCountColor(params.storeId);
+  const tagCount = await getCountTag(params.storeId);
 
+  // HOTEL
   const roomsCount = await getRoomsCount(params.storeId);
   const bookingCount = await getBookingCount(params.storeId);
   const bookingRevenue = await getTotalHotelRevenue(params.storeId);
   const graphHotelData = await getGraphHotelRevenue(params.storeId);
   const monthlyRevenue = await getTotalMonthRevenue(params.storeId);
   const hotelClients = await getTotalHotelClients(params.storeId);
-
   const monlyClients = await getTotalMonthClients(params.storeId);
   const monlyBooking = await getTotalMonthBooknig(params.storeId);
 
@@ -80,38 +89,96 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
     return (
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <Heading title="Dashboard" description="Overview of your Store" />
+          <div className="flex justify-between">
+            <Heading title="Dashboard" description="Overview of your Hotel" />
+            <div className="flex">
+              <StoreDropdownMenuCheckboxes data={filters} />
+            </div>
+          </div>
           <Separator />
-          <div className="grid gap-4 grid-cols-3">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Revenue
-                </CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{formatter.format(totalRevenue)}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+{salesCount}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Products In Stock</CardTitle>
-                <Package className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stockCount}</div>
-              </CardContent>
-            </Card>
+          <div className={"grid gap-4 grid-cols-" + filters?.store_filter_row}>
+            {filters?.store_total_revenue ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Total Revenue
+                  </CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{formatter.format(totalRevenue)}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_sales ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CreditCard className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">+{salesCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_products ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Product</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stockCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_category ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Category</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{categoryCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_colors ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Color</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{colorCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_tags ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Tag</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{tagCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_sizes ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Size</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{sizeCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+
+
+
           </div>
 
           <Card className="col-span-4">
@@ -132,12 +199,11 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
           <div className="flex justify-between">
             <Heading title="Dashboard" description="Overview of your Hotel" />
             <div className="flex">
-              <DropdownMenuCheckboxes data={filters} />
+              <HotelDropdownMenuCheckboxes data={filters} />
             </div>
-
           </div>
           <Separator />
-          <div className="grid gap-4 grid-cols-4">
+          <div className={"grid gap-4 grid-cols-" + filters?.hotel_filter_row}>
             {filters?.hotel_total_revenue ?
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

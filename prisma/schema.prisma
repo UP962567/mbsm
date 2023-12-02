@@ -69,10 +69,8 @@ model UserFilter {
   userId String
   user   User   @relation(fields: [userId], references: [uuid])
 
-  storeId String
-  store   Store  @relation("UHFilterToStore", fields: [storeId], references: [uuid])
-
-  type StoreType
+  hotel_filter_row String @default("4")
+  store_filter_row String @default("4")
 
   hotel_total_revenue   Boolean @default(true)
   hotel_total_booking   Boolean @default(true)
@@ -82,11 +80,18 @@ model UserFilter {
   hotel_monthly_booking Boolean @default(true)
   hotel_monthly_clients Boolean @default(true)
 
+  store_total_revenue  Boolean @default(true)
+  store_total_sales    Boolean @default(true)
+  store_total_products Boolean @default(true)
+  store_total_category Boolean @default(true)
+  store_total_sizes    Boolean @default(true)
+  store_total_colors   Boolean @default(true)
+  store_total_tags     Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([userId])
-  @@index([storeId])
 }
 
 model StoreToUser {
@@ -115,7 +120,6 @@ model Store {
   products   Product[]    @relation("StoreToProduct")
   orders     Order[]      @relation("StoreToOrder")
   tags       Tag[]        @relation("StoreToTag")
-  userFilter UserFilter[] @relation("UHFilterToStore")
 
   CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
   CalendarRoom    CalendarRoom[]    @relation("RoomToStore")

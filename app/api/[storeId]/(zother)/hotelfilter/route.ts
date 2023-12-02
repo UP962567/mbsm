@@ -28,9 +28,6 @@ export async function GET(
 
 
         const pusher = await prismadb.userFilter.findMany({
-            where: {
-              storeId: params.storeId,
-            }
           });
 
         return NextResponse.json(pusher);
@@ -60,13 +57,22 @@ export async function PATCH(
         hotel_total_clients,
         hotel_total_revenue,
         hotel_total_rooms,
+
+        store_total_revenue,
+        store_total_sales,
+        store_total_products,
+        store_total_category,
+        store_total_sizes,
+        store_total_colors,
+        store_total_tags,
+
+        hotel_filter_row,
+        store_filter_row,
        } = body;
 
 
       const product = await prismadb.userFilter.update({
         where: {
-          storeId: params.storeId,
-          type: "HOTEL",
           uuid: userId,
         },
         data: {
@@ -77,6 +83,17 @@ export async function PATCH(
             hotel_total_clients,
             hotel_total_revenue,
             hotel_total_rooms,
+
+            store_total_revenue,
+            store_total_sales,
+            store_total_products,
+            store_total_category,
+            store_total_sizes,
+            store_total_colors,
+            store_total_tags,
+
+            hotel_filter_row,
+            store_filter_row,
         }
       });
   

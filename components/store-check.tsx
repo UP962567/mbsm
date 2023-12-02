@@ -25,15 +25,15 @@ type Checked = DropdownMenuCheckboxItemProps["checked"];
 interface Item {
     userId: string;
     uuid: string;
-    hotel_monthly_booking: boolean;
-    hotel_monthly_clients: boolean;
-    hotel_monthly_revenue: boolean;
-    hotel_total_booking: boolean;
-    hotel_total_clients: boolean;
-    hotel_total_revenue: boolean;
-    hotel_total_rooms: boolean;
+    store_total_revenue: boolean;
+    store_total_sales: boolean;
+    store_total_products: boolean;
+    store_total_category: boolean;
+    store_total_sizes: boolean;
+    store_total_colors: boolean;
+    store_total_tags: boolean;
 
-    hotel_filter_row: string;
+    store_filter_row: string;
     // Add other properties as needed
 }
 
@@ -41,7 +41,7 @@ interface DropdownMenuCheckboxesProps {
     data: Item | null; // Adjust the type as needed
 }
 
-export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
+export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
     const params = useParams();
     const route = useRouter();
 
@@ -57,37 +57,38 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
 
     useEffect(() => {
         if (data) {
-            setCheck(data.hotel_total_booking || false);
-            setCheck1(data.hotel_monthly_booking || false);
-            setCheck2(data.hotel_total_clients || false);
-            setCheck3(data.hotel_monthly_clients || false);
-            setCheck4(data.hotel_total_rooms || false);
-            setCheck5(data.hotel_total_revenue || false);
-            setCheck6(data.hotel_monthly_revenue || false);
-            setPosition(data.hotel_filter_row || "2")
+            setCheck(data.store_total_revenue || false);
+            setCheck1(data.store_total_sales || false);
+            setCheck2(data.store_total_products || false);
+            setCheck3(data.store_total_category || false);
+            setCheck4(data.store_total_sizes || false);
+            setCheck5(data.store_total_colors || false);
+            setCheck6(data.store_total_tags || false);
+            setPosition(data.store_filter_row || "2")
+
         }
     }, [data]); // Only run the effect when data changes
 
-    const checkUpdate = async () => { if (check) { setCheck(false); update.hotel_total_booking = false; } else { setCheck(true); update.hotel_total_booking = true; } await onSubmit(); }
-    const checkUpdate1 = async () => { if (check1) { setCheck1(false); update.hotel_monthly_booking = false } else { setCheck1(true); update.hotel_monthly_booking = true; } await onSubmit(); }
-    const checkUpdate2 = async () => { if (check2) { setCheck2(false); update.hotel_total_clients = false } else { setCheck2(true); update.hotel_total_clients = true; } await onSubmit(); }
-    const checkUpdate3 = async () => { if (check3) { setCheck3(false); update.hotel_monthly_clients = false } else { setCheck3(true); update.hotel_monthly_clients = true; } await onSubmit(); }
-    const checkUpdate4 = async () => { if (check4) { setCheck4(false); update.hotel_total_rooms = false } else { setCheck4(true); update.hotel_total_rooms = true; } await onSubmit(); }
-    const checkUpdate5 = async () => { if (check5) { setCheck5(false); update.hotel_total_revenue = false } else { setCheck5(true); update.hotel_total_revenue = true; } await onSubmit(); }
-    const checkUpdate6 = async () => { if (check6) { setCheck6(false); update.hotel_monthly_revenue = false } else { setCheck6(true); update.hotel_monthly_revenue = true; } await onSubmit(); }
+    const checkUpdate = async () => { if (check) { setCheck(false); update.store_total_revenue = false; } else { setCheck(true); update.store_total_revenue = true; } await onSubmit(); }
+    const checkUpdate1 = async () => { if (check1) { setCheck1(false); update.store_total_sales = false } else { setCheck1(true); update.store_total_sales = true; } await onSubmit(); }
+    const checkUpdate2 = async () => { if (check2) { setCheck2(false); update.store_total_products = false } else { setCheck2(true); update.store_total_products = true; } await onSubmit(); }
+    const checkUpdate3 = async () => { if (check3) { setCheck3(false); update.store_total_category = false; } else { setCheck3(true); update.store_total_category = true; } await onSubmit(); }
+    const checkUpdate4 = async () => { if (check4) { setCheck4(false); update.store_total_sizes = false; } else { setCheck4(true); update.store_total_sizes = true; } await onSubmit(); }
+    const checkUpdate5 = async () => { if (check5) { setCheck5(false); update.store_total_colors = false; } else { setCheck5(true); update.store_total_colors = true; } await onSubmit(); }
+    const checkUpdate6 = async () => { if (check6) { setCheck6(false); update.store_total_tags = false; } else { setCheck6(true); update.store_total_tags = true; } await onSubmit(); }
 
-    const possitionClicked2 = async () => { setPosition("3"); update.hotel_filter_row = "3"; ; await onSubmit(); }
-    const possitionClicked3 = async () => { setPosition("4"); update.hotel_filter_row = "4"; ; await onSubmit(); }
+    const possitionClicked2 = async () => { setPosition("3"); update.store_filter_row = "3";; await onSubmit(); }
+    const possitionClicked3 = async () => { setPosition("4"); update.store_filter_row = "4";; await onSubmit(); }
 
     const update = {
-        hotel_total_booking: check,
-        hotel_monthly_booking: check1,
-        hotel_total_clients: check2,
-        hotel_monthly_clients: check3,
-        hotel_total_rooms: check4,
-        hotel_total_revenue: check5,
-        hotel_monthly_revenue: check6,
-        hotel_filter_row: position,
+        store_total_revenue: check,
+        store_total_sales: check1,
+        store_total_products: check2,
+        store_total_category: check3,
+        store_total_sizes: check4,
+        store_total_colors: check5,
+        store_total_tags: check6,
+        store_filter_row: position
     }
 
     const onSubmit = async () => {
@@ -114,44 +115,43 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
                     checked={check}
                     onCheckedChange={checkUpdate}
                 >
-                    total_booking
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check2}
-                    onCheckedChange={checkUpdate2}
-                >
-                    total_clients
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check4}
-                    onCheckedChange={checkUpdate4}
-                >
-                    total_rooms
-                </DropdownMenuCheckboxItem>
-
-                <DropdownMenuCheckboxItem
-                    checked={check5}
-                    onCheckedChange={checkUpdate5}
-                >
                     total_revenue
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                     checked={check1}
                     onCheckedChange={checkUpdate1}
                 >
-                    monthly_booking
+                    total_sales
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                    checked={check2}
+                    onCheckedChange={checkUpdate2}
+                >
+                    total_products
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                     checked={check3}
                     onCheckedChange={checkUpdate3}
                 >
-                    monthly_clients
+                    total_category
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                    checked={check4}
+                    onCheckedChange={checkUpdate4}
+                >
+                    total_sizes
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                    checked={check5}
+                    onCheckedChange={checkUpdate5}
+                >
+                    total_colors
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
                     checked={check6}
                     onCheckedChange={checkUpdate6}
                 >
-                    monthly_revenue
+                    total_tags
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuSeparator />
                 {/* <DropdownMenuLabel className="flex items-center justify-center">
@@ -160,8 +160,8 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
                 <DropdownMenuLabel>Card Colums</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                    <DropdownMenuRadioItem value="3" onClick={possitionClicked2}>3 Colums</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="4" onClick={possitionClicked3}>4 Colums</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem onClick={possitionClicked2} value="3">3 Colums</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
