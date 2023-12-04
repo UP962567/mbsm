@@ -13,12 +13,17 @@ import {
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
+    DropdownMenuPortal,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useParams, useRouter } from 'next/navigation';
+import { Settings } from 'lucide-react';
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -76,9 +81,11 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
     const checkUpdate5 = async () => { if (check5) { setCheck5(false); update.hotel_total_revenue = false } else { setCheck5(true); update.hotel_total_revenue = true; } await onSubmit(); }
     const checkUpdate6 = async () => { if (check6) { setCheck6(false); update.hotel_monthly_revenue = false } else { setCheck6(true); update.hotel_monthly_revenue = true; } await onSubmit(); }
 
-    const possitionClicked2 = async () => { setPosition("3"); update.hotel_filter_row = "3"; ; await onSubmit(); }
-    const possitionClicked3 = async () => { setPosition("4"); update.hotel_filter_row = "4"; ; await onSubmit(); }
-
+    const possitionClicked2 = async () => { setPosition("3"); update.hotel_filter_row = "3";; await onSubmit(); }
+    const possitionClicked3 = async () => { setPosition("4"); update.hotel_filter_row = "4";; await onSubmit(); }
+    const possitionClicked4 = async () => { setPosition("5"); update.hotel_filter_row = "5";; await onSubmit(); }
+    const possitionClicked5 = async () => { setPosition("6"); update.hotel_filter_row = "6";; await onSubmit(); }
+    const possitionClicked7 = async () => { setPosition("8"); update.hotel_filter_row = "8";; await onSubmit(); }
     const update = {
         hotel_total_booking: check,
         hotel_monthly_booking: check1,
@@ -157,12 +164,22 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
                 {/* <DropdownMenuLabel className="flex items-center justify-center">
                     <Button variant="green" size="sm" onClick={onSubmit}> Update </Button>
                 </DropdownMenuLabel> */}
-                <DropdownMenuLabel>Card Colums</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                    <DropdownMenuRadioItem value="3" onClick={possitionClicked2}>3 Colums</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="4" onClick={possitionClicked3}>4 Colums</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger> <Settings className="mr-2 h-4 w-4" /> <span>Change Colums</span> </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+                                <DropdownMenuRadioItem onClick={possitionClicked2} value="3">3 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked4} value="5">5 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked5} value="6">6 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked7} value="8">8 Colums</DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                            {/* <DropdownMenuItem> <MessageSquare className="mr-2 h-4 w-4" /> <span>Message</span> </DropdownMenuItem>
+                            <DropdownMenuItem> <PlusCircle className="mr-2 h-4 w-4" /> <span>More...</span> </DropdownMenuItem> */}
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuSub>
             </DropdownMenuContent>
         </DropdownMenu>
     )

@@ -9,13 +9,35 @@ import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { Button } from "@/components/ui/button"
 
 import {
+    Cloud,
+    CreditCard,
+    Github,
+    Keyboard,
+    LifeBuoy,
+    LogOut,
+    Mail,
+    MessageSquare,
+    Plus,
+    PlusCircle,
+    Settings,
+    User,
+    UserPlus,
+    Users,
+} from "lucide-react"
+
+import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
+    DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuPortal,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useParams, useRouter } from 'next/navigation';
@@ -79,6 +101,9 @@ export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
 
     const possitionClicked2 = async () => { setPosition("3"); update.store_filter_row = "3";; await onSubmit(); }
     const possitionClicked3 = async () => { setPosition("4"); update.store_filter_row = "4";; await onSubmit(); }
+    const possitionClicked4 = async () => { setPosition("5"); update.store_filter_row = "5";; await onSubmit(); }
+    const possitionClicked5 = async () => { setPosition("6"); update.store_filter_row = "6";; await onSubmit(); }
+    const possitionClicked7 = async () => { setPosition("8"); update.store_filter_row = "8";; await onSubmit(); }
 
     const update = {
         store_total_revenue: check,
@@ -111,58 +136,35 @@ export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuCheckboxItem
-                    checked={check}
-                    onCheckedChange={checkUpdate}
-                >
-                    total_revenue
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check1}
-                    onCheckedChange={checkUpdate1}
-                >
-                    total_sales
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check2}
-                    onCheckedChange={checkUpdate2}
-                >
-                    total_products
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check3}
-                    onCheckedChange={checkUpdate3}
-                >
-                    total_category
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check4}
-                    onCheckedChange={checkUpdate4}
-                >
-                    total_sizes
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check5}
-                    onCheckedChange={checkUpdate5}
-                >
-                    total_colors
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check6}
-                    onCheckedChange={checkUpdate6}
-                >
-                    total_tags
-                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check} onCheckedChange={checkUpdate}> <CreditCard className="mr-2 h-4 w-4" /> total_revenue </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check1} onCheckedChange={checkUpdate1}> <CreditCard className="mr-2 h-4 w-4" /> total_sales </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check2} onCheckedChange={checkUpdate2}> <CreditCard className="mr-2 h-4 w-4" /> total_products </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check3} onCheckedChange={checkUpdate3}> <CreditCard className="mr-2 h-4 w-4" /> total_category </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check4} onCheckedChange={checkUpdate4}> <CreditCard className="mr-2 h-4 w-4" /> total_sizes </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check5} onCheckedChange={checkUpdate5}> <CreditCard className="mr-2 h-4 w-4" /> total_colors </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check6} onCheckedChange={checkUpdate6}> <CreditCard className="mr-2 h-4 w-4" /> total_tags </DropdownMenuCheckboxItem>
+
                 <DropdownMenuSeparator />
                 {/* <DropdownMenuLabel className="flex items-center justify-center">
                     <Button variant="green" size="sm" onClick={onSubmit}> Update </Button>
                 </DropdownMenuLabel> */}
-                <DropdownMenuLabel>Card Colums</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                    <DropdownMenuRadioItem onClick={possitionClicked2} value="3">3 Colums</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger> <Settings className="mr-2 h-4 w-4" /> <span>Change Colums</span> </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+                                <DropdownMenuRadioItem onClick={possitionClicked2} value="3">3 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked4} value="5">5 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked5} value="6">6 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked7} value="8">8 Colums</DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                            {/* <DropdownMenuItem> <MessageSquare className="mr-2 h-4 w-4" /> <span>Message</span> </DropdownMenuItem>
+                            <DropdownMenuItem> <PlusCircle className="mr-2 h-4 w-4" /> <span>More...</span> </DropdownMenuItem> */}
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuSub>
             </DropdownMenuContent>
         </DropdownMenu>
     )

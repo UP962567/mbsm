@@ -62,8 +62,6 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
     }
   });
 
-  console.log(filters)
-
   // STORE
   const totalRevenue = await getTotalRevenue(params.storeId);
   const graphRevenue = await getGraphRevenue(params.storeId);
@@ -96,6 +94,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </div>
           </div>
           <Separator />
+          {/* <div className={"grid gap-4 grid-cols-" + filters?.store_filter_row}> */}
           <div className={"grid gap-4 grid-cols-" + filters?.store_filter_row}>
             {filters?.store_total_revenue ?
               <Card>
