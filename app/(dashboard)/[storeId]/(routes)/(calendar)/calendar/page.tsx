@@ -1,18 +1,19 @@
 "use client"
 import CalendarCode from "./components/calendar-code";
 
+// eslint-disable-next-line @next/next/no-async-client-component
+const Calendar = ({
+  params
+}: {
+  params: { storeId: string }
+}) => {
 
-const Calendar = async ({
-    params
-  }: {
-    params: { storeId: string }
-  }) => {
 
-    return (
-        <div className='w-full'>
-            <CalendarCode params={params}/>
-        </div>
-    )
+  return (
+    <div className='w-90'>
+      <CalendarCode params={params} />
+    </div>
+  )
 }
 
 export default Calendar

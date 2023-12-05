@@ -175,9 +175,6 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
                 </CardContent>
               </Card>
               : null}
-
-
-
           </div>
 
           <Card className="col-span-4">

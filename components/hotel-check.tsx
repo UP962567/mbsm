@@ -39,11 +39,10 @@ interface Item {
     hotel_total_rooms: boolean;
 
     hotel_filter_row: string;
-    // Add other properties as needed
 }
 
 interface DropdownMenuCheckboxesProps {
-    data: Item | null; // Adjust the type as needed
+    data: Item | null; 
 }
 
 export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
@@ -71,7 +70,7 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
             setCheck6(data.hotel_monthly_revenue || false);
             setPosition(data.hotel_filter_row || "2")
         }
-    }, [data]); // Only run the effect when data changes
+    }, [data]);
 
     const checkUpdate = async () => { if (check) { setCheck(false); update.hotel_total_booking = false; } else { setCheck(true); update.hotel_total_booking = true; } await onSubmit(); }
     const checkUpdate1 = async () => { if (check1) { setCheck1(false); update.hotel_monthly_booking = false } else { setCheck1(true); update.hotel_monthly_booking = true; } await onSubmit(); }
@@ -85,6 +84,7 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
     const possitionClicked3 = async () => { setPosition("4"); update.hotel_filter_row = "4";; await onSubmit(); }
     const possitionClicked4 = async () => { setPosition("5"); update.hotel_filter_row = "5";; await onSubmit(); }
     const possitionClicked5 = async () => { setPosition("6"); update.hotel_filter_row = "6";; await onSubmit(); }
+    const possitionClicked6 = async () => { setPosition("7"); update.hotel_filter_row = "7";; await onSubmit(); }
     const possitionClicked7 = async () => { setPosition("8"); update.hotel_filter_row = "8";; await onSubmit(); }
     const update = {
         hotel_total_booking: check,
@@ -173,6 +173,7 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
                                 <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked4} value="5">5 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked5} value="6">6 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked6} value="7">7 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked7} value="8">8 Colums</DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                             {/* <DropdownMenuItem> <MessageSquare className="mr-2 h-4 w-4" /> <span>Message</span> </DropdownMenuItem>

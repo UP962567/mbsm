@@ -56,11 +56,10 @@ interface Item {
     store_total_tags: boolean;
 
     store_filter_row: string;
-    // Add other properties as needed
 }
 
 interface DropdownMenuCheckboxesProps {
-    data: Item | null; // Adjust the type as needed
+    data: Item | null;
 }
 
 export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
@@ -103,6 +102,7 @@ export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
     const possitionClicked3 = async () => { setPosition("4"); update.store_filter_row = "4";; await onSubmit(); }
     const possitionClicked4 = async () => { setPosition("5"); update.store_filter_row = "5";; await onSubmit(); }
     const possitionClicked5 = async () => { setPosition("6"); update.store_filter_row = "6";; await onSubmit(); }
+    const possitionClicked6 = async () => { setPosition("7"); update.store_filter_row = "7";; await onSubmit(); }
     const possitionClicked7 = async () => { setPosition("8"); update.store_filter_row = "8";; await onSubmit(); }
 
     const update = {
@@ -158,6 +158,7 @@ export function StoreDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
                                 <DropdownMenuRadioItem onClick={possitionClicked3} value="4">4 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked4} value="5">5 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked5} value="6">6 Colums</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem onClick={possitionClicked6} value="7">7 Colums</DropdownMenuRadioItem>
                                 <DropdownMenuRadioItem onClick={possitionClicked7} value="8">8 Colums</DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                             {/* <DropdownMenuItem> <MessageSquare className="mr-2 h-4 w-4" /> <span>Message</span> </DropdownMenuItem>

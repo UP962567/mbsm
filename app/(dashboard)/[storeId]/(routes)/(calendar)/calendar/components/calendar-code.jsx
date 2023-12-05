@@ -6,9 +6,11 @@ import moment from "moment";
 import Timeline from 'react-calendar-timeline';
 import axios from 'axios';
 import { Button as ButtonUI } from '@/components/ui/button';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, LocalizationProvider, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { Separator } from '@/components/ui/separator';
 import { toast } from "react-hot-toast"
+import { Select } from '@radix-ui/react-select';
+
 
 const CalendarCode = ({ params }) => {
     const [loading, setLoading] = useState(false);
@@ -42,10 +44,6 @@ const CalendarCode = ({ params }) => {
         setOpen(true);
     };
 
-    const handleOpenCreateClick = () => {
-        setOpenTop(true);
-    };
-
     const handleCanvasContextMenu = (group, time) => {
         console.log("Canvas context menu", group, moment(time).format());
     };
@@ -69,12 +67,39 @@ const CalendarCode = ({ params }) => {
 
     //////////////////////////////////////////////////////////////////////////////////////////////// Get Data
 
+    const calculateTotalPrice = () => {
+        if (start && end && rooms && addons) {
+            const numberOfNights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+            const selectedRoom = rooms.find((item) => String(item.id) === String(groupB));
+            const selectedAddon = addons?.find((item) => String(item.uuid) === String(dailyB));
+
+            if (selectedRoom && selectedRoom.price) {
+                const numericPrice = parseFloat(selectedRoom.price.toString());
+
+                if (selectedAddon?.price && clientsB) {
+                    const addonPrice = parseFloat(selectedAddon?.price.toString());
+                    if (clientsB !== 0 || clientsB !== undefined || addonPrice === 0) {
+                        setPriceB((numberOfNights) * ((clientsB * addonPrice) + numericPrice));
+                        return (numberOfNights) * (((clientsB * addonPrice)) + numericPrice);
+                    }
+                }
+
+                else if (!isNaN(numericPrice)) {
+                    setPriceB(numberOfNights * numericPrice)
+                    return numberOfNights * numericPrice;
+                }
+            }
+        }
+    };
+
     const [item, setItems] = useState([]);
     const [groups, setGroups] = useState([]);
+    const [addons, setAddons] = useState([]);
 
     useEffect(() => {
         fetchData()
         fetchGroup()
+        fetchAddons()
     }, [])
 
     const fetchData = () => {
@@ -90,6 +115,22 @@ const CalendarCode = ({ params }) => {
             .then(data => setGroups(data))
             .catch(err => console.log(err));
     };
+
+    const fetchAddons = () => {
+        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/addons`)
+            .then(res => res.json())
+            .then(data => setAddons(data))
+            .catch(err => console.log(err));
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////// Open Button
+
+    const handleOpenCreateClick = () => {
+
+        setOpenTop(true);
+
+    };
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////// Modify Data
 
@@ -142,20 +183,6 @@ const CalendarCode = ({ params }) => {
         end_time: moment(dataEnd).toISOString(),
         group: parseInt(dataGroup),
         className: "Group" + groupId,
-    };
-
-    const handleSubmit = async () => {
-        axios
-            .post(process.env.REACT_APP_API_KEY + 'addcalendar', productData)
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-                // Handle error: display error message or take other actions
-            });
-        fetchData();
-        setOpen(false);
     };
 
     const handleSubmitCreate = async () => {
@@ -220,7 +247,7 @@ const CalendarCode = ({ params }) => {
 
                         <Separator />
 
-                        <div className='flex-col-1'>
+                        <div className='flex-col-2'>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -241,6 +268,7 @@ const CalendarCode = ({ params }) => {
                                 variant="standard"
                                 onChange={(event) => setDataTitle(event.target.value)}
                             />
+
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -252,6 +280,7 @@ const CalendarCode = ({ params }) => {
                                 variant="standard"
                                 onChange={(event) => setDataStart(event.target.value)}
                             />
+
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -262,6 +291,7 @@ const CalendarCode = ({ params }) => {
                                 variant="standard"
                                 onChange={(event) => setDataEnd(event.target.value)}
                             />
+
                         </div>
                     </DialogContent>
                     <DialogActions>
@@ -269,6 +299,7 @@ const CalendarCode = ({ params }) => {
                         <Button onClick={(event) => handleSubmitCreate()}>Sent</Button>
                     </DialogActions>
                 </Dialog>
+
             </div>
         </div>
 
