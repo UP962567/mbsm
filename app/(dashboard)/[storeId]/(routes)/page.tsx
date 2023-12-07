@@ -94,8 +94,14 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </div>
           </div>
           <Separator />
-          {/* <div className={"grid gap-4 grid-cols-" + filters?.store_filter_row}> */}
-          <div className={"grid gap-4 grid-cols-" + filters?.store_filter_row}>
+          <div className={
+            filters?.store_filter_row === "3" ? "grid grid-cols-3 gap-4" : "" ||
+              filters?.store_filter_row === "4" ? "grid grid-cols-4 gap-4" : "" ||
+                filters?.store_filter_row === "5" ? "grid grid-cols-5 gap-4" : "" ||
+                  filters?.store_filter_row === "6" ? "grid grid-cols-6 gap-4" : "" ||
+                    filters?.store_filter_row === "7" ? "grid grid-cols-7 gap-4" : "" ||
+                      filters?.store_filter_row === "8" ? "grid grid-cols-8 gap-4" : ""
+          }>
             {filters?.store_total_revenue ?
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -186,7 +192,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </CardContent>
           </Card>
         </div>
-      </div>
+      </div >
     );
   } else if (store?.type === "HOTEL") {
     return (
@@ -199,7 +205,14 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </div>
           </div>
           <Separator />
-          <div className={"grid gap-4 grid-cols-" + filters?.hotel_filter_row}>
+          <div className={
+            filters?.hotel_filter_row === "3" ? "grid grid-cols-3 gap-4" : "" ||
+              filters?.hotel_filter_row === "4" ? "grid grid-cols-4 gap-4" : "" ||
+                filters?.hotel_filter_row === "5" ? "grid grid-cols-5 gap-4" : "" ||
+                  filters?.hotel_filter_row === "6" ? "grid grid-cols-6 gap-4" : "" ||
+                    filters?.hotel_filter_row === "7" ? "grid grid-cols-7 gap-4" : "" ||
+                      filters?.hotel_filter_row === "8" ? "grid grid-cols-8 gap-4" : ""
+          }>
             {filters?.hotel_total_revenue ?
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
