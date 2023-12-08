@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-import { CalendarBooking } from "@prisma/client"
+import { CalendarAddon, CalendarBooking, CalendarRoom } from "@prisma/client"
 import { useBookingModal } from '@/hooks/use-booking-modal';
 
 import { cn } from "@/lib/utils"
@@ -23,14 +23,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from 'lucide-react';
 
-
-
 interface FormProps {
     initialData: CalendarBooking | null;
+    rooms: CalendarRoom[];
+    addons: CalendarAddon[];
 };
 
 export const BookingModel: React.FC<FormProps> = ({
-    initialData,
+    initialData, rooms, addons
 }) => {
     const params = useParams();
     const router = useRouter();
@@ -63,33 +63,6 @@ export const BookingModel: React.FC<FormProps> = ({
         }
     });
 
-    ///////////////////////////////////////////////
-
-    const [rooms, setRooms] = useState([]);
-    const [addons, setAddons] = useState([]);
-
-    useEffect(() => {
-        fetchGroup()
-        fetchAddons()
-    }, [])
-
-    const fetchGroup = () => {
-        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/rooms`)
-            .then(res => res.json())
-            .then(data => setRooms(data))
-            .catch(err => console.log(err));
-    };
-
-    const fetchAddons = () => {
-        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/addons`)
-            .then(res => res.json())
-            .then(data => setAddons(data))
-            .catch(err => console.log(err));
-    };
-
-
-    ///////////////////////////////////////////////
-
     const calculateTotalPrice = (): number => {
         if (start && end && rooms && addons) {
             const numberOfNights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
@@ -113,7 +86,6 @@ export const BookingModel: React.FC<FormProps> = ({
                 }
             }
         }
-
         return 0;
     };
 
@@ -147,6 +119,7 @@ export const BookingModel: React.FC<FormProps> = ({
             initialData = null;
             bookingModal.onClose();
             window.location.reload();
+
             setLoading(false);
         }
     };
@@ -157,7 +130,7 @@ export const BookingModel: React.FC<FormProps> = ({
             isOpen={bookingModal.isOpen}
             onClose={bookingModal.onClose}>
 
-            <div className='box-content'>
+            <div>
                 <div className='space-y-4 py-2 pb-4'>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -395,5 +368,4 @@ export const BookingModel: React.FC<FormProps> = ({
             </div>
         </Modal>
     )
-
 }
