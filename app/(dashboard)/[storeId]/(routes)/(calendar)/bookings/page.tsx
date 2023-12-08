@@ -27,6 +27,7 @@ const PCPage = async ({
         group: n_formatter.format(item.group),
         addonId: item.calendarAddon?.title || "No addon",
         clients: n_formatter.format(item.clients ?? 0),
+        discount: n_formatter.format(item.discount ?? 0),
         start_time: format(item.start_time, 'MMMM do, yyyy'),
         end_time: format(item.end_time, 'MMMM do, yyyy'),
         createdAt: format(item.createdAt, 'MMMM do, yyyy')

@@ -8,6 +8,7 @@ export type Column = {
   title: string
   group: string
   clients: string
+  discount: string
   addonId: string
   start_time: string
   end_time: string
@@ -26,6 +27,10 @@ export const columns: ColumnDef<Column>[] = [
   {
     accessorKey: "clients",
     header: "People +8",
+  },
+  {
+    accessorKey: "discount",
+    header: "Discount/Pay",
   },
   {
     accessorKey: "addonId",

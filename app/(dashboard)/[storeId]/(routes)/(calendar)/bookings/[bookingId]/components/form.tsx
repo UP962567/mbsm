@@ -1,30 +1,29 @@
 "use client"
 
 import axios from "axios"
-import { format } from "date-fns"
+
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { CalendarIcon, Trash } from "lucide-react"
-import { CalendarAddon, CalendarBooking, CalendarRoom } from "@prisma/client"
+
+import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
+
+import { CalendarAddon, CalendarBooking, CalendarRoom } from "@prisma/client"
+
+import { CalendarIcon, Trash } from "lucide-react"
+
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+
 import { cn } from "@/lib/utils"
 
 interface FormProps {
@@ -47,6 +46,7 @@ export const Former: React.FC<FormProps> = ({
   const [groupB, setGroupB] = useState<number | undefined>(undefined);
   const [priceB, setPriceB] = useState<number | undefined>(undefined);
   const [clientsB, setClietsB] = useState<number | undefined>(undefined);
+  const [discountB, setDiscountB] = useState<number | undefined>(undefined);
   const [dailyB, setDailyB] = useState<string | undefined>(undefined);
 
   const title = initialData ? 'Edit Booking' : 'Create Booking';
@@ -64,6 +64,7 @@ export const Former: React.FC<FormProps> = ({
       end_time: end,
       group: undefined,
       clients: 0,
+      discount: 0,
       addonId: '',
     }
   });
@@ -80,8 +81,8 @@ export const Former: React.FC<FormProps> = ({
         if (selectedAddon?.price && clientsB) {
           const addonPrice = parseFloat(selectedAddon?.price.toString());
           if (clientsB !== 0 || clientsB !== undefined || addonPrice === 0) {
-            setPriceB((numberOfNights) * ((clientsB * addonPrice) + numericPrice));
-            return (numberOfNights) * (((clientsB * addonPrice)) + numericPrice);
+            setPriceB((numberOfNights) * ((clientsB * addonPrice) + (numericPrice - (discountB ?? 0))));
+            return (numberOfNights) * (((clientsB * addonPrice)) + (numericPrice - (discountB ?? 0)));
           }
         }
 
@@ -101,6 +102,7 @@ export const Former: React.FC<FormProps> = ({
     start_time: start,
     end_time: end,
     totalPrice: priceB,
+    discount: discountB,
     clients: clientsB,
     addonId: dailyB,
   }
@@ -342,6 +344,28 @@ export const Former: React.FC<FormProps> = ({
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount (- per day)</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Day - Discount"
+                      type="number"
+                      value={field.value || ''}
+                      onChange={(event) => {
+                        field.onChange(event);
+                        setDiscountB(parseInt(event.target.value));
+                      }}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

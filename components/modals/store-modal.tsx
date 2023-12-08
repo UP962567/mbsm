@@ -1,17 +1,19 @@
 "use client";
 
 import * as z from 'zod';
-import { Modal } from '@/components/ui/modal';
-import { useStoreModal } from '@/hooks/use-store-modal';
+import axios from 'axios';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
+import { useState } from 'react';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import axios from 'axios';
+import { Modal } from '@/components/ui/modal';
+
+import { useStoreModal } from '@/hooks/use-store-modal';
 
 const formSchema = z.object({
     name: z.string().min(3, 'Store name must be at least 3 characters long.'),

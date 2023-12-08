@@ -80,7 +80,7 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { title, group, start_time, end_time, totalPrice, clients, addonId } = body;
+    const { title, group, start_time, end_time, totalPrice, clients, addonId, discount } = body;
 
     const { userId } = auth();
 
@@ -128,6 +128,7 @@ export async function PATCH(
         end_time,
         totalPrice,
         clients,
+        discount,
         addonId
       }
     });

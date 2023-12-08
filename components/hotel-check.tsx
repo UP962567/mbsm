@@ -42,7 +42,7 @@ interface Item {
 }
 
 interface DropdownMenuCheckboxesProps {
-    data: Item | null; 
+    data: Item | null;
 }
 
 export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
@@ -117,49 +117,14 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuCheckboxItem
-                    checked={check}
-                    onCheckedChange={checkUpdate}
-                >
-                    total_booking
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check2}
-                    onCheckedChange={checkUpdate2}
-                >
-                    total_clients
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check4}
-                    onCheckedChange={checkUpdate4}
-                >
-                    total_rooms
-                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check} onCheckedChange={checkUpdate} > total_booking </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check2} onCheckedChange={checkUpdate2} > total_clients </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check4} onCheckedChange={checkUpdate4} > total_rooms </DropdownMenuCheckboxItem>
 
-                <DropdownMenuCheckboxItem
-                    checked={check5}
-                    onCheckedChange={checkUpdate5}
-                >
-                    total_revenue
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check1}
-                    onCheckedChange={checkUpdate1}
-                >
-                    monthly_booking
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check3}
-                    onCheckedChange={checkUpdate3}
-                >
-                    monthly_clients
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                    checked={check6}
-                    onCheckedChange={checkUpdate6}
-                >
-                    monthly_revenue
-                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check5} onCheckedChange={checkUpdate5} > total_revenue </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check1} onCheckedChange={checkUpdate1} > monthly_booking </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check3} onCheckedChange={checkUpdate3} > monthly_clients </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={check6} onCheckedChange={checkUpdate6} > monthly_revenue </DropdownMenuCheckboxItem>
                 <DropdownMenuSeparator />
                 {/* <DropdownMenuLabel className="flex items-center justify-center">
                     <Button variant="green" size="sm" onClick={onSubmit}> Update </Button>

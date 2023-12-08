@@ -4,26 +4,15 @@ import React, { useEffect, useState } from 'react';
 import 'react-calendar-timeline/lib/Timeline.css';
 import moment from "moment";
 import Timeline from 'react-calendar-timeline';
-import axios from 'axios';
 import { Button as ButtonUI } from '@/components/ui/button';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, LocalizationProvider, FormControl, InputLabel, MenuItem } from '@mui/material';
-import { Separator } from '@/components/ui/separator';
-import { toast } from "react-hot-toast"
-import { Select } from '@radix-ui/react-select';
-
+import { useBookingModal } from '@/hooks/use-booking-modal';
 
 const CalendarCode = ({ params }) => {
-    const [loading, setLoading] = useState(false);
     const [visibleTimeStart, setVisibleTimeStart] = useState();
     const [visibleTimeEnd, setVisibleTimeEnd] = useState();
-    const [open, setOpen] = useState(false);
-    const [openTop, setOpenTop] = useState(false);
-    const [groupId, setGroupId] = useState();
-    const [time, setTime] = useState();
-    const [dataTitle, setDataTitle] = useState();
-    const [dataStart, setDataStart] = useState();
-    const [dataEnd, setDataEnd] = useState();
-    const [dataGroup, setDataGroup] = useState();
+
+
+    const bookingModel = useBookingModal();
 
     useEffect(() => {
         const visibleTimeStart1 = moment().startOf("months").valueOf();
@@ -67,40 +56,9 @@ const CalendarCode = ({ params }) => {
 
     //////////////////////////////////////////////////////////////////////////////////////////////// Get Data
 
-    const calculateTotalPrice = () => {
-        if (start && end && rooms && addons) {
-            const numberOfNights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-            const selectedRoom = rooms.find((item) => String(item.id) === String(groupB));
-            const selectedAddon = addons?.find((item) => String(item.uuid) === String(dailyB));
-
-            if (selectedRoom && selectedRoom.price) {
-                const numericPrice = parseFloat(selectedRoom.price.toString());
-
-                if (selectedAddon?.price && clientsB) {
-                    const addonPrice = parseFloat(selectedAddon?.price.toString());
-                    if (clientsB !== 0 || clientsB !== undefined || addonPrice === 0) {
-                        setPriceB((numberOfNights) * ((clientsB * addonPrice) + numericPrice));
-                        return (numberOfNights) * (((clientsB * addonPrice)) + numericPrice);
-                    }
-                }
-
-                else if (!isNaN(numericPrice)) {
-                    setPriceB(numberOfNights * numericPrice)
-                    return numberOfNights * numericPrice;
-                }
-            }
-        }
-    };
-
     const [item, setItems] = useState([]);
     const [groups, setGroups] = useState([]);
     const [addons, setAddons] = useState([]);
-
-    useEffect(() => {
-        fetchData()
-        fetchGroup()
-        fetchAddons()
-    }, [])
 
     const fetchData = () => {
         fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`)
@@ -123,14 +81,11 @@ const CalendarCode = ({ params }) => {
             .catch(err => console.log(err));
     };
 
-    //////////////////////////////////////////////////////////////////////////////////////////////// Open Button
-
-    const handleOpenCreateClick = () => {
-
-        setOpenTop(true);
-
-    };
-
+    useEffect(() => {
+        fetchData()
+        fetchGroup()
+        fetchAddons()
+    }, [])
 
     //////////////////////////////////////////////////////////////////////////////////////////////// Modify Data
 
@@ -141,9 +96,16 @@ const CalendarCode = ({ params }) => {
             title: item.title,
             start_time: moment(item.start_time),
             end_time: moment(item.end_time),
-            className: "Group" + item.group,
-            selectedBgColor: 'rgba(225, 166, 244, 1)',
-            bgColor: 'rgba(225, 166, 244, 0.6)',
+            className: 'rounded-lg shadow-lg items-center justify-center',
+            canMove: false,
+            canResize: false,
+            canChangeGroup: false,
+            itemProps: {
+                // these optional attributes are passed to the root <div /> of each item as <div {...itemProps} />
+                'data-custom-attribute': 'Random content',
+                'aria-hidden': true,
+                onDoubleClick: () => { console.log('You clicked double!') }
+            }
         }
     });
 
@@ -169,37 +131,6 @@ const CalendarCode = ({ params }) => {
         setVisibleTimeEnd(visibleTimeEnd1);
     };
 
-    const productData = {
-        title: dataTitle,
-        start_time: dataStart,
-        end_time: dataEnd,
-        group: groupId,
-        className: "Group" + groupId,
-    };
-
-    const productDataCreate = {
-        title: dataTitle,
-        start_time: moment(dataStart).toISOString(),
-        end_time: moment(dataEnd).toISOString(),
-        group: parseInt(dataGroup),
-        className: "Group" + groupId,
-    };
-
-    const handleSubmitCreate = async () => {
-        try {
-            setLoading(true);
-            await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`, productDataCreate);
-            toast.success("Booking created successfully");
-        } catch (error) {
-            console.error(error);
-            toast.error("Error creating booking");
-        } finally {
-            fetchData()
-            setLoading(false);
-            setOpenTop(false);
-        }
-    };
-
 
     return (
         <div className="col-span-2">
@@ -210,96 +141,36 @@ const CalendarCode = ({ params }) => {
                     <ButtonUI variant="default" onClick={onNextClick}>{"Month >>"}</ButtonUI>
                 </div>
                 <div>
-                    <ButtonUI variant="green" onClick={handleOpenCreateClick}>{"Create"}</ButtonUI>
+                    {/* <ButtonUI variant="green" onClick={handleOpenCreateClick}>{"Create"}</ButtonUI> */}
+                    <ButtonUI variant="green" onClick={() => { bookingModel.onOpen(); }}>{"Create"}</ButtonUI>
                 </div>
             </div>
             <br />
             <div className="">
-                <React.StrictMode>
-                    <Timeline
-                        groups={groups}
-                        items={itemer}
-                        defaultTimeStart={moment().add(-2, 'day')}
-                        defaultTimeEnd={moment().add(2, 'day')}
+                {!bookingModel.isOpen ?
+                    <React.StrictMode>
+                        <Timeline
+                            groups={groups}
+                            items={itemer}
+                            defaultTimeStart={moment().add(-2, 'day')}
+                            defaultTimeEnd={moment().add(2, 'day')}
 
-                        //////////////////// Code Editor Start
-                        visibleTimeStart={visibleTimeStart}
-                        visibleTimeEnd={visibleTimeEnd}
-                        sidebarWidth={75}
-                        onCanvasClick={handleCanvasClick}
-                        onCanvasDoubleClick={handleCanvasDoubleClick}
-                        onCanvasContextMenu={handleCanvasContextMenu}
-                        onItemClick={handleItemClick}
-                        onItemSelect={handleItemSelect}
-                        onItemContextMenu={handleItemContextMenu}
-                        onItemDoubleClick={handleItemDoubleClick}
-                        buffer={1}
-                    //////////////////// Code Editor End
-                    />
-                </React.StrictMode>
-
-                <Dialog id='createbooking' open={openTop} onClose={(event) => setOpenTop(false)}>
-                    <DialogTitle fontSize={24}>Create Booking</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText fontSize={14}>
-                            Please Enter the <b><u>Start date</u></b> and <b><u>End date</u></b>
-                        </DialogContentText>
-
-                        <Separator />
-
-                        <div className='flex-col-2'>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="group"
-                                label="Enter Room ID (Like: 204)"
-                                type="number"
-                                fullWidth
-                                variant="standard"
-                                onChange={(event) => setDataGroup(event.target.value)}
-                            />
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="title"
-                                label="Enter Comment (client: Maliq Dyrma)"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={(event) => setDataTitle(event.target.value)}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="start_date"
-                                label=""
-                                value={time}
-                                type="date"
-                                fullWidth
-                                variant="standard"
-                                onChange={(event) => setDataStart(event.target.value)}
-                            />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="end_date"
-                                label=""
-                                type="date"
-                                fullWidth
-                                variant="standard"
-                                onChange={(event) => setDataEnd(event.target.value)}
-                            />
-
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={(event) => setOpenTop(false)}>Cancel</Button>
-                        <Button onClick={(event) => handleSubmitCreate()}>Sent</Button>
-                    </DialogActions>
-                </Dialog>
-
+                            //////////////////// Code Editor Start
+                            visibleTimeStart={visibleTimeStart}
+                            visibleTimeEnd={visibleTimeEnd}
+                            sidebarWidth={75}
+                            onCanvasClick={handleCanvasClick}
+                            onCanvasDoubleClick={handleCanvasDoubleClick}
+                            onCanvasContextMenu={handleCanvasContextMenu}
+                            onItemClick={handleItemClick}
+                            onItemSelect={handleItemSelect}
+                            onItemContextMenu={handleItemContextMenu}
+                            onItemDoubleClick={handleItemDoubleClick}
+                            buffer={1}
+                        //////////////////// Code Editor End
+                        />
+                    </React.StrictMode>
+                    : null}
             </div>
         </div>
 

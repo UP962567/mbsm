@@ -113,18 +113,18 @@ model Store {
   type   StoreType
   userId String?
 
-  billboards Billboard[]  @relation("StoreToBillboard")
-  category   Category[]   @relation("StoreToCategory")
-  sizes      Size[]       @relation("StoreToSize")
-  colors     Color[]      @relation("StoreToColor")
-  products   Product[]    @relation("StoreToProduct")
-  orders     Order[]      @relation("StoreToOrder")
-  tags       Tag[]        @relation("StoreToTag")
+  billboards Billboard[] @relation("StoreToBillboard")
+  category   Category[]  @relation("StoreToCategory")
+  sizes      Size[]      @relation("StoreToSize")
+  colors     Color[]     @relation("StoreToColor")
+  products   Product[]   @relation("StoreToProduct")
+  orders     Order[]     @relation("StoreToOrder")
+  tags       Tag[]       @relation("StoreToTag")
 
-  CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
-  CalendarRoom    CalendarRoom[]    @relation("RoomToStore")
-  CalendarBooking CalendarBooking[] @relation("BookingToStore")
-  CalendarAddon   CalendarAddon[]   @relation("AddonToStore")
+  CalendarFloor    CalendarFloor[]    @relation("FloorToStore")
+  CalendarRoom     CalendarRoom[]     @relation("RoomToStore")
+  CalendarBooking  CalendarBooking[]  @relation("BookingToStore")
+  CalendarAddon    CalendarAddon[]    @relation("AddonToStore")
 
   StoreToUser StoreToUser[]
 
@@ -387,6 +387,7 @@ model CalendarBooking {
 
   totalPrice Decimal @default(0)
   clients    Int?    @default(0)
+  discount   Int?    @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
