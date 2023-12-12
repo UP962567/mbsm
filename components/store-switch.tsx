@@ -77,7 +77,7 @@ export default function StoreSwithcer({
                         </CommandGroup>
                     </CommandList>
                     <CommandSeparator />
-                    <CommandList>
+                    {/* <CommandList>
                         <CommandGroup>
                             <CommandItem
                                 onSelect={() => {
@@ -89,7 +89,7 @@ export default function StoreSwithcer({
                                 Create Store
                             </CommandItem>
                         </CommandGroup>
-                    </CommandList>
+                    </CommandList> */}
                 </Command>
             </PopoverContent>
         </Popover>
