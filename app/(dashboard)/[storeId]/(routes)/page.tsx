@@ -321,7 +321,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               </CardContent>
             </Card>
 
-            <Card className="col-span-1">
+            <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Prediction Overview</CardTitle>
