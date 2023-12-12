@@ -32,6 +32,8 @@ import { getCountCategory } from "@/actions/store/get-store-category-count";
 import { getCountSize } from "@/actions/store/get-store-size-count";
 import { getCountColor } from "@/actions/store/get-store-color-count";
 import { getCountTag } from "@/actions/store/get-store-tag-count";
+import { getGraphHotelRevenueTest } from "@/actions/hotel/1-to-work-prediction-scema-test-data";
+import { getPreviewOverwier } from "@/actions/hotel/get-hotel-yearly-revenue";
 
 
 interface DashboardPageProps {
@@ -76,11 +78,14 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const roomsCount = await getRoomsCount(params.storeId);
   const bookingCount = await getBookingCount(params.storeId);
   const bookingRevenue = await getTotalHotelRevenue(params.storeId);
-  const graphHotelData = await getGraphHotelRevenue(params.storeId);
   const monthlyRevenue = await getTotalMonthRevenue(params.storeId);
   const hotelClients = await getTotalHotelClients(params.storeId);
   const monlyClients = await getTotalMonthClients(params.storeId);
   const monlyBooking = await getTotalMonthBooknig(params.storeId);
+  const graphHotelData = await getGraphHotelRevenue(params.storeId);
+
+  const testdata = await getGraphHotelRevenueTest(params.storeId);
+  const testdata2 = await getPreviewOverwier(params.storeId);
 
 
   if (store?.type === "STORE") {
@@ -183,14 +188,22 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               : null}
           </div>
 
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <Overview data={graphRevenue} />
-            </CardContent>
-          </Card>
+          <Separator />
+          <div className="grid grid-cols-4 gap-4">
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Present Overview</CardTitle>
+                  Test
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={graphRevenue} />
+              </CardContent>
+            </Card>
+
+          </div>
         </div>
       </div >
     );
@@ -292,19 +305,48 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               : null}
           </div>
 
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <Overview data={graphHotelData} />
-            </CardContent>
-          </Card>
-
           <Separator />
-          <div>
-            Test
+
+          <div className="grid grid-cols-4 gap-4">
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Present Overview</CardTitle>
+                  Test
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={graphHotelData} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-1">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Prediction Overview</CardTitle>
+                  Test
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={testdata} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-1">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>History Overview</CardTitle>
+                  Test
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={testdata2} />
+              </CardContent>
+            </Card>
+
           </div>
+
         </div>
       </div>
     );

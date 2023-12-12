@@ -5,10 +5,13 @@
 
 # Second NOADMIN needs to be change to noAccess better
 ## Change the directory on the route file
-## 
+### Done
+
+# Add form for user that do not have access.
+## This will provide the ADMIN with the userID from Clerk
 
 # Change the names on the table on admin
 ## to be added more function on the ADMIN. Show user settings. So you can manage them
 
 # Future
-## Cooming
+## VIEW AS....
