@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'MBSM Software',
-  description: 'E-C Software',
+  description: 'BOVA Software',
 }
 
 export default async function RootLayout({

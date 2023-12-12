@@ -27,7 +27,7 @@ export async function GET(
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
 
-        const pusher = await prismadb.userFilter.findMany({
+        const pusher = await prismadb.user.findMany({
           });
 
         return NextResponse.json(pusher);
@@ -71,7 +71,7 @@ export async function PATCH(
        } = body;
 
 
-      const product = await prismadb.userFilter.update({
+      const product = await prismadb.user.update({
         where: {
           uuid: userId,
         },

@@ -1,6 +1,7 @@
 # First FILTER DB does not create it self when you add a data to USER table
 ## Better to just add all the filters data to the User info. 
 ## Can be done easy and it will be better.
+### Done
 
 # Second NOADMIN needs to be change to noAccess better
 ## Change the directory on the route file

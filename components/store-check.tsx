@@ -45,7 +45,7 @@ import { useParams, useRouter } from 'next/navigation';
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface Item {
-    userId: string;
+    id: number;
     uuid: string;
     store_total_revenue: boolean;
     store_total_sales: boolean;

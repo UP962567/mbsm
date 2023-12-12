@@ -28,7 +28,7 @@ import { Settings } from 'lucide-react';
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface Item {
-    userId: string;
+    id: number;
     uuid: string;
     hotel_monthly_booking: boolean;
     hotel_monthly_clients: boolean;

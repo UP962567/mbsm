@@ -56,7 +56,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
     }
   });
 
-  const filters = await prismadb.userFilter.findUnique({
+  const filters = await prismadb.user.findUnique({
     where: {
       uuid: userId,
     }

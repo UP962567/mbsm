@@ -54,24 +54,7 @@ model User {
   address  String
   role     UserType @default(NONE)
 
-  StoreToUser     StoreToUser[]
-  CalendarBooking CalendarBooking[]
-  UserFilter      UserFilter[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-}
-
-model UserFilter {
-  id   Int    @id @default(autoincrement())
-  uuid String @unique @default(cuid())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [uuid])
-
-  hotel_filter_row String @default("4")
-  store_filter_row String @default("4")
-
+  hotel_filter_row      String  @default("4")
   hotel_total_revenue   Boolean @default(true)
   hotel_total_booking   Boolean @default(true)
   hotel_total_rooms     Boolean @default(true)
@@ -80,6 +63,7 @@ model UserFilter {
   hotel_monthly_booking Boolean @default(true)
   hotel_monthly_clients Boolean @default(true)
 
+  store_filter_row     String  @default("4")
   store_total_revenue  Boolean @default(true)
   store_total_sales    Boolean @default(true)
   store_total_products Boolean @default(true)
@@ -88,11 +72,13 @@ model UserFilter {
   store_total_colors   Boolean @default(true)
   store_total_tags     Boolean @default(true)
 
+  StoreToUser     StoreToUser[]
+  CalendarBooking CalendarBooking[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  @@index([userId])
 }
+
 
 model StoreToUser {
   id      Int    @id @default(autoincrement())
@@ -121,10 +107,10 @@ model Store {
   orders     Order[]     @relation("StoreToOrder")
   tags       Tag[]       @relation("StoreToTag")
 
-  CalendarFloor    CalendarFloor[]    @relation("FloorToStore")
-  CalendarRoom     CalendarRoom[]     @relation("RoomToStore")
-  CalendarBooking  CalendarBooking[]  @relation("BookingToStore")
-  CalendarAddon    CalendarAddon[]    @relation("AddonToStore")
+  CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
+  CalendarRoom    CalendarRoom[]    @relation("RoomToStore")
+  CalendarBooking CalendarBooking[] @relation("BookingToStore")
+  CalendarAddon   CalendarAddon[]   @relation("AddonToStore")
 
   StoreToUser StoreToUser[]
 

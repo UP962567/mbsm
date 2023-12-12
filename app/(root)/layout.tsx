@@ -49,6 +49,6 @@ export default async function Setuplayout({
         )
     }
     else {
-        redirect("/noadmin")
+        redirect("/noaccess")
     }
 }
