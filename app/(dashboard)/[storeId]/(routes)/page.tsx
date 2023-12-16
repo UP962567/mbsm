@@ -350,6 +350,168 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
         </div>
       </div>
     );
+  } else if (store?.type === "FARM") {
+    return (
+      <div className="flex-col">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <div className="flex justify-between">
+            <Heading title="Dashboard" description="Overview of your Farm" />
+            <div className="flex">
+              <HotelDropdownMenuCheckboxes data={filters} />
+            </div>
+          </div>
+          <Separator />
+          <div className={
+            filters?.hotel_filter_row === "3" ? "grid grid-cols-3 gap-4" : "" ||
+              filters?.hotel_filter_row === "4" ? "grid grid-cols-4 gap-4" : "" ||
+                filters?.hotel_filter_row === "5" ? "grid grid-cols-5 gap-4" : "" ||
+                  filters?.hotel_filter_row === "6" ? "grid grid-cols-6 gap-4" : "" ||
+                    filters?.hotel_filter_row === "7" ? "grid grid-cols-7 gap-4" : "" ||
+                      filters?.hotel_filter_row === "8" ? "grid grid-cols-8 gap-4" : ""
+          }>
+            {filters?.hotel_total_revenue ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Locations</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{formatter.format(bookingRevenue)}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_monthly_revenue ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Fields</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{formatter.format(monthlyRevenue)}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_total_booking ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Trees</CardTitle>
+                  <CreditCard className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{bookingCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_monthly_booking ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Barns</CardTitle>
+                  <CreditCard className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyBooking}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_total_rooms ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Vehicles</CardTitle>
+                  <Lamp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{roomsCount}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_total_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Workers</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{hotelClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_monthly_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Animals</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.hotel_monthly_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Equiments</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+                          {filters?.hotel_monthly_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Workers</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+                          {filters?.hotel_monthly_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Investment</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+                          {filters?.hotel_monthly_clients ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monlyClients}</div>
+                </CardContent>
+              </Card>
+              : null}
+                        </div>
+
+          <Separator />
+
+          <div className="grid grid-cols-4 gap-4">
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Present Overview</CardTitle>
+                  Test
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={graphHotelData} />
+              </CardContent>
+            </Card>
+          </div>
+
+        </div>
+      </div>
+    );
   }
 }
 

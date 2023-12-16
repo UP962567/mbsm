@@ -1,7 +1,3 @@
-import Leftbar from "@/components/leftbar";
-import LeftbarHotel from "@/components/hotel-leftbar";
-import LeftbarFarm from "@/components/farm-leftbar";
-import Navbar from "@/components/navbar";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation";
@@ -27,7 +23,8 @@ export default async function Dashboardlayout({
                 some: {
                     userId: userId
                 }
-            }
+            },
+            type: "FARM"
         },
     });
 
@@ -35,21 +32,10 @@ export default async function Dashboardlayout({
         redirect('/')
     }
 
-
-    const storeType = store.type;
-
-
     return (
         <div>
-            < Navbar />
-            <div className="h-screen flex flex-row justify-start">
-                {storeType === "STORE" ? <Leftbar />: null}
-                {storeType === "HOTEL" ? <LeftbarHotel /> : null}
-                {storeType === "FARM" ? <LeftbarFarm /> : null}
-
-                <div className="flex-1 p-4">
-                    {children}
-                </div>
+            <div className="flex-1 p-4">
+                {children}
             </div>
         </div>
     )

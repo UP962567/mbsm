@@ -28,6 +28,14 @@ import { Settings } from 'lucide-react';
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface Item {
+    // email: string;
+    // username: string;
+    // password: string;
+    // name: string;
+    // phone: string;
+    // address: string;
+    // role: string;
+
     id: number;
     uuid: string;
     hotel_monthly_booking: boolean;
@@ -42,7 +50,7 @@ interface Item {
 }
 
 interface DropdownMenuCheckboxesProps {
-    data: Item | null;
+    data: Item;
 }
 
 export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {
@@ -86,6 +94,7 @@ export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProp
     const possitionClicked5 = async () => { setPosition("6"); update.hotel_filter_row = "6";; await onSubmit(); }
     const possitionClicked6 = async () => { setPosition("7"); update.hotel_filter_row = "7";; await onSubmit(); }
     const possitionClicked7 = async () => { setPosition("8"); update.hotel_filter_row = "8";; await onSubmit(); }
+    
     const update = {
         hotel_total_booking: check,
         hotel_monthly_booking: check1,
