@@ -5,16 +5,16 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { locationId: string } }
+  { params }: { params: { animalId: string } }
 ) {
   try {
-    if (!params.locationId) {
-      return new NextResponse("Store id is required", { status: 400 });
+    if (!params.animalId) {
+      return new NextResponse("Data id is required", { status: 400 });
     }
 
-    const product = await prismadb.farmLocation.findUnique({
+    const product = await prismadb.farmAnimal.findUnique({
       where: {
-        uuid: params.locationId
+        uuid: params.animalId
       }
     });
 
@@ -27,7 +27,7 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { locationId: string, storeId: string } }
+  { params }: { params: { animalId: string, storeId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -36,7 +36,7 @@ export async function DELETE(
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!params.locationId) {
+    if (!params.animalId) {
       return new NextResponse("DATA id is required", { status: 400 });
     }
 
@@ -55,9 +55,9 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.farmLocation.deleteMany({
+    const product = await prismadb.farmAnimal.deleteMany({
       where: {
-        uuid: params.locationId,
+        uuid: params.animalId,
       }
     });
 
@@ -71,21 +71,20 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { locationId: string, storeId: string } }
+  { params }: { params: { animalId: string, storeId: string } }
 ) {
   try {
     const body = await req.json();
 
-    const { name, maps, maps_dsc, size } = body;
+    const { name, number, locationId } = body;
 
     const { userId } = auth();
 
     if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
     // if (!name) return new NextResponse("Missing data", { status: 400 });
-    // if (!maps) return new NextResponse("Missing data", { status: 400 });
-    // if (!maps_dsc) return new NextResponse("Missing data", { status: 400 });
-    // if (!size) return new NextResponse("Missing data", { status: 400 });
+    // if (!number) return new NextResponse("Missing data", { status: 400 });
+    // if (!locationId) return new NextResponse("Missing data", { status: 400 });
 
 
     if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
@@ -105,15 +104,14 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.farmLocation.update({
+    const product = await prismadb.farmAnimal.update({
       where: {
-        uuid: params.locationId,
+        uuid: params.animalId,
       },
       data: {
         name,
-        size,
-        maps,
-        maps_dsc
+        number,
+        locationId,
       }
     });
 

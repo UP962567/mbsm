@@ -5,7 +5,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { FarmLocation } from "@prisma/client"
+import { FarmAnimal, FarmLocation } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -21,13 +21,15 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { AlertModal } from "@/components/modals/alert-modal"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface FormProps {
-  initialData: FarmLocation | null;
+  initialData: FarmAnimal | null;
+  location: FarmLocation[];
 };
 
 export const Former: React.FC<FormProps> = ({
-  initialData
+  initialData, location
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -35,44 +37,41 @@ export const Former: React.FC<FormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState<string | undefined>(undefined);
-  const [maps, setMaps] = useState<string | undefined>(undefined);
-  const [maps_dsc, setMapsDsc] = useState<string | undefined>(undefined);
-  const [size, setSize] = useState<number | undefined>(undefined);
+  const [locationId, setLocationId] = useState<string | undefined>(undefined);
+  const [number, setNumber] = useState<number | undefined>(undefined);
 
-  const title = initialData ? 'Edit Addon' : 'Create Addon';
-  const description = initialData ? 'Edit a Addon.' : 'Add a new Addon';
-  const toastMessage = initialData ? 'Addon updated.' : 'Addon created.';
+  const title = initialData ? 'Edit Animal' : 'Create Animal';
+  const description = initialData ? 'Edit a Animal.' : 'Add a new Animal';
+  const toastMessage = initialData ? 'Animal updated.' : 'Animal created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const form = useForm({
     defaultValues: initialData ? {
       ...initialData,
-      size: parseFloat(String(initialData?.size)) || undefined,
+      siznumbere: parseFloat(String(initialData?.number)) || undefined,
     } : {
       name: '',
-      maps: '',
-      maps_dsc: '',
-      size: 0,
+      locationId: '',
+      number: 0,
     }
   });
 
   const data = {
     name: name,
-    maps: maps,
-    maps_dsc: maps_dsc,
-    size: size,
+    locationId: locationId,
+    number: number,
   }
 
   const onSubmit = async () => {
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/locations/${params.locationId}`, data);
+        await axios.patch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/animals/${params.animalId}`, data);
       } else {
-        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/locations`, data);
+        await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/animals`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/locations`);
+      router.push(`/${params.storeId}/animals`);
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.' + error);
@@ -85,9 +84,9 @@ export const Former: React.FC<FormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/locations/${params.locationId}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/animals/${params.animalId}`);
       router.refresh();
-      router.push(`/${params.storeId}/locations`);
+      router.push(`/${params.storeId}/animals`);
       toast.success('Data deleted.');
     } catch (error: any) {
       toast.error('Make sure you removed all products using this data first.' + error);
@@ -147,21 +146,33 @@ export const Former: React.FC<FormProps> = ({
 
             <FormField
               control={form.control}
-              name="maps"
+              name="locationId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Maps name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Maps"
-                      value={field.value || ''}
-                      onChange={(event) => {
-                        field.onChange(event);
-                        setMaps(event.target.value);
-                      }}
-                    />
-                  </FormControl>
+                  <FormLabel>Select Location</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={(value) => {
+                      field.onChange(value);  // This is necessary to update form control
+                      setLocationId(value);  // Update the locationId state
+                    }}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a location" >
+                        </SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {location.map((category) => (
+                        <SelectItem key={category.id} value={category.uuid}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -170,29 +181,7 @@ export const Former: React.FC<FormProps> = ({
 
             <FormField
               control={form.control}
-              name="maps_dsc"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Maps name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Maps Description"
-                      value={field.value || ''}
-                      onChange={(event) => {
-                        field.onChange(event);
-                        setMapsDsc(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="size"
+              name="number"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Total Hectars</FormLabel>
@@ -203,7 +192,7 @@ export const Former: React.FC<FormProps> = ({
                       value={field.value || ''}
                       onChange={(event) => {
                         field.onChange(event);
-                        setSize(parseFloat(event.target.value));
+                        setNumber(parseFloat(event.target.value));
                       }}
                     />
                   </FormControl>

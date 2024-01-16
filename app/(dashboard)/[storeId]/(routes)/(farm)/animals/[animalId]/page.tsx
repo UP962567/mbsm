@@ -5,11 +5,17 @@ import { Former } from "./components/form";
 const ColorPage = async ({
   params
 }: {
-  params: { locationId: string , storeId: string }
+  params: { animalId: string , storeId: string }
 }) => {
-  const data = await prismadb.farmLocation.findUnique({
+  const data = await prismadb.farmAnimal.findUnique({
     where: {
-      uuid: params.locationId,
+      uuid: params.animalId,
+      storeId: params.storeId
+    }
+  });
+
+  const data1 = await prismadb.farmLocation.findMany({
+    where: {
       storeId: params.storeId
     }
   });
@@ -17,7 +23,7 @@ const ColorPage = async ({
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Former initialData={data} 
+        <Former initialData={data} location={data1}
         />
       </div>
     </div>
