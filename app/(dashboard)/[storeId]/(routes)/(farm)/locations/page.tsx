@@ -1,6 +1,4 @@
 import prismadb from "@/lib/prismadb";
-import { n_formatter } from "@/lib/utils";
-import { Column } from "./components/columns";
 import { Client } from "./components/client";
 
 const Page = async ({
@@ -8,7 +6,7 @@ const Page = async ({
 }: {
     params: {storeId: string;}
 }) => {
-    const pC = await prismadb.calendarAddon.findMany({
+    const data = await prismadb.farmLocation.findMany({
         where: {
             storeId: params.storeId
         },
@@ -20,7 +18,7 @@ const Page = async ({
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
-                <Client/>
+                <Client data={data}/>
             </div>
         </div>
     );

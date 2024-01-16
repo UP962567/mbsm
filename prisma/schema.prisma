@@ -117,6 +117,8 @@ model Store {
   CalendarBooking CalendarBooking[] @relation("BookingToStore")
   CalendarAddon   CalendarAddon[]   @relation("AddonToStore")
 
+  FarmLocation FarmLocation[] @relation("FarmLocationToStore")
+
   StoreToUser StoreToUser[]
 
   createdAt DateTime @default(now())
@@ -391,4 +393,24 @@ model CalendarBooking {
   @@index([userId])
   @@index([storeId])
   @@index([addonId])
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+model FarmLocation {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name     String
+  maps     String
+  maps_dsc String
+  size     Int?
+
+  storeId String
+  store   Store  @relation("FarmLocationToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
 }

@@ -20,9 +20,9 @@ const SidebarFarm = () => {
         { id: 5, label: "Animal", icon: Rabbit, link: `/${params.storeId}/animals` },
         { id: 6, label: "Equiment", icon: Shapes, link: `/${params.storeId}/equipments` },
         { id: 7, label: "Vehicle", icon: Tractor, link: `/${params.storeId}/vehicles` },
+        { id: 10, label: "Worker", icon: Users, link: `/${params.storeId}/workers` },
         { id: 8, label: "Outcome", icon: TrendingDown, link: `/${params.storeId}/outcome` },
         { id: 9, label: "Income", icon: TrendingUp, link: `/${params.storeId}/income` },
-        { id: 10, label: "Worker", icon: Users, link: `/${params.storeId}/workers` },
         { id: 11, label: "Daily", icon: Sunrise, link: `/${params.storeId}/daily` },
     ];
 
