@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { Client } from "./components/client";
+import { n_formatter } from "@/lib/utils";
 
 const Page = async ({
     params
@@ -20,7 +21,8 @@ const Page = async ({
 
     const dataWithLocationNames = data.map(animal => ({
         ...animal,
-        locationName: animal.location.name // Assuming 'name' is the field for the location name in FarmLocation
+        locationName: animal.location.name, // Assuming 'name' is the field for the location name in FarmLocation
+        price: n_formatter.format(animal.price?.toNumber() ?? 0),
     }));
 
     return (

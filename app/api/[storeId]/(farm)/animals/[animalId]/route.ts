@@ -76,16 +76,18 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { name, number, locationId } = body;
+    const { name, quantity, information, feedType, bought, sold, price, outOfUse, locationId } = body;
 
     const { userId } = auth();
 
     if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
     // if (!name) return new NextResponse("Missing data", { status: 400 });
-    // if (!number) return new NextResponse("Missing data", { status: 400 });
-    // if (!locationId) return new NextResponse("Missing data", { status: 400 });
-
+    // if (!quantity) return new NextResponse("Missing data", { status: 400 });
+    // if (!information) return new NextResponse("Missing data", { status: 400 });
+    // if (!feedType) return new NextResponse("Missing data", { status: 400 });
+    // if (!bought) return new NextResponse("Missing data", { status: 400 });
+    // if (!price) return new NextResponse("Missing data", { status: 400 });
 
     if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
@@ -110,7 +112,13 @@ export async function PATCH(
       },
       data: {
         name,
-        number,
+        quantity,
+        information,
+        feedType,
+        bought,
+        sold,
+        price,
+        outOfUse,
         locationId,
       }
     });

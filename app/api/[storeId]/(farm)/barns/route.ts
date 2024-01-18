@@ -9,20 +9,18 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { name, quantity, information, feedType, bought, sold, price, outOfUse, locationId } = body;
+        const { name, information, quantity, planted, harvest, price, locationId, fieldId } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
         if (!name) return new NextResponse("Missing data", { status: 400 });
-        if (!quantity) return new NextResponse("Missing data", { status: 400 });
         if (!information) return new NextResponse("Missing data", { status: 400 });
-        if (!feedType) return new NextResponse("Missing data", { status: 400 });
-        if (!bought) return new NextResponse("Missing data", { status: 400 });
+        if (!quantity) return new NextResponse("Missing data", { status: 400 });
         if (!price) return new NextResponse("Missing data", { status: 400 });
-        // if (!outOfUse) return new NextResponse("Missing data", { status: 400 });
-
+        if (!planted) return new NextResponse("Missing data", { status: 400 });
+        if (!fieldId) return new NextResponse("Missing data", { status: 400 });
         if (!locationId) return new NextResponse("Missing data", { status: 400 });
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
@@ -40,17 +38,16 @@ export async function POST(
 
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const product = await prismadb.farmAnimal.create({
+        const product = await prismadb.farmBarn.create({
             data: {
-                name,
-                quantity,
-                information,
-                feedType,
-                bought,
-                sold,
-                price,
-                outOfUse,
-                locationId,
+                name, 
+                information, 
+                quantity, 
+                planted, 
+                harvest, 
+                price, 
+                locationId, 
+                fieldId,
                 storeId: params.storeId,
             },
         });
@@ -71,7 +68,7 @@ export async function GET(
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
 
-        const products = await prismadb.farmAnimal.findMany({
+        const products = await prismadb.farmBarn.findMany({
             where: {
                 storeId: params.storeId,
             },

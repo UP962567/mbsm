@@ -18,9 +18,9 @@ const Page = async ({
         }
     });
 
-    const dataWithLocationNames = data.map(animal => ({
-        ...animal,
-        locationName: animal.location.name // Assuming 'name' is the field for the location name in FarmLocation
+    const dataWithLocationNames = data.map(maps => ({
+        ...maps,
+        locationName: maps.location.name // Assuming 'name' is the field for the location name in FarmLocation
     }));
 
     return (

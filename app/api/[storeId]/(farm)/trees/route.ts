@@ -9,14 +9,19 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { name, number, locationId } = body;
+        const { name, type, information, quantity, planted, harvest, price, locationId, fieldId } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
         if (!name) return new NextResponse("Missing data", { status: 400 });
-        if (!number) return new NextResponse("Missing data", { status: 400 });
+        if (!type) return new NextResponse("Missing data", { status: 400 });
+        if (!information) return new NextResponse("Missing data", { status: 400 });
+        if (!quantity) return new NextResponse("Missing data", { status: 400 });
+        if (!price) return new NextResponse("Missing data", { status: 400 });
+        if (!planted) return new NextResponse("Missing data", { status: 400 });
+        if (!fieldId) return new NextResponse("Missing data", { status: 400 });
         if (!locationId) return new NextResponse("Missing data", { status: 400 });
 
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
@@ -34,11 +39,17 @@ export async function POST(
 
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const product = await prismadb.farmAnimal.create({
+        const product = await prismadb.farmTree.create({
             data: {
-                name,
-                number,
-                locationId,
+                name, 
+                type, 
+                information, 
+                quantity, 
+                planted, 
+                harvest, 
+                price, 
+                locationId, 
+                fieldId,
                 storeId: params.storeId,
             },
         });
@@ -59,7 +70,7 @@ export async function GET(
         if (!params.storeId) return new NextResponse("Missing Store ID", { status: 400 });
 
 
-        const products = await prismadb.farmAnimal.findMany({
+        const products = await prismadb.farmTree.findMany({
             where: {
                 storeId: params.storeId,
             },

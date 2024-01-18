@@ -13,7 +13,13 @@ type Farm = {
   id: number;
   uuid: string;
   name: string;
-  number: number;
+  quantity: number;
+  information: string;
+  feedType: string;
+  bought: Date;
+  sold: Date | null;
+  price: string; // using '?' to denote that this field is optional
+  outOfUse: boolean;
   locationId: string;
   locationName: string;
 };
@@ -35,15 +41,22 @@ export const Client = ({ data }: { data: Farm[] }) => {
         {data.map((data) => (
           <Card key={data.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Name: {data.name}</CardTitle>
+              <CardTitle className="text-sm font-medium">Name: <b>{data.name}</b></CardTitle>
               <Button onClick={() => router.push(`/${params.storeId}/animals/${data.uuid}`)}>
                 <Edit className="h-4 w-4 text-muted-foreground" />
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="text-sm font-medium">Total: {data.number}</div>
-
-              <div className="text-sm font-medium">Location: {data.locationName}</div>
+              <div className="text-sm font-medium">Quantity: <b>{data.quantity}</b></div>
+              <div className="text-sm font-medium">Price/Seed: <b>{data.price}</b> </div>
+              <Separator className="m-2"/>
+              <div className="text-sm font-medium">Location of Field: <b>{data.locationName}</b> </div>
+              <Separator className="m-2"/>
+              <div className="text-sm font-medium">Planted: <b>{data.bought.toLocaleDateString()}</b> </div>
+              <div className="text-sm font-medium">Collected: <b>{data.sold?.toLocaleDateString()}</b> </div>
+              <Separator className="m-2"/>
+              <div className="text-sm font-medium">Food: <b>{data.feedType}</b> </div>
+              <div className="text-sm font-medium">Information: <b>{data.information}</b> </div>
             </CardContent>
           </Card>
         ))}

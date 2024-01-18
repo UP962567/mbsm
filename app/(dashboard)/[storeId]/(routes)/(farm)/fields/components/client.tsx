@@ -8,19 +8,21 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiList } from "@/components/ui/api-list";
-import { number } from "zod";
 
-type FarmLocation = {
+type FarmField = {
   id: number;
   uuid: string;
   name: string;
+  type: string;
+  information: string;
+  status: string;
   locationId: string;
   locationName: string;
-  number: number; // using '?' to denote that this field is optional
+  size: number; // using '?' to denote that this field is optional
   // Add other fields from your Prisma model as needed
 };
 
-export const Client = ({ data }: { data: FarmLocation[] }) => {
+export const Client = ({ data }: { data: FarmField[] }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -37,14 +39,19 @@ export const Client = ({ data }: { data: FarmLocation[] }) => {
         {data.map((data) => (
           <Card key={data.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Name: {data.name}</CardTitle>
-              <Button onClick={() => router.push(`/${params.storeId}/locations/${data.uuid}`)}>
+              <CardTitle className="text-sm font-medium">Name: <b>{data.name}</b></CardTitle>
+              <Button onClick={() => router.push(`/${params.storeId}/fields/${data.uuid}`)}>
                 <Edit className="h-4 w-4 text-muted-foreground" />
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="text-sm font-medium">Location: {data.locationName}</div>
-              <div className="text-sm font-medium">Size Hectars: {data.name} H</div>
+              <div className="text-sm font-medium">Location: <b>{data.locationName}</b></div>
+              <div className="text-sm font-medium">Size (H): <b>{data.size}</b></div>
+              <br></br>
+              <div className="text-sm font-medium">Type: <b>{data.type}</b></div>
+              <div className="text-sm font-medium">Status: <b>{data.status}</b></div>
+              <br></br>
+              <div className="text-sm font-medium">Information: <b>{data.information}</b></div>
             </CardContent>
           </Card>
         ))}
