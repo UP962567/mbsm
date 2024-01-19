@@ -74,6 +74,16 @@ model User {
   store_total_colors   Boolean @default(true)
   store_total_tags     Boolean @default(true)
 
+  farm_filter_row      String  @default("6")
+  farm_count_location  Boolean @default(true)
+  farm_count_animal    Boolean @default(true)
+  farm_count_field     Boolean @default(true)
+  farm_count_worker    Boolean @default(true)
+  farm_count_tree      Boolean @default(true)
+  farm_count_barn      Boolean @default(true)
+  farm_count_equipment Boolean @default(true)
+  farm_count_vehicle   Boolean @default(true)
+
   StoreToUser     StoreToUser[]
   CalendarBooking CalendarBooking[]
 

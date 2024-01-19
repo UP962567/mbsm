@@ -2,14 +2,14 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 import { CreditCard, DollarSign, Lamp, Package, Users } from "lucide-react";
-import { Cloud, Github, Keyboard, LifeBuoy, LogOut, Mail, MessageSquare, Plus, PlusCircle, Settings, User, UserPlus, } from "lucide-react"
 
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-
 import { Overview } from "@/components/overview";
+import { FarmDropdownMenuCheckboxes } from "@/components/farm-check";
 import { HotelDropdownMenuCheckboxes } from "@/components/hotel-check";
+import { StoreDropdownMenuCheckboxes } from "@/components/store-check";
 
 import { formatter } from "@/lib/utils";
 import prismadb from "@/lib/prismadb";
@@ -18,6 +18,10 @@ import { getTotalRevenue } from "@/actions/store/get-store-total-revenue";
 import { getSalesCount } from "@/actions/store/get-store-sales-count";
 import { getGraphRevenue } from "@/actions/store/get-store-graph-revenue";
 import { getStockCount } from "@/actions/store/get-store-stock-count";
+import { getCountSize } from "@/actions/store/get-store-size-count";
+import { getCountColor } from "@/actions/store/get-store-color-count";
+import { getCountTag } from "@/actions/store/get-store-tag-count";
+import { getCountCategory } from "@/actions/store/get-store-category-count";
 
 import { getRoomsCount } from "@/actions/hotel/get-hotel-rooms-count";
 import { getBookingCount } from "@/actions/hotel/get-hotel-booking-count";
@@ -27,13 +31,17 @@ import { getTotalMonthRevenue } from "@/actions/hotel/get-hotel-month-revenue";
 import { getTotalHotelClients } from "@/actions/hotel/get-hotel-clients-count";
 import { getTotalMonthClients } from "@/actions/hotel/get-hotel-month-client";
 import { getTotalMonthBooknig } from "@/actions/hotel/get-hotel-month-booking";
-import { StoreDropdownMenuCheckboxes } from "@/components/store-check";
-import { getCountCategory } from "@/actions/store/get-store-category-count";
-import { getCountSize } from "@/actions/store/get-store-size-count";
-import { getCountColor } from "@/actions/store/get-store-color-count";
-import { getCountTag } from "@/actions/store/get-store-tag-count";
 import { getGraphHotelRevenueTest } from "@/actions/hotel/1-to-work-prediction-scema-test-data";
 import { getPreviewOverwier } from "@/actions/hotel/get-hotel-yearly-revenue";
+
+import { getCountLocation } from "@/actions/farm/get-count-locations";
+import { getCountAnimal } from "@/actions/farm/get-count-animals";
+import { getCountBarn } from "@/actions/farm/get-count-barns";
+import { getCountField } from "@/actions/farm/get-count-fields";
+import { getCountTree } from "@/actions/farm/get-count-trees";
+import { getCountVehicle } from "@/actions/farm/get-count-vehicles";
+import { getCountWorker } from "@/actions/farm/get-count-workers";
+import { getCountEquipment } from "@/actions/farm/get-count-equipments";
 
 
 interface DashboardPageProps {
@@ -83,6 +91,16 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const monlyClients = await getTotalMonthClients(params.storeId);
   const monlyBooking = await getTotalMonthBooknig(params.storeId);
   const graphHotelData = await getGraphHotelRevenue(params.storeId);
+
+  // FARM
+  const FARMcountLocation = await getCountLocation(params.storeId);
+  const FARMcountAnimal = await getCountAnimal(params.storeId);
+  const FARMcountBarn = await getCountBarn(params.storeId);
+  const FARMcountField = await getCountField(params.storeId);
+  const FARMcountTree = await getCountTree(params.storeId);
+  const FARMcountVehicle = await getCountVehicle(params.storeId);
+  const FARMcountWorker = await getCountWorker(params.storeId);
+  const FARMcountEquipment = await getCountEquipment(params.storeId);
 
   const testdata = await getGraphHotelRevenueTest(params.storeId);
   const testdata2 = await getPreviewOverwier(params.storeId);
@@ -357,140 +375,123 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
           <div className="flex justify-between">
             <Heading title="Dashboard" description="Overview of your Farm" />
             <div className="flex">
-              <HotelDropdownMenuCheckboxes data={filters} />
+              <FarmDropdownMenuCheckboxes data={filters} />
             </div>
           </div>
           <Separator />
           <div className={
-            filters?.hotel_filter_row === "3" ? "grid grid-cols-3 gap-4" : "" ||
-              filters?.hotel_filter_row === "4" ? "grid grid-cols-4 gap-4" : "" ||
-                filters?.hotel_filter_row === "5" ? "grid grid-cols-5 gap-4" : "" ||
-                  filters?.hotel_filter_row === "6" ? "grid grid-cols-6 gap-4" : "" ||
-                    filters?.hotel_filter_row === "7" ? "grid grid-cols-7 gap-4" : "" ||
-                      filters?.hotel_filter_row === "8" ? "grid grid-cols-8 gap-4" : ""
+            filters?.farm_filter_row === "3" ? "grid grid-cols-3 gap-4" : "" ||
+              filters?.farm_filter_row === "4" ? "grid grid-cols-4 gap-4" : "" ||
+                filters?.farm_filter_row === "5" ? "grid grid-cols-5 gap-4" : "" ||
+                  filters?.farm_filter_row === "6" ? "grid grid-cols-6 gap-4" : "" ||
+                    filters?.farm_filter_row === "7" ? "grid grid-cols-7 gap-4" : "" ||
+                      filters?.farm_filter_row === "8" ? "grid grid-cols-8 gap-4" : ""
           }>
-            {filters?.hotel_total_revenue ?
+            {filters?.farm_count_location ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Locations</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{formatter.format(bookingRevenue)}</div>
-                </CardContent>
+                <a href={params.storeId + "/locations"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Locations</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountLocation}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_monthly_revenue ?
+            {filters?.farm_count_field ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Fields</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{formatter.format(monthlyRevenue)}</div>
-                </CardContent>
+                <a href={params.storeId + "/fields"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Fields</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountField}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_total_booking ?
+            {filters?.farm_count_tree ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Trees</CardTitle>
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{bookingCount}</div>
-                </CardContent>
+                <a href={params.storeId + "/trees"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Trees</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountTree}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_monthly_booking ?
+            {filters?.farm_count_barn ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Barns</CardTitle>
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyBooking}</div>
-                </CardContent>
+                <a href={params.storeId + "/barns"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Barns</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountBarn}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_total_rooms ?
+            {filters?.farm_count_vehicle ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Vehicles</CardTitle>
-                  <Lamp className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{roomsCount}</div>
-                </CardContent>
+                <a href={params.storeId + "/vehicles"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Vehicles</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountVehicle}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_total_clients ?
+            {filters?.farm_count_worker ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Workers</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{hotelClients}</div>
-                </CardContent>
+                <a href={params.storeId + "/workers"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Workers</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountWorker}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_monthly_clients ?
+            {filters?.farm_count_animal ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Animals</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyClients}</div>
-                </CardContent>
+                <a href={params.storeId + "/animals"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Animals</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountAnimal}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-            {filters?.hotel_monthly_clients ?
+            {filters?.farm_count_equipment ?
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Equiments</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyClients}</div>
-                </CardContent>
+                <a href={params.storeId + "/equipments"}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Equipments</b></CardTitle>
+                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{FARMcountEquipment}</div>
+                  </CardContent>
+                </a>
               </Card>
               : null}
-                          {filters?.hotel_monthly_clients ?
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Workers</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyClients}</div>
-                </CardContent>
-              </Card>
-              : null}
-                          {filters?.hotel_monthly_clients ?
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Investment</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyClients}</div>
-                </CardContent>
-              </Card>
-              : null}
-                          {filters?.hotel_monthly_clients ?
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{monlyClients}</div>
-                </CardContent>
-              </Card>
-              : null}
-                        </div>
+          </div>
 
           <Separator />
 

@@ -50,7 +50,7 @@ interface Item {
 }
 
 interface DropdownMenuCheckboxesProps {
-    data: Item;
+    data: Item | null;
 }
 
 export function HotelDropdownMenuCheckboxes({ data }: DropdownMenuCheckboxesProps) {

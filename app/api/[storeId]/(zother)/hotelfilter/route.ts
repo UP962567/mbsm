@@ -66,8 +66,18 @@ export async function PATCH(
         store_total_colors,
         store_total_tags,
 
+        farm_count_location,
+        farm_count_animal,
+        farm_count_field,
+        farm_count_worker,
+        farm_count_tree,
+        farm_count_barn,
+        farm_count_equipment,
+        farm_count_vehicle,
+
         hotel_filter_row,
         store_filter_row,
+        farm_filter_row,
        } = body;
 
 
@@ -92,8 +102,18 @@ export async function PATCH(
             store_total_colors,
             store_total_tags,
 
+            farm_count_location,
+            farm_count_animal,
+            farm_count_field,
+            farm_count_worker,
+            farm_count_tree,
+            farm_count_barn,
+            farm_count_equipment,
+            farm_count_vehicle,
+
             hotel_filter_row,
             store_filter_row,
+            farm_filter_row,
         }
       });
   
