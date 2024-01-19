@@ -9,14 +9,15 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { name, information, usage, bought, sold, outOfUse, quantity, locationId } = body;
+        const { name, plate, model, bought, information, sold, outOfUse, quantity, petrolType, locationId, } = body;
 
         const { userId } = auth();
 
         if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
 
         if (!name) return new NextResponse("Missing data 1", { status: 400 });
-        if (!usage) return new NextResponse("Missing data 2", { status: 400 });
+        if (!plate) return new NextResponse("Missing data 2", { status: 400 });
+        if (!model) return new NextResponse("Missing data 3", { status: 400 });
         if (!information) return new NextResponse("Missing data 3", { status: 400 });
         if (!bought) return new NextResponse("Missing data 4", { status: 400 });
         if (!quantity) return new NextResponse("Missing data 6", { status: 400 });
@@ -37,16 +38,9 @@ export async function POST(
 
         if (!storeByUserId) return new NextResponse("Unauthorized", { status: 401 });
 
-        const product = await prismadb.farmEquipment.create({
+        const product = await prismadb.farmVehicle.create({
             data: {
-                name,
-                information,
-                usage,
-                bought,
-                sold,
-                outOfUse,
-                quantity,
-                locationId,
+                name, plate, information, model, bought, sold, outOfUse, quantity, petrolType, locationId,
                 storeId: params.storeId,
             },
         });

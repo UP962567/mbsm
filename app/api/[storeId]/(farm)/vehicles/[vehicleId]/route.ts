@@ -5,16 +5,16 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { equipmentId: string } }
+  { params }: { params: { vehicleId: string } }
 ) {
   try {
-    if (!params.equipmentId) {
+    if (!params.vehicleId) {
       return new NextResponse("Data id is required", { status: 400 });
     }
 
-    const product = await prismadb.farmEquipment.findUnique({
+    const product = await prismadb.farmVehicle.findUnique({
       where: {
-        uuid: params.equipmentId
+        uuid: params.vehicleId
       }
     });
 
@@ -27,7 +27,7 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { equipmentId: string, storeId: string } }
+  { params }: { params: { vehicleId: string, storeId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -36,7 +36,7 @@ export async function DELETE(
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!params.equipmentId) {
+    if (!params.vehicleId) {
       return new NextResponse("DATA id is required", { status: 400 });
     }
 
@@ -55,9 +55,9 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.farmEquipment.deleteMany({
+    const product = await prismadb.farmVehicle.deleteMany({
       where: {
-        uuid: params.equipmentId,
+        uuid: params.vehicleId,
       }
     });
 
@@ -71,12 +71,12 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { equipmentId: string, storeId: string } }
+  { params }: { params: { vehicleId: string, storeId: string } }
 ) {
   try {
     const body = await req.json();
 
-    const { name, information, usage, bought, sold, outOfUse, quantity, locationId } = body;
+    const { name, plate, information, model, bought, sold, outOfUse, quantity, petrolType, locationId } = body;
 
     const { userId } = auth();
 
@@ -107,19 +107,12 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const product = await prismadb.farmEquipment.update({
+    const product = await prismadb.farmVehicle.update({
       where: {
-        uuid: params.equipmentId,
+        uuid: params.vehicleId,
       },
       data: {
-        name,
-        information,
-        usage,
-        bought,
-        sold,
-        outOfUse,
-        quantity,
-        locationId,
+        name, plate, information, model, bought, sold, outOfUse, quantity, petrolType, locationId,
       }
     });
 
