@@ -137,6 +137,7 @@ model Store {
   FarmEquipment FarmEquipment[] @relation("FarmEquipmentToStore")
   FarmMedicine  FarmMedicine[]  @relation("FarmMedicineToStore")
   FarmOrder     FarmOrder[]     @relation("FarmOrderToStore")
+  FarmHarvest   FarmHarvest[]   @relation("FarmHarvestToStore")
 
   StoreToUser StoreToUser[]
 
@@ -680,4 +681,22 @@ model FarmField {
 
   @@index([storeId])
   @@index([locationId])
+}
+
+model FarmHarvest {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name        String
+  quantity    Int
+  productId   String
+  harvested   DateTime
+
+  storeId String
+  store   Store  @relation("FarmHarvestToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
 }

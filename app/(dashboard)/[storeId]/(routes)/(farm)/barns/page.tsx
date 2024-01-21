@@ -27,11 +27,21 @@ const Page = async ({
         price: n_formatter.format(maps.price?.toNumber() ?? 0),
     }));
 
+    const harvest = await prismadb.farmHarvest.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
 
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
-                <Client data={dataWithLocationNames}/>
+                <Client data={dataWithLocationNames}
+                    harvest={harvest}
+                />
             </div>
         </div>
     );

@@ -20,6 +20,15 @@ const Page = async ({
         }
     });
 
+    const harvest = await prismadb.farmHarvest.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
     const dataWithLocationNames = data.map(maps => ({
         ...maps,
         locationName: maps.location.name, // Assuming 'name' is the field for the location name in FarmLocation
@@ -31,7 +40,10 @@ const Page = async ({
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
-                <Client data={dataWithLocationNames}/>
+                <Client 
+                    data={dataWithLocationNames} 
+                    harvest={harvest}
+                />
             </div>
         </div>
     );
