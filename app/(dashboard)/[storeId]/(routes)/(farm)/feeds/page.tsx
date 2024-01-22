@@ -5,29 +5,25 @@ import { n_formatter } from "@/lib/utils";
 const Page = async ({
     params
 }: {
-    params: {storeId: string;}
+    params: { storeId: string; }
 }) => {
-    const data = await prismadb.farmAnimal.findMany({
+    const data = await prismadb.farmFeed.findMany({
         where: {
             storeId: params.storeId
         },
         orderBy: {
             createdAt: 'desc'
-        },
-        include: {
-            location: true
         }
     });
 
-    const dataWithLocationNames = data.map(animal => ({
-        ...animal,
-        locationName: animal.location.name, // Assuming 'name' is the field for the location name in FarmLocation
-        price: n_formatter.format(animal.price?.toNumber() ?? 0),
+    const dataWithLocationNames = data.map(maps => ({
+        ...maps,
+        price: n_formatter.format(maps.price?.toNumber() ?? 0),
     }));
 
-    const harvest = await prismadb.farmHarvest.findMany({
+    const dataUsed = await prismadb.farmFeedUsed.findMany({
         where: {
-            storeId: params.storeId,
+            storeId: params.storeId
         },
         orderBy: {
             createdAt: 'desc'
@@ -39,7 +35,7 @@ const Page = async ({
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
                 <Client data={dataWithLocationNames}
-                    harvest={harvest}
+                    feed={dataUsed}
                 />
             </div>
         </div>

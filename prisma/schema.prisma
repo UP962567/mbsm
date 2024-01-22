@@ -43,6 +43,18 @@ enum UserType {
   MANAGER
 }
 
+enum FeedType {
+  ANIMALS
+  BARNS
+  TREES
+}
+
+enum MedicineType {
+  ANIMALS
+  BARNS
+  TREES
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// USER
 
 model User {
@@ -129,17 +141,20 @@ model Store {
   CalendarBooking CalendarBooking[] @relation("BookingToStore")
   CalendarAddon   CalendarAddon[]   @relation("AddonToStore")
 
-  FarmLocation  FarmLocation[]  @relation("FarmLocationToStore")
-  FarmAnimal    FarmAnimal[]    @relation("FarmAnimalToStore")
-  FarmField     FarmField[]     @relation("FarmFieldToStore")
-  FarmBarn      FarmBarn[]      @relation("FarmBarnToStore")
-  FarmTree      FarmTree[]      @relation("FarmTreeToStore")
-  FarmVehicle   FarmVehicle[]   @relation("FarmVehicleToStore")
-  FarmWorker    FarmWorker[]    @relation("FarmWorkerToStore")
-  FarmEquipment FarmEquipment[] @relation("FarmEquipmentToStore")
-  FarmMedicine  FarmMedicine[]  @relation("FarmMedicineToStore")
-  FarmOrder     FarmOrder[]     @relation("FarmOrderToStore")
-  FarmHarvest   FarmHarvest[]   @relation("FarmHarvestToStore")
+  FarmLocation     FarmLocation[]     @relation("FarmLocationToStore")
+  FarmAnimal       FarmAnimal[]       @relation("FarmAnimalToStore")
+  FarmField        FarmField[]        @relation("FarmFieldToStore")
+  FarmBarn         FarmBarn[]         @relation("FarmBarnToStore")
+  FarmTree         FarmTree[]         @relation("FarmTreeToStore")
+  FarmVehicle      FarmVehicle[]      @relation("FarmVehicleToStore")
+  FarmWorker       FarmWorker[]       @relation("FarmWorkerToStore")
+  FarmEquipment    FarmEquipment[]    @relation("FarmEquipmentToStore")
+  FarmMedicine     FarmMedicine[]     @relation("FarmMedicineToStore")
+  FarmOrder        FarmOrder[]        @relation("FarmOrderToStore")
+  FarmHarvest      FarmHarvest[]      @relation("FarmHarvestToStore")
+  FarmFeed         FarmFeed[]         @relation("FarmFeedToStore")
+  FarmFeedUsed     FarmFeedUsed[]     @relation("FarmFeedUsedToStore")
+  FarmMedicineUsed FarmMedicineUsed[] @relation("FarmMedicineUsedToStore")
 
   StoreToUser StoreToUser[]
 
@@ -438,7 +453,6 @@ model FarmLocation {
   vehicles   FarmVehicle[]
   workers    FarmWorker[]
   equipments FarmEquipment[]
-  medicines  FarmMedicine[]
   orders     FarmOrder[]
 
   createdAt DateTime @default(now())
@@ -609,55 +623,6 @@ model FarmEquipment {
   @@index([locationId])
 }
 
-model FarmMedicine {
-  id   Int    @id @default(autoincrement())
-  uuid String @unique @default(cuid())
-
-  name        String
-  quantity    Int
-  information String
-  bought      DateTime
-  outOfUse    Boolean  @default(false)
-  price       Decimal? @default(0)
-
-  storeId String
-  store   Store  @relation("FarmMedicineToStore", fields: [storeId], references: [uuid])
-
-  locationId String
-  location   FarmLocation @relation(fields: [locationId], references: [uuid])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@index([storeId])
-  @@index([locationId])
-}
-
-model FarmOrder {
-  id   Int    @id @default(autoincrement())
-  uuid String @unique @default(cuid())
-
-  name         String
-  quantity     Int
-  information  String
-  usage        String
-  bought       DateTime
-  price        Decimal? @default(0)
-  subscription Boolean  @default(false)
-
-  storeId String
-  store   Store  @relation("FarmOrderToStore", fields: [storeId], references: [uuid])
-
-  locationId String
-  location   FarmLocation @relation(fields: [locationId], references: [uuid])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@index([storeId])
-  @@index([locationId])
-}
-
 model FarmField {
   id   Int    @id @default(autoincrement())
   uuid String @unique @default(cuid())
@@ -689,10 +654,10 @@ model FarmHarvest {
   id   Int    @id @default(autoincrement())
   uuid String @unique @default(cuid())
 
-  name        String
-  quantity    Int
-  productId   String
-  harvested   DateTime
+  name      String
+  quantity  Int
+  productId String
+  harvested DateTime
 
   storeId String
   store   Store  @relation("FarmHarvestToStore", fields: [storeId], references: [uuid])
@@ -701,4 +666,119 @@ model FarmHarvest {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([storeId])
+}
+
+model FarmMedicine {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name        String
+  quantity    Int
+  information String
+  type        MedicineType
+  bought      DateTime
+  outOfUse    Boolean      @default(false)
+  price       Decimal?     @default(0)
+
+  FarmMedicineUsed FarmMedicineUsed[]
+
+  storeId String
+  store   Store  @relation("FarmMedicineToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
+model FarmMedicineUsed {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  medicineId String
+  medicine   FarmMedicine @relation(fields: [medicineId], references: [uuid])
+
+  name        String
+  quantity    Int
+  used        DateTime
+  information String
+
+  storeId String
+  store   Store  @relation("FarmMedicineUsedToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+  @@index([medicineId])
+}
+
+model FarmFeed {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name        String
+  quantity    Int
+  information String
+  bought      DateTime
+  type        FeedType
+  outOfUse    Boolean  @default(false)
+  price       Decimal? @default(0)
+
+  FeedUsed FarmFeedUsed[]
+
+  storeId String
+  store   Store  @relation("FarmFeedToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+}
+
+model FarmFeedUsed {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  feedId String
+  feed   FarmFeed @relation(fields: [feedId], references: [uuid])
+
+  name        String
+  quantity    Int
+  used        DateTime
+  information String
+
+  storeId String
+  store   Store  @relation("FarmFeedUsedToStore", fields: [storeId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+  @@index([feedId])
+}
+
+model FarmOrder {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  name         String
+  quantity     Int
+  information  String
+  usage        String
+  bought       DateTime
+  price        Decimal? @default(0)
+  subscription Boolean  @default(false)
+
+  storeId String
+  store   Store  @relation("FarmOrderToStore", fields: [storeId], references: [uuid])
+
+  locationId String
+  location   FarmLocation @relation(fields: [locationId], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
+  @@index([locationId])
 }

@@ -2,19 +2,15 @@
 
 import { CalendarIcon, Edit, Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { format } from "date-fns"
+import * as z from "zod"
+import { toast } from "react-hot-toast"
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiList } from "@/components/ui/api-list";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns"
-import * as z from "zod"
-import axios from "axios";
-import toast from "react-hot-toast";
 
 import { ClientData } from "./harvest/client";
 import { Column } from "./harvest/columns";
@@ -45,32 +41,34 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
-type Farm = {
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+
+type farmMedicine = {
   id: number;
   uuid: string;
   name: string;
   quantity: number;
   information: string;
-  feedType: string;
   bought: Date;
-  sold: Date | null;
-  price: string; // using '?' to denote that this field is optional
+  type: string;
   outOfUse: boolean;
-  locationId: string;
-  locationName: string;
+  price: string | null;
 };
 
-type FarmHarvest = {
+type farmMedicineUsed = {
   id: number;
   uuid: string;
   name: string;
   quantity: number;
-  productId: string;
-  harvested: Date;
+  information: string;
+  used: Date;
+  medicineId: string;
 };
 
-
-export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[] }) => {
+export const Client = ({ data, medicine }: { data: farmMedicine[]; medicine: farmMedicineUsed[] }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -82,7 +80,7 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
       message: "Quantity must be at least 2 characters.",
     }),
     productId: z.string().min(2, {
-      message: "AnimalId is not correct.",
+      message: "TreeID is not correct.",
     }),
     harvested: z.date().min(new Date(-1), {
       message: "Harvest date must be in the future.",
@@ -92,8 +90,8 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Animal",
-      quantity: 1, // Default to a number
+      name: "Apple",
+      quantity: 123, // Default to a number
       productId: "",
       harvested: new Date(),
     },
@@ -120,7 +118,7 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
       await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/harvests`, onSubmitData);
 
       router.refresh();
-      router.push(`/${params.storeId}/animals`);
+      router.push(`/${params.storeId}/medicines`);
       toast.success("Data saved successfully.");
     } catch (error: any) {
       toast.error('Something went wrong.' + error);
@@ -129,66 +127,64 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
     }
   };
 
-  const animalUuids = new Set(data.map(animal => animal.uuid));
+  const medicineUuids = new Set(data.map(medicine => medicine.uuid));
 
-  const animalIdToNameMap = data.reduce((acc, animal) => {
-    acc[animal.uuid] = animal.name;
+  const medicineIdToNameMap = data.reduce((acc, medicine) => {
+    acc[medicine.uuid] = medicine.name;
     return acc;
   }, {} as { [key: string]: string });
 
-  const relevantHarvestsWithProductName = harvest
-    .filter(h => animalUuids.has(h.productId))
-    .map(h => ({
-      ...h,
-      productName: animalIdToNameMap[h.productId] || "Unknown"
-    }));
-
+  const relevantMedicinesWithProductName = medicine ? medicine
+    .filter(m => medicineUuids.has(m.medicineId))
+    .map(m => ({
+      ...m,
+      productName: medicineIdToNameMap[m.medicineId] || "Unknown"
+    })) : [];
+    
   return (
     <>
       <Separator />
       <div className="flex items-center justify-between">
-        <Heading title={`Animals (${data.length})`} description="Manage Animals" />
-        <Button onClick={() => router.push(`/${params.storeId}/animals/new`)}>
+        <Heading title={`Medicines (${data.length})`} description="Manage Medicines" />
+        <Button onClick={() => router.push(`/${params.storeId}/medicines/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>
       <Separator />
       <div className="grid grid-cols-3 gap-4">
-        {data.map((data) => (
-          <Card key={data.id}>
+        {data.map((medicine) => (
+          <Card key={medicine.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Name: <b>{data.name}</b></CardTitle>
-              <Button onClick={() => router.push(`/${params.storeId}/animals/${data.uuid}`)}>
+              <CardTitle className="text-sm font-medium">Name: <b>{medicine.name}</b></CardTitle>
+              <Button onClick={() => router.push(`/${params.storeId}/medicines/${medicine.uuid}`)}>
                 <Edit className="h-4 w-4 text-muted-foreground" />
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="text-sm font-medium">Quantity: <b>{data.quantity}</b></div>
-              <div className="text-sm font-medium">Price/Seed: <b>{data.price}</b> </div>
+              <div className="text-sm font-medium">Quantity: <b>{medicine.quantity}</b></div>
+              <div className="text-sm font-medium">Price/Pills: <b>{medicine.price}</b> </div>
               <Separator className="m-2" />
-              <div className="text-sm font-medium">Location of Field: <b>{data.locationName}</b> </div>
-              <Separator className="m-2" />
-              <div className="text-sm font-medium">Planted: <b>{data.bought.toLocaleDateString()}</b> </div>
-              <div className="text-sm font-medium">Collected: <b>{data.sold?.toLocaleDateString()}</b> </div>
-              <Separator className="m-2" />
-              <div className="text-sm font-medium">Food: <b>{data.feedType}</b> </div>
-              <div className="text-sm font-medium">Information: <b>{data.information}</b> </div>
+              <div className="text-sm font-medium">Information: <b>{medicine.information}</b> </div>
+              <div className="text-sm font-medium">Usage Type: <b>{medicine.type}</b> </div>
+              <div className="text-sm font-medium">Bought: <b>{medicine.bought.toLocaleDateString()}</b> </div>
+              <div className="text-sm font-medium">Out of Use: <b>{medicine.outOfUse}</b> </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
       <Separator />
 
       <div className="flex items-center justify-between">
-        <Heading title={`Harvests (${relevantHarvestsWithProductName.length})`} description="Manage Harvests" />
+        <Heading title={`Medcines (${relevantMedicinesWithProductName.length})`} description="Manage Medcines" />
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button><Plus className="mr-2 h-4 w-4" /> Harvests </Button>
+            <Button><Plus className="mr-2 h-4 w-4" /> Medcines Usage </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Havested product</DrawerTitle>
+              <DrawerTitle>Medcines product</DrawerTitle>
               <DrawerDescription>Please complete all the field.</DrawerDescription>
             </DrawerHeader>
 
@@ -337,14 +333,14 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
       <Separator />
 
       <div className="flex-1 space-y-4">
-        <ClientData data={relevantHarvestsWithProductName} />
+        <ClientData data={relevantMedicinesWithProductName} />
       </div>
 
-      <Separator />
 
-      <Heading title="API" description="API Calls for Animals" />
       <Separator />
-      <ApiList entityName="animals" entityIdName="animalId" />
+      <Heading title="API" description="API Calls for Medicines" />
+      <Separator />
+      <ApiList entityName="medicines" entityIdName="medicineId" />
     </>
   );
 };

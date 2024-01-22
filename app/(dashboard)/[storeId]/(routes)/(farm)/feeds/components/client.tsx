@@ -2,19 +2,15 @@
 
 import { CalendarIcon, Edit, Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { format } from "date-fns"
+import * as z from "zod"
+import { toast } from "react-hot-toast"
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiList } from "@/components/ui/api-list";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns"
-import * as z from "zod"
-import axios from "axios";
-import toast from "react-hot-toast";
 
 import { ClientData } from "./harvest/client";
 import { Column } from "./harvest/columns";
@@ -45,32 +41,34 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
-type Farm = {
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+
+type farmFeed = {
   id: number;
   uuid: string;
   name: string;
   quantity: number;
   information: string;
-  feedType: string;
   bought: Date;
-  sold: Date | null;
-  price: string; // using '?' to denote that this field is optional
+  type: string;
   outOfUse: boolean;
-  locationId: string;
-  locationName: string;
+  price: string | null;
 };
 
-type FarmHarvest = {
+type farmFeedUsed = {
   id: number;
   uuid: string;
   name: string;
   quantity: number;
-  productId: string;
-  harvested: Date;
+  information: string;
+  used: Date;
+  feedId: string;
 };
 
-
-export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[] }) => {
+export const Client = ({ data, feed }: { data: farmFeed[]; feed: farmFeedUsed[] }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -82,7 +80,7 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
       message: "Quantity must be at least 2 characters.",
     }),
     productId: z.string().min(2, {
-      message: "AnimalId is not correct.",
+      message: "FeedId is not correct.",
     }),
     harvested: z.date().min(new Date(-1), {
       message: "Harvest date must be in the future.",
@@ -92,8 +90,8 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Animal",
-      quantity: 1, // Default to a number
+      name: "Food",
+      quantity: 123, // Default to a number
       productId: "",
       harvested: new Date(),
     },
@@ -117,10 +115,10 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
     try {
       setLoading(true);
 
-      await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/harvests`, onSubmitData);
+      await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/feeds`, onSubmitData);
 
       router.refresh();
-      router.push(`/${params.storeId}/animals`);
+      router.push(`/${params.storeId}/feeds`);
       toast.success("Data saved successfully.");
     } catch (error: any) {
       toast.error('Something went wrong.' + error);
@@ -129,66 +127,64 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
     }
   };
 
-  const animalUuids = new Set(data.map(animal => animal.uuid));
+  const feedUuids = new Set(data.map(feed => feed.uuid));
 
-  const animalIdToNameMap = data.reduce((acc, animal) => {
-    acc[animal.uuid] = animal.name;
+  const feedIdToNameMap = data.reduce((acc, feed) => {
+    acc[feed.uuid] = feed.name;
     return acc;
   }, {} as { [key: string]: string });
 
-  const relevantHarvestsWithProductName = harvest
-    .filter(h => animalUuids.has(h.productId))
-    .map(h => ({
-      ...h,
-      productName: animalIdToNameMap[h.productId] || "Unknown"
-    }));
-
+  const relevantFeedsWithProductName = feed ? feed
+    .filter(m => feedUuids.has(m.feedId))
+    .map(m => ({
+      ...m,
+      productName: feedIdToNameMap[m.feedId] || "Unknown"
+    })) : [];
+    
   return (
     <>
       <Separator />
       <div className="flex items-center justify-between">
-        <Heading title={`Animals (${data.length})`} description="Manage Animals" />
-        <Button onClick={() => router.push(`/${params.storeId}/animals/new`)}>
+        <Heading title={`Feeds (${data.length})`} description="Manage Feeds" />
+        <Button onClick={() => router.push(`/${params.storeId}/feeds/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>
       <Separator />
       <div className="grid grid-cols-3 gap-4">
-        {data.map((data) => (
-          <Card key={data.id}>
+        {data.map((feed) => (
+          <Card key={feed.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Name: <b>{data.name}</b></CardTitle>
-              <Button onClick={() => router.push(`/${params.storeId}/animals/${data.uuid}`)}>
+              <CardTitle className="text-sm font-medium">Name: <b>{feed.name}</b></CardTitle>
+              <Button onClick={() => router.push(`/${params.storeId}/feeds/${feed.uuid}`)}>
                 <Edit className="h-4 w-4 text-muted-foreground" />
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="text-sm font-medium">Quantity: <b>{data.quantity}</b></div>
-              <div className="text-sm font-medium">Price/Seed: <b>{data.price}</b> </div>
+              <div className="text-sm font-medium">Quantity: <b>{feed.quantity}</b></div>
+              <div className="text-sm font-medium">Price/Pills: <b>{feed.price}</b> </div>
               <Separator className="m-2" />
-              <div className="text-sm font-medium">Location of Field: <b>{data.locationName}</b> </div>
-              <Separator className="m-2" />
-              <div className="text-sm font-medium">Planted: <b>{data.bought.toLocaleDateString()}</b> </div>
-              <div className="text-sm font-medium">Collected: <b>{data.sold?.toLocaleDateString()}</b> </div>
-              <Separator className="m-2" />
-              <div className="text-sm font-medium">Food: <b>{data.feedType}</b> </div>
-              <div className="text-sm font-medium">Information: <b>{data.information}</b> </div>
+              <div className="text-sm font-medium">Information: <b>{feed.information}</b> </div>
+              <div className="text-sm font-medium">Usage Type: <b>{feed.type}</b> </div>
+              <div className="text-sm font-medium">Bought: <b>{feed.bought.toLocaleDateString()}</b> </div>
+              <div className="text-sm font-medium">Out of Use: <b>{feed.outOfUse}</b> </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
       <Separator />
 
       <div className="flex items-center justify-between">
-        <Heading title={`Harvests (${relevantHarvestsWithProductName.length})`} description="Manage Harvests" />
+        <Heading title={`Feeds (${relevantFeedsWithProductName.length})`} description="Manage Feeds Usage" />
 
         <Drawer>
           <DrawerTrigger asChild>
-            <Button><Plus className="mr-2 h-4 w-4" /> Harvests </Button>
+            <Button><Plus className="mr-2 h-4 w-4" /> Feed Usage </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Havested product</DrawerTitle>
+              <DrawerTitle>Feed product</DrawerTitle>
               <DrawerDescription>Please complete all the field.</DrawerDescription>
             </DrawerHeader>
 
@@ -337,14 +333,14 @@ export const Client = ({ data, harvest }: { data: Farm[]; harvest: FarmHarvest[]
       <Separator />
 
       <div className="flex-1 space-y-4">
-        <ClientData data={relevantHarvestsWithProductName} />
+        <ClientData data={relevantFeedsWithProductName} />
       </div>
 
-      <Separator />
 
-      <Heading title="API" description="API Calls for Animals" />
       <Separator />
-      <ApiList entityName="animals" entityIdName="animalId" />
+      <Heading title="API" description="API Calls for Feeds" />
+      <Separator />
+      <ApiList entityName="feeds" entityIdName="feedId" />
     </>
   );
 };
