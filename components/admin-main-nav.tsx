@@ -16,7 +16,8 @@ export function MainNav({
     const routes_store = [
         { href: `/admin/stores`, label: "Stores", active: pathname === `/admin/stores`, },
         { href: `/admin/users`, label: "Users", active: pathname === `/admin/users`, },
-        { href: `/admin/usaccess`, label: "USAccess", active: pathname === `/admin/usaccess`, },
+        { href: `/admin/requests`, label: "Requests", active: pathname === `/admin/requests`, },
+        { href: `/admin/usaccess`, label: "Accesses", active: pathname === `/admin/usaccess`, },
     ];
 
 return (

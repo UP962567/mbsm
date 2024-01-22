@@ -17,14 +17,19 @@ const ColorPage = async ({
   });
 
   const users = await prismadb.user.findMany({
+    where: {
+      status: {
+        not: 'Pending' // This condition ensures that the status is not 'Pending'
+      }
+    }
   });
 
-  return ( 
+  return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <DataForm initialData={data}
-        users={users}
-        stores={stores}
+          users={users}
+          stores={stores}
         />
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
-import { Copy, Edit, MoreHorizontal, Trash, Redo } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 
@@ -33,7 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/admin/stores/${data.uuid}`);
+      await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/admin/users/${data.uuid}`);
       toast.success('Tag deleted.');
       router.refresh();
     } catch (error) {
@@ -73,15 +73,9 @@ export const CellAction: React.FC<CellActionProps> = ({
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/stores/${data.uuid}`)}
+            onClick={() => router.push(`/admin/users/${data.uuid}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => router.push(`/${data.uuid}`)}
-          >
-            <Redo className="mr-2 h-4 w-4" /> Go To
           </DropdownMenuItem>
 
           <DropdownMenuItem

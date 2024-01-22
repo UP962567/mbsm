@@ -82,7 +82,7 @@ export const Former: React.FC<FormProps> = ({
         await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/admin/users`, data);
       }
       router.refresh();
-      router.push(`/admin/users`);
+      router.push(`/admin/requests`);
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
@@ -97,7 +97,7 @@ export const Former: React.FC<FormProps> = ({
       setLoading(true);
       await axios.delete(`/${process.env.NEXT_PUBLIC_API_URL}/admin/users/${params.userId}`);
       router.refresh();
-      router.push(`/admin/users`);
+      router.push(`/admin/requests`);
       toast.success('Tag deleted.');
     } catch (error: any) {
       toast.error('MMmmmm..');

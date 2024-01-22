@@ -55,6 +55,8 @@ model User {
   phone    String
   address  String
   role     UserType @default(NONE)
+  active   Boolean  @default(false)
+  status   String   @default("Pending")
 
   hotel_filter_row      String  @default("4")
   hotel_total_revenue   Boolean @default(true)

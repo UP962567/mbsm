@@ -53,7 +53,7 @@ export async function PATCH(
 
     const body = await req.json();
     
-    const { name, password, email, uuid, address, phone, username } = body;
+    const { name, password, email, uuid, address, phone, username, status, active } = body;
     
     const pusher = await prismadb.user.update({
       where: {
@@ -66,7 +66,9 @@ export async function PATCH(
         uuid,
         address,
         phone,
-        username
+        username,
+        status,
+        active
       }
     });
   

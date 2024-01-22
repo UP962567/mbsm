@@ -33,8 +33,6 @@ export default async function Dashboardlayout({
         <div>
             < Navbar />
             <div className="h-screen flex flex-row justify-start">
-                <Leftbar />
-
                 <div className="flex-1 p-4">
                     {children}
                 </div>

@@ -7,18 +7,15 @@ import { format } from "date-fns";
 const Users = async ({
     params
 }: {
-    params: { storeId: string; }
+    params: {storeId: string;}
 }) => {
     const datas = await prismadb.user.findMany({
         orderBy: {
             createdAt: 'desc'
         },
         where: {
-            status: {
-                not: 'Pending' // This condition ensures that the status is not 'Pending'
-            }
+            status: 'Pending'
         }
-
     });
 
     const formated: Column[] = datas.map((item) => ({
