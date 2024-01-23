@@ -54,11 +54,15 @@ export const Former: React.FC<FormProps> = ({
   const toastMessage = initialData ? 'Feed updated.' : 'Feed created.';
   const action = initialData ? 'Save changes' : 'Create';
 
+  const initialDataWithConvertedPrice = initialData ? {
+    ...initialData,
+    price: initialData.price ? initialData.price.toString() : '0',
+  } : null;
+
   const form = useForm({
-    defaultValues: initialData ? {
+    defaultValues: initialDataWithConvertedPrice ? {
       ...initialData,
       quantity: parseFloat(String(initialData?.quantity)) || undefined,
-      price: parseFloat(String(initialData?.price)) || undefined,
     } : {
       name: '',
       information: '',
@@ -194,7 +198,7 @@ export const Former: React.FC<FormProps> = ({
                     <Input
                       placeholder="Price per Feed"
                       type="number"
-                      value={field.value || ''}
+                      value={field.value ? field.value.toString() : ''}
                       onChange={(event) => {
                         field.onChange(event);
                         setPrice(parseFloat(event.target.value));
@@ -205,7 +209,7 @@ export const Former: React.FC<FormProps> = ({
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="quantity"
@@ -286,9 +290,9 @@ export const Former: React.FC<FormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                        <SelectItem key="ANIMALS" value="ANIMALS">ANIMALS</SelectItem>
-                        <SelectItem key="BARNS" value="BARNS">BARNS</SelectItem>
-                        <SelectItem key="TREES" value="TREES">TREES</SelectItem>
+                      <SelectItem key="ANIMALS" value="ANIMALS">ANIMALS</SelectItem>
+                      <SelectItem key="BARNS" value="BARNS">BARNS</SelectItem>
+                      <SelectItem key="TREES" value="TREES">TREES</SelectItem>
 
                     </SelectContent>
                   </Select>

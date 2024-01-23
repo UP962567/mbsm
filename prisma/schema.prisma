@@ -702,6 +702,7 @@ model FarmMedicineUsed {
   quantity    Int
   used        DateTime
   information String
+  productId   String
 
   storeId String
   store   Store  @relation("FarmMedicineUsedToStore", fields: [storeId], references: [uuid])
@@ -747,6 +748,7 @@ model FarmFeedUsed {
   quantity    Int
   used        DateTime
   information String
+  productId   String
 
   storeId String
   store   Store  @relation("FarmFeedUsedToStore", fields: [storeId], references: [uuid])

@@ -34,12 +34,41 @@ const Page = async ({
         }
     });
 
+    const feed = await prismadb.farmFeed.findMany({
+        where: {
+            storeId: params.storeId,
+            type: 'ANIMALS',
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
+    const dataWithFeedPrice = feed.map(feed => ({
+        ...feed,
+        price: n_formatter.format(feed.price?.toNumber() ?? 0),
+    }));
+
+
+    const feedUsage = await prismadb.farmFeedUsed.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            feed: true // Just include the related feed records
+        }
+    });
 
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
                 <Client data={dataWithLocationNames}
                     harvest={harvest}
+                    feedU={feedUsage}
+                    feed={dataWithFeedPrice}
                 />
             </div>
         </div>
