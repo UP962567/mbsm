@@ -44,10 +44,7 @@ const NoAdmin = async () => {
 
     if (userIdOrg && userIdOrg[organizationAdminCh] === "admin" || userIdOrg && userIdOrg[organizationAdminCh] === "basic_member") {
         console.log("SDON 1")
-    } else
-        if (userIdOrg && userIdOrg[organizationUserCh] === "basic_member") {
-            console.log("SDON 2")
-        } else {
+    } else {
             return (
                 <div>
                     <RequestAccessPage data={data} />
