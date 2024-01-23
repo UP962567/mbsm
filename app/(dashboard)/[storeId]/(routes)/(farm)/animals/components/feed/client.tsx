@@ -1,18 +1,18 @@
 "use client";
 
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/components/ui/data-table2";
 import { columns, Column } from "./columns";
 
 interface ClientProps {
-  data: Column[];
+  data_feed: Column[];
 }
 
 export const ClientDataFeed: React.FC<ClientProps> = ({
-  data
+  data_feed
 }) => {
   return (
     <>
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable searchKey="name" searchKey2="animal" columns={columns} data={data_feed} />
     </>
   );
 };

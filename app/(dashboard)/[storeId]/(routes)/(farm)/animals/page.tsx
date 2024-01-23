@@ -21,7 +21,7 @@ const Page = async ({
 
     const dataWithLocationNames = data.map(animal => ({
         ...animal,
-        locationName: animal.location.name, // Assuming 'name' is the field for the location name in FarmLocation
+        locationName: animal.location.name,
         price: n_formatter.format(animal.price?.toNumber() ?? 0),
     }));
 
@@ -58,7 +58,7 @@ const Page = async ({
             createdAt: 'desc'
         },
         include: {
-            feed: true // Just include the related feed records
+            feed: true,
         }
     });
 

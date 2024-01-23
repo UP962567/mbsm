@@ -10,9 +10,8 @@ export type Column = {
   quantity: number;
   information: string;
   used: Date;
-  feedId: string;
-  feedName: string;
-  productId: string;
+  feeded: string;
+  animal: string;
 }
 
 export const columns: ColumnDef<Column>[] = [
@@ -37,12 +36,12 @@ export const columns: ColumnDef<Column>[] = [
     header: "Information",
   },
   {
-    accessorKey: "feedName",
-    header: "Feed Name",
+    accessorKey: "feeded",
+    header: "Feeded",
   },
   {
-    accessorKey: "productId",
-    header: "Product ID",
+    accessorKey: "animal",
+    header: "Animal",
   },
   {
     id: "actions",

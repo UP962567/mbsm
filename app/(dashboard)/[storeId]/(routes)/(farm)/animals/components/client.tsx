@@ -119,7 +119,7 @@ export const Client = ({ data, harvest, feedU, feed }:
     name: z.string().min(2, {
       message: "Name must be at least 2 characters.",
     }),
-    quantity: z.number().min(2, {
+    quantity: z.number().min(1, {
       message: "Quantity must be at least 2 characters.",
     }),
     feedId: z.string().min(2, {
@@ -139,12 +139,12 @@ export const Client = ({ data, harvest, feedU, feed }:
   const formFeed = useForm({
     resolver: zodResolver(formSchemaFeed),
     defaultValues: {
-      name: "Feed: ",
-      quantity: 1, // Default to a number
+      name: "",
+      quantity: null, // Default to a number
       feedId: "",
       productId: "",
       used: new Date(),
-      information: "Information: ",
+      information: "",
     },
   });
 
@@ -157,16 +157,41 @@ export const Client = ({ data, harvest, feedU, feed }:
     used: used,
   }
 
-  const feedUuids = new Set(feedU.map(feedU => feedU.uuid));
-  const feedIdToNameMap = feedU.reduce((acc, feedU) => {
-    acc[feedU.uuid] = feedU.name;
+  const onSubmitFeed = async () => {
+    console.log(onSubmitDataFeed)
+    try {
+      setLoading(true);
+
+      await axios.post(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/more/feeds_used`, onSubmitDataFeed);
+
+      router.refresh();
+      router.push(`/${params.storeId}/animals`);
+      toast.success("Data saved successfully.");
+    } catch (error: any) {
+      toast.error('Something went wrong.' + error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const feedUuids = new Set(feed.map(f => f.uuid));
+
+  const feedIdToNameMap = feed.reduce((acc, f) => {
+    acc[f.uuid] = f.name;
     return acc;
   }, {} as { [key: string]: string });
+
+  const productIdToNameMap = data.reduce((acc, farm) => {
+    acc[farm.uuid] = farm.name;
+    return acc;
+  }, {} as { [key: string]: string });
+
   const relevantFeedsWithFeedName = feedU
-    .filter(h => feedUuids.has(h.feedId))
-    .map(h => ({
-      ...h,
-      feedName: feedIdToNameMap[h.feedId] || "Unknown"
+    .filter(fu => feedUuids.has(fu.feedId))
+    .map(fu => ({
+      ...fu,
+      feeded: feedIdToNameMap[fu.feedId] || "Unknown",
+      animal: productIdToNameMap[fu.productId] || "Unknown"
     }));
 
   // Feed Form
@@ -181,7 +206,7 @@ export const Client = ({ data, harvest, feedU, feed }:
     name: z.string().min(2, {
       message: "Name must be at least 2 characters.",
     }),
-    quantity: z.number().min(2, {
+    quantity: z.number().min(1, {
       message: "Quantity must be at least 2 characters.",
     }),
     productId: z.string().min(2, {
@@ -195,8 +220,8 @@ export const Client = ({ data, harvest, feedU, feed }:
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Animal",
-      quantity: 1, // Default to a number
+      name: "",
+      quantity: null, // Default to a number
       productId: "",
       harvested: new Date(),
     },
@@ -457,7 +482,7 @@ export const Client = ({ data, harvest, feedU, feed }:
             <div className="p-4 pb-0">
 
               <Form {...formFeed}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                <form onSubmit={formFeed.handleSubmit(onSubmitFeed)} className="space-y-8 w-full">
                   <div className="md:grid md:grid-cols-3 gap-4">
 
                     <FormField
@@ -473,7 +498,7 @@ export const Client = ({ data, harvest, feedU, feed }:
                               value={field.value || ''}
                               onChange={(event) => {
                                 field.onChange(event);
-                                setName(event.target.value);
+                                setNameFeed(event.target.value);
                               }}
                             />
                           </FormControl>
@@ -572,7 +597,7 @@ export const Client = ({ data, harvest, feedU, feed }:
                             disabled={loading}
                             onValueChange={(value) => {
                               field.onChange(value);  // This is necessary to update form control
-                              setFeedId(value);  // Update the locationId state
+                              setProductIdFeed(value);  // Update the locationId state
                             }}
                             value={field.value}
                             defaultValue={field.value}
@@ -654,7 +679,7 @@ export const Client = ({ data, harvest, feedU, feed }:
       <Separator />
 
       <div className="flex-1 space-y-4">
-        <ClientDataFeed data={relevantFeedsWithFeedName} />
+        <ClientDataFeed data_feed={relevantFeedsWithFeedName} />
       </div>
 
       <Separator />
