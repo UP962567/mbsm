@@ -55,7 +55,7 @@ type farmFeed = {
   bought: Date;
   type: string;
   outOfUse: boolean;
-  price: string | null;
+  price: string;
 };
 
 type farmFeedUsed = {

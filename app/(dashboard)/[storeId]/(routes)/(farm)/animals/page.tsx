@@ -1,6 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import { Client } from "./components/client";
-import { n_formatter } from "@/lib/utils";
 
 const Page = async ({
     params
@@ -22,7 +21,7 @@ const Page = async ({
     const dataWithLocationNames = data.map(animal => ({
         ...animal,
         locationName: animal.location.name,
-        price: n_formatter.format(animal.price?.toNumber() ?? 0),
+        price: animal.price ? animal.price.toString() : null,
     }));
 
     const harvest = await prismadb.farmHarvest.findMany({
@@ -33,6 +32,9 @@ const Page = async ({
             createdAt: 'desc'
         }
     });
+
+    // ----------------------------------------------
+    // Feed
 
     const feed = await prismadb.farmFeed.findMany({
         where: {
@@ -46,7 +48,7 @@ const Page = async ({
 
     const dataWithFeedPrice = feed.map(feed => ({
         ...feed,
-        price: n_formatter.format(feed.price?.toNumber() ?? 0),
+        price: feed.price ? feed.price.toNumber() : 0,
     }));
 
 
@@ -62,6 +64,42 @@ const Page = async ({
         }
     });
 
+    // Feed
+    // ----------------------------------------------
+
+    // ----------------------------------------------
+    // Medicine
+
+    const medicine = await prismadb.farmMedicine.findMany({
+        where: {
+            storeId: params.storeId,
+            type: 'ANIMALS',
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
+    const dataWithMedicinePrice = medicine.map(medicine => ({
+        ...medicine,
+        price: medicine.price ? medicine.price.toNumber() : 0,
+    }));
+
+
+    const medicineUsage = await prismadb.farmMedicineUsed.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            medicine: true,
+        }
+    });
+
+    // Medicine
+    // ----------------------------------------------
     return (
         <div className="flex-col">
             <div className="flex-1 space-y-4 p-8 pt-8">
@@ -69,6 +107,8 @@ const Page = async ({
                     harvest={harvest}
                     feedU={feedUsage}
                     feed={dataWithFeedPrice}
+                    medicineU={medicineUsage}
+                    medicine={dataWithMedicinePrice}
                 />
             </div>
         </div>
