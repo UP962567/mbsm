@@ -36,6 +36,73 @@ const Page = async ({
         price: n_formatter.format(maps.price?.toNumber() ?? 0),
     }));
 
+        // ----------------------------------------------
+    // Feed
+
+    const feed = await prismadb.farmFeed.findMany({
+        where: {
+            storeId: params.storeId,
+            type: 'TREES',
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
+    const dataWithFeedPrice = feed.map(feed => ({
+        ...feed,
+        price: feed.price ? feed.price.toNumber() : 0,
+    }));
+
+
+    const feedUsage = await prismadb.farmFeedUsed.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            feed: true,
+        }
+    });
+
+    // Feed
+    // ----------------------------------------------
+
+    // ----------------------------------------------
+    // Medicine
+
+    const medicine = await prismadb.farmMedicine.findMany({
+        where: {
+            storeId: params.storeId,
+            type: 'TREES',
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
+    const dataWithMedicinePrice = medicine.map(medicine => ({
+        ...medicine,
+        price: medicine.price ? medicine.price.toNumber() : 0,
+    }));
+
+
+    const medicineUsage = await prismadb.farmMedicineUsed.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            medicine: true,
+        }
+    });
+
+    // Medicine
+    // ----------------------------------------------
 
     return (
         <div className="flex-col">
@@ -43,6 +110,10 @@ const Page = async ({
                 <Client 
                     data={dataWithLocationNames} 
                     harvest={harvest}
+                    feed={dataWithFeedPrice}
+                    feedU={feedUsage}
+                    medicine={dataWithMedicinePrice}
+                    medicineU={medicineUsage}
                 />
             </div>
         </div>
