@@ -178,7 +178,7 @@ export const Client = ({ data, feed }: { data: farmFeed[]; feed: farmFeedUsed[] 
       <div className="flex items-center justify-between">
         <Heading title={`Feeds Used (${relevantFeedsWithProductName.length})`} description="Manage Feeds Usage" />
 
-        <Drawer>
+        {/* <Drawer>
           <DrawerTrigger asChild>
             <Button><Plus className="mr-2 h-4 w-4" /> Feed Usage </Button>
           </DrawerTrigger>
@@ -327,7 +327,7 @@ export const Client = ({ data, feed }: { data: farmFeed[]; feed: farmFeedUsed[] 
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
-        </Drawer>
+        </Drawer> */}
 
       </div >
       <Separator />

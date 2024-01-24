@@ -178,7 +178,7 @@ export const Client = ({ data, medicine }: { data: farmMedicine[]; medicine: far
       <div className="flex items-center justify-between">
         <Heading title={`Medcines Used (${relevantMedicinesWithProductName.length})`} description="Manage Medcines" />
 
-        <Drawer>
+        {/* <Drawer>
           <DrawerTrigger asChild>
             <Button><Plus className="mr-2 h-4 w-4" /> Medcines Usage </Button>
           </DrawerTrigger>
@@ -327,7 +327,7 @@ export const Client = ({ data, medicine }: { data: farmMedicine[]; medicine: far
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
-        </Drawer>
+        </Drawer> */}
 
       </div >
       <Separator />
