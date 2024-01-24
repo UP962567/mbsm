@@ -411,13 +411,16 @@ export const Client = ({ data, harvest, feedU, feed, medicineU, medicine }:
   return (
     <>
       <Separator />
+
       <div className="flex items-center justify-between">
         <Heading title={`Animals (${data.length})`} description="Manage Animals" />
         <Button onClick={() => router.push(`/${params.storeId}/animals/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>
+
       <Separator />
+
       <div className="grid grid-cols-3 gap-4">
         {data.map((data) => (
           <Card key={data.id}>
@@ -442,8 +445,10 @@ export const Client = ({ data, harvest, feedU, feed, medicineU, medicine }:
           </Card>
         ))}
       </div>
+
       <Separator />
 
+      {/* Data One */}
       <div className="flex items-center justify-between">
         <Heading title={`Harvests (${relevantHarvestsWithProductName.length})`} description="Manage Harvests" />
 
@@ -599,13 +604,18 @@ export const Client = ({ data, harvest, feedU, feed, medicineU, medicine }:
         </Drawer>
 
       </div >
+
       <Separator />
 
       <div className="flex-1 space-y-4">
         <ClientData data={relevantHarvestsWithProductName} />
       </div>
 
+      {/* End Data One */}
+
       <Separator />
+
+      {/* Data Two */}
 
       <div className="flex items-center justify-between">
         <Heading title={`Feeds (${relevantFeedsWithFeedName.length})`} description="Manage Feeds" />
@@ -823,7 +833,11 @@ export const Client = ({ data, harvest, feedU, feed, medicineU, medicine }:
         <ClientDataFeed data_feed={relevantFeedsWithFeedName} />
       </div>
 
+      {/* End Data Two */}
+
       <Separator />
+
+      {/* Data Three */}
 
       <div className="flex items-center justify-between">
         <Heading title={`Medicines (${relevantMedicinesWithFeedName.length})`} description="Manage Medicines" />
@@ -1036,11 +1050,14 @@ export const Client = ({ data, harvest, feedU, feed, medicineU, medicine }:
         </Drawer>
 
       </div >
+
       <Separator />
 
       <div className="flex-1 space-y-4">
         <ClientDataMedicine data_medicine={relevantMedicinesWithFeedName} />
       </div>
+
+      {/* End Data Three */}
 
       <Separator />
 
