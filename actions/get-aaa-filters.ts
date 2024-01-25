@@ -1,11 +1,11 @@
 import prismadb from "@/lib/prismadb";
 
 export const getFilters = async (userId: string) => {
-  const filters = await prismadb.userFilter.findMany({
+  const filters = await prismadb.user.findMany({
     where: {
-      userId
-    }
-  });
-
+      uuid: userId,
+    },
+  }
+  );
   return filters;
 };
