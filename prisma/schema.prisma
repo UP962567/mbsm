@@ -249,17 +249,17 @@ model Product {
   categoryId String
   category   Category @relation("CateToProduct", fields: [categoryId], references: [uuid])
 
-  tagId String
-  tag   Tag    @relation("TagToProduct", fields: [tagId], references: [uuid])
+  tagId String?
+  tag   Tag?    @relation("TagToProduct", fields: [tagId], references: [uuid])
 
   storeId String
   store   Store  @relation("StoreToProduct", fields: [storeId], references: [uuid])
 
-  sizeId String
-  size   Size   @relation(fields: [sizeId], references: [uuid])
+  sizeId String?
+  size   Size?   @relation(fields: [sizeId], references: [uuid])
 
-  colorId String
-  color   Color  @relation(fields: [colorId], references: [uuid])
+  colorId String?
+  color   Color?  @relation(fields: [colorId], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
