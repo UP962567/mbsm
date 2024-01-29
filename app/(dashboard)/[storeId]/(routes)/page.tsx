@@ -328,8 +328,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Present Overview</CardTitle>
-                  View this year sales
+                  <CardTitle>Present Monthly Overview</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
@@ -340,8 +339,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>This Year Overview</CardTitle>
-                  Total Income of this year
+                  <CardTitle>Present Yearly Overview</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
