@@ -17,7 +17,7 @@ const PCPage = async ({
             calendarAddon: true
         },
         orderBy: {
-            createdAt: 'desc'
+            start_time: 'desc'
         }
     });
 

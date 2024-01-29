@@ -14,7 +14,6 @@ import { StoreDropdownMenuCheckboxes } from "@/components/store-check";
 import { formatter } from "@/lib/utils";
 import prismadb from "@/lib/prismadb";
 
-import { getTotalRevenue } from "@/actions/store/get-store-total-revenue";
 import { getSalesCount } from "@/actions/store/get-store-sales-count";
 import { getGraphRevenue } from "@/actions/store/get-store-graph-revenue";
 import { getStockCount } from "@/actions/store/get-store-stock-count";
@@ -73,7 +72,6 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   });
 
   // STORE
-  const totalRevenue = await getTotalRevenue(params.storeId);
   const graphRevenue = await getGraphRevenue(params.storeId);
   const salesCount = await getSalesCount(params.storeId);
   const stockCount = await getStockCount(params.storeId);
@@ -134,7 +132,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{formatter.format(totalRevenue)}</div>
+                  <div className="text-2xl font-bold">TEST</div>
                 </CardContent>
               </Card>
               : null}
@@ -331,7 +329,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Present Overview</CardTitle>
-                  Test
+                  View this year sales
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
@@ -342,8 +340,8 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Prediction Overview</CardTitle>
-                  Test
+                  <CardTitle>This Year Overview</CardTitle>
+                  Total Income of this year
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
@@ -351,11 +349,11 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               </CardContent>
             </Card>
 
-            <Card className="col-span-1">
+            <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>History Overview</CardTitle>
-                  Test
+                  From the last 8 years
                 </div>
               </CardHeader>
               <CardContent className="pl-2">

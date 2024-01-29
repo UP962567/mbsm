@@ -9,7 +9,7 @@ export const getPreviewOverwier = async (storeId: string): Promise<GraphData[]> 
     const teardate = new Date;
     const year = teardate.getUTCFullYear();
     const maxYear = year + 1;
-    const minYear = year - 3;
+    const minYear = year - 9;
 
     const bookings = await prismadb.calendarBooking.findMany({
         where: {
@@ -18,9 +18,6 @@ export const getPreviewOverwier = async (storeId: string): Promise<GraphData[]> 
                 gte: new Date(`${minYear}-01-01T00:00:00Z`),
                 lt: new Date(`${maxYear}-01-01T00:00:00Z`),
             },
-        },
-        include: {
-            room: true,
         },
     });
 

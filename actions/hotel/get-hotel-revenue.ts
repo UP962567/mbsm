@@ -4,10 +4,7 @@ export const getTotalHotelRevenue = async (storeId: string) => {
   const bookings = await prismadb.calendarBooking.findMany({
     where: {
       storeId,
-    },
-    include: {
-      room: true,
-    },
+    }
   });
 
   const totalRevenue = bookings.reduce((total, booking) => {
