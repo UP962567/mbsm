@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 const SidebarHotel = () => {
-    const [toggleCollapse, setToggleCollapse] = useState(true);
+    const [toggleCollapse, setToggleCollapse] = useState(false);
     const [isCollapsible, setIsCollapsible] = useState(true);
     const params = useParams();
 
