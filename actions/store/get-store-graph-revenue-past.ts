@@ -5,16 +5,17 @@ interface GraphData {
   total: number;
 }
 
-export const getGraphRevenue = async (storeId: string): Promise<GraphData[]> => {
+export const getGraphRevenuePast = async (storeId: string): Promise<GraphData[]> => {
   const teardate = new Date;
   const thisyear = teardate.getUTCFullYear();
-  const nextyear = thisyear + 1;
+  const pastyear = thisyear - 1;
+  const nextyear = pastyear + 1;
 
   const bookings = await prismadb.sales.findMany({
     where: {
       storeId,
       sold: {
-        gte: new Date(thisyear + "-01-01T00:00:00Z"),
+        gte: new Date(pastyear + "-01-01T00:00:00Z"),
         lt: new Date(nextyear + "-01-01T00:00:00Z"),
       },
     }

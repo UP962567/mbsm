@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Overview } from "@/components/overview";
+import { Overview2 } from "@/components/overview2";
 import { FarmDropdownMenuCheckboxes } from "@/components/farm-check";
 import { HotelDropdownMenuCheckboxes } from "@/components/hotel-check";
 import { StoreDropdownMenuCheckboxes } from "@/components/store-check";
@@ -15,12 +16,16 @@ import { formatter } from "@/lib/utils";
 import prismadb from "@/lib/prismadb";
 
 import { getSalesCount } from "@/actions/store/get-store-sales-count";
-import { getGraphRevenue } from "@/actions/store/get-store-graph-revenue";
 import { getStockCount } from "@/actions/store/get-store-stock-count";
 import { getCountSize } from "@/actions/store/get-store-size-count";
 import { getCountColor } from "@/actions/store/get-store-color-count";
 import { getCountTag } from "@/actions/store/get-store-tag-count";
 import { getCountCategory } from "@/actions/store/get-store-category-count";
+import { getTotalStoreRevenue } from "@/actions/store/get-store-total-revenue";
+import { getStoreMonthRevenue } from "@/actions/store/get-store-month-revenue";
+import { getYearlyRevenueStore } from "@/actions/store/get-store-yearly-revenue";
+import { getGraphRevenuePast } from "@/actions/store/get-store-graph-revenue-past";
+import { getGraphRevenue } from "@/actions/store/get-store-graph-revenue";
 
 import { getRoomsCount } from "@/actions/hotel/get-hotel-rooms-count";
 import { getBookingCount } from "@/actions/hotel/get-hotel-booking-count";
@@ -41,6 +46,9 @@ import { getCountTree } from "@/actions/farm/get-count-trees";
 import { getCountVehicle } from "@/actions/farm/get-count-vehicles";
 import { getCountWorker } from "@/actions/farm/get-count-workers";
 import { getCountEquipment } from "@/actions/farm/get-count-equipments";
+import { getGraphHarvest } from "@/actions/farm/graph-harvest";
+import { getGraphMedicine } from "@/actions/farm/graph-medicine";
+import { getGraphFeed } from "@/actions/farm/graph-feed";
 
 
 interface DashboardPageProps {
@@ -79,6 +87,11 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const sizeCount = await getCountSize(params.storeId);
   const colorCount = await getCountColor(params.storeId);
   const tagCount = await getCountTag(params.storeId);
+  const totalRevenue = await getTotalStoreRevenue(params.storeId);
+  const monthlyRevenueStore = await getStoreMonthRevenue(params.storeId);
+  
+  const yearlyRevenue = await getYearlyRevenueStore(params.storeId);
+  const graphRevenuePast = await getGraphRevenuePast(params.storeId);
 
   // HOTEL
   const roomsCount = await getRoomsCount(params.storeId);
@@ -100,6 +113,10 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const FARMcountWorker = await getCountWorker(params.storeId);
   const FARMcountEquipment = await getCountEquipment(params.storeId);
 
+  const FARMgraphHarvest = await getGraphHarvest(params.storeId);
+  const FARMgraphMedicine = await getGraphMedicine(params.storeId);
+  const FARMgraphFeed = await getGraphFeed(params.storeId);
+
   const testdata = await getGraphHotelRevenueTest(params.storeId);
   const testdata2 = await getPreviewOverwier(params.storeId);
 
@@ -109,7 +126,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex justify-between">
-            <Heading title="Dashboard" description="Overview of your Hotel" />
+            <Heading title="Dashboard" description="Overview of your Store" />
             <div className="flex">
               <StoreDropdownMenuCheckboxes data={filters} />
             </div>
@@ -132,7 +149,20 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">TEST</div>
+                  <div className="text-2xl font-bold">{totalRevenue}</div>
+                </CardContent>
+              </Card>
+              : null}
+            {filters?.store_total_revenue ?
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Monthly Revenue
+                  </CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{monthlyRevenueStore}</div>
                 </CardContent>
               </Card>
               : null}
@@ -205,17 +235,41 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
           </div>
 
           <Separator />
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-6 gap-4">
 
             <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Present Overview</CardTitle>
-                  Test
+                  Monthly
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
                 <Overview data={graphRevenue} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Past Overview</CardTitle>
+                  Monthly
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={graphRevenuePast} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Yearly Overview</CardTitle>
+                  Yearly
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={yearlyRevenue} />
               </CardContent>
             </Card>
 
@@ -478,7 +532,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
               <Card>
                 <a href={params.storeId + "/equipments"}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Equipments</b></CardTitle>
+                    <CardTitle className="text-sm font-medium">Count <b style={{ color: 'green' }}>Equipments</b></CardTitle>
                     <CreditCard className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -491,17 +545,41 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
 
           <Separator />
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-6 gap-4">
 
             <Card className="col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Present Overview</CardTitle>
-                  Test
+                  <CardTitle>Havesting</CardTitle>
+                  Monthly
                 </div>
               </CardHeader>
               <CardContent className="pl-2">
-                <Overview data={graphHotelData} />
+                <Overview2 data={FARMgraphHarvest} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Feed</CardTitle>
+                  Monthly
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview2 data={FARMgraphFeed} />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Medicine</CardTitle>
+                  Monthly
+                </div>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview2 data={FARMgraphMedicine} />
               </CardContent>
             </Card>
           </div>

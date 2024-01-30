@@ -5,28 +5,28 @@ interface GraphData {
   total: number;
 }
 
-export const getGraphRevenue = async (storeId: string): Promise<GraphData[]> => {
+export const getGraphMedicine = async (storeId: string): Promise<GraphData[]> => {
   const teardate = new Date;
   const thisyear = teardate.getUTCFullYear();
   const nextyear = thisyear + 1;
 
-  const bookings = await prismadb.sales.findMany({
+  const medicines = await prismadb.farmMedicineUsed.findMany({
     where: {
       storeId,
-      sold: {
+      used: {
         gte: new Date(thisyear + "-01-01T00:00:00Z"),
         lt: new Date(nextyear + "-01-01T00:00:00Z"),
       },
     }
   });
 
-  const monthlyRevenue: { [key: number]: number } = {};
+  const monthlymedicin: { [key: number]: number } = {};
 
-  for (const booking of bookings) {
-    const month = booking.sold.getMonth();
-    let revenueForBooking = booking.total.toNumber();
+  for (const medicine of medicines) {
+    const month = medicine.used.getMonth();
+    let revenueForBooking = medicine.quantity;
 
-    monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenueForBooking;
+    monthlymedicin[month] = (monthlymedicin[month] || 0) + revenueForBooking;
   }
 
   const graphData: GraphData[] = [
@@ -44,8 +44,8 @@ export const getGraphRevenue = async (storeId: string): Promise<GraphData[]> => 
     { name: "Dec", total: 0 },
   ];
 
-  for (const month in monthlyRevenue) {
-    graphData[parseInt(month)].total = monthlyRevenue[parseInt(month)];
+  for (const month in monthlymedicin) {
+    graphData[parseInt(month)].total = monthlymedicin[parseInt(month)];
   }
 
   return graphData;

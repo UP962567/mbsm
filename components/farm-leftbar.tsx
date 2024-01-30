@@ -23,9 +23,9 @@ const SidebarFarm = () => {
         { id: 12, label: "Feeds", icon: Soup, link: `/${params.storeId}/feeds` },
         { id: 13, label: "Medicines", icon: Tablets, link: `/${params.storeId}/medicines` },
         { id: 10, label: "Worker", icon: Users, link: `/${params.storeId}/workers` },
-        { id: 8, label: "Outcome", icon: TrendingDown, link: `/${params.storeId}/outcome` },
-        { id: 9, label: "Income", icon: TrendingUp, link: `/${params.storeId}/income` },
-        { id: 11, label: "Daily", icon: Sunrise, link: `/${params.storeId}/daily` },
+        // { id: 8, label: "Outcome", icon: TrendingDown, link: `/${params.storeId}/outcome` },
+        // { id: 9, label: "Income", icon: TrendingUp, link: `/${params.storeId}/income` },
+        // { id: 11, label: "Daily", icon: Sunrise, link: `/${params.storeId}/daily` },
     ];
 
 

@@ -135,6 +135,7 @@ model Store {
   products   Product[]   @relation("StoreToProduct")
   orders     Order[]     @relation("StoreToOrder")
   tags       Tag[]       @relation("StoreToTag")
+  sales      Sales[]     @relation("StoreToSales")
 
   CalendarFloor   CalendarFloor[]   @relation("FloorToStore")
   CalendarRoom    CalendarRoom[]    @relation("RoomToStore")
@@ -302,6 +303,22 @@ model Image {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([productId])
+}
+
+model Sales {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(cuid())
+
+  storeId String
+  store   Store  @relation("StoreToSales", fields: [storeId], references: [uuid])
+
+  total Decimal  @default(0)
+  sold  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([storeId])
 }
 
 model Order {
