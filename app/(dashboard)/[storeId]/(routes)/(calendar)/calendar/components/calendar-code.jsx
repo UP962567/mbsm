@@ -90,6 +90,7 @@ const CalendarCode = ({ params }) => {
     //////////////////////////////////////////////////////////////////////////////////////////////// Modify Data
 
     const itemer = item.map((item) => {
+        const endDate = moment(item.end_time).add(1, 'day'); // Add one day to the end date
         return {
             id: item.id,
             group: item.group,

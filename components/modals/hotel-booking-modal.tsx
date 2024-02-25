@@ -22,12 +22,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from 'lucide-react';
+import { Calendar2 } from '../ui/calendar_v2';
 
 interface FormProps {
     initialData: CalendarBooking | null;
     rooms: CalendarRoom[];
     addons: CalendarAddon[];
 };
+
+interface Booking {
+    id: number;
+    start_time: Date;
+    end_time: Date;
+    group: number;
+}
 
 export const BookingModel: React.FC<FormProps> = ({
     initialData, rooms, addons
@@ -43,10 +51,52 @@ export const BookingModel: React.FC<FormProps> = ({
     const [clientsB, setClietsB] = useState<number | undefined>(undefined);
     const [discountB, setDiscountB] = useState<number | undefined>(undefined);
     const [dailyB, setDailyB] = useState<string | undefined>(undefined);
+    const [disabledDatesT, setDisabledDatesT] = useState<Date[]>([]);
 
     const bookingModal = useBookingModal();
 
     const [loading, setLoading] = useState(false);
+
+    const fetchBookings = async (): Promise<Booking[]> => {
+        try {
+            const response = await fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings/booked`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch bookings data');
+            }
+            const data: Booking[] = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+            return [];
+        }
+    };
+
+    const getDisabledDatesForGroup = async (group: number): Promise<Date[]> => {
+        try {
+            const bookings = await fetchBookings(); // Fetch bookings data
+            const groupBookings = bookings.filter(booking => booking.group === group);
+            const disabledDates: Date[] = [];
+    
+            groupBookings.forEach(booking => {
+                const startDate = new Date(booking.start_time);
+                const endDate = new Date(booking.end_time);
+    
+                // Loop through each date between start and end date and add them to disabledDates
+                // Start the loop from the day after the start date
+                for (let date = new Date(startDate); date < endDate; date.setDate(date.getDate() + 1)) {
+                    disabledDates.push(new Date(date));
+                }
+            });
+    
+            return disabledDates;
+
+            console.log(disabledDates);
+
+        } catch (error) {
+            console.error('Error getting disabled dates for group:', error);
+            return []; // Return an empty array in case of error
+        }
+    };
 
     const form = useForm({
         defaultValues: initialData ? {
@@ -101,7 +151,51 @@ export const BookingModel: React.FC<FormProps> = ({
     }
 
     const onSubmit = async () => {
-        // console.log(data)
+        // Check if there are any disabled dates between start and end time
+        const disabledDates = await getDisabledDatesForGroup(groupB || 0); // Assuming groupB is defined
+    
+        console.log(disabledDates);
+    
+        if (!start || !end) {
+            console.log('Cannot submit: Start and end dates are required.');
+            toast.error('Cannot submit: Start and end dates are required.');
+            return;
+        }
+    
+        if (start > end){
+            console.log('Cannot submit: The end date cannot be before the start date.');
+            toast.error('Cannot submit: The end date cannot be before the start date.');
+            return;
+        }
+        
+        if (start === end){
+            console.log('Cannot submit: The end date cannot be the same as the start date.');
+            toast.error('Cannot submit: The end date cannot be the same as the start date.');
+            return;
+        }
+    
+        // Check if start or end date is disabled
+        const isStartDisabled = disabledDates.some(date => date.getTime() === start.getTime());
+        // const isEndDisabled = disabledDates.some(date => date.getTime() === end.getTime());
+    
+        if (isStartDisabled) {
+            // Handle disabled dates scenario
+            console.log('Cannot submit: The start or end date is disabled.');
+            toast.error('Cannot submit: The start or end date is disabled.');
+            return;
+        }
+    
+        // Check if any date between start and end is disabled
+        const isDisabled = disabledDates.some(date => date > start && date < end);
+    
+        if (isDisabled) {
+            // Handle disabled dates scenario
+            console.log('Cannot submit: There are disabled dates within the selected range.');
+            toast.error('Cannot submit: There are disabled dates within the selected range.');
+            return;
+        }
+    
+        // Submit the form if validation passes
         try {
             setLoading(true);
             if (initialData) {
@@ -119,10 +213,12 @@ export const BookingModel: React.FC<FormProps> = ({
             initialData = null;
             bookingModal.onClose();
             window.location.reload();
-
+    
             setLoading(false);
         }
     };
+    
+
     return (
         <Modal
             title='Create new Booking'
