@@ -2,7 +2,7 @@
 
 import axios from "axios"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 
@@ -54,10 +54,26 @@ export const Former: React.FC<FormProps> = ({
   const toastMessage = initialData ? 'Booking updated.' : 'Booking created.';
   const action = initialData ? 'Save changes' : 'Create';
 
+  useEffect(() => {
+    if (initialData && initialData.start_time && initialData.end_time) {
+      setTitleB(initialData.title);
+      setGroupB(initialData.group);
+      setDiscountB(initialData?.discount ?? undefined);
+      setClietsB(initialData?.clients ?? undefined);
+      setDailyB(initialData?.addonId ?? undefined);
+      setClietsB(initialData?.clients ?? undefined);
+      setStart(new Date(initialData.start_time));
+      setEnd(new Date(initialData.end_time));
+    }
+  }, [initialData]);
+
   const form = useForm({
     defaultValues: initialData ? {
       ...initialData,
       group: parseFloat(String(initialData?.group)) || undefined,
+      clients: parseFloat(String(initialData?.clients)) || undefined,
+      discount: parseFloat(String(initialData?.discount)) || undefined,
+      totalPrice: parseFloat(String(initialData?.totalPrice)) || undefined,
     } : {
       title: '',
       start_time: start,
@@ -66,6 +82,7 @@ export const Former: React.FC<FormProps> = ({
       clients: 0,
       discount: 0,
       addonId: '',
+      totalPrice: 0,
     }
   });
 

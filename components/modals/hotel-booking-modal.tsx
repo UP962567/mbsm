@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { format } from "date-fns"
 import { toast } from 'react-hot-toast';
@@ -22,7 +22,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from 'lucide-react';
-import { Calendar2 } from '../ui/calendar_v2';
 
 interface FormProps {
     initialData: CalendarBooking | null;
@@ -89,8 +88,6 @@ export const BookingModel: React.FC<FormProps> = ({
             });
     
             return disabledDates;
-
-            console.log(disabledDates);
 
         } catch (error) {
             console.error('Error getting disabled dates for group:', error);

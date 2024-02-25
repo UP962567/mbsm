@@ -6,11 +6,13 @@ import moment from "moment";
 import Timeline from 'react-calendar-timeline';
 import { Button as ButtonUI } from '@/components/ui/button';
 import { useBookingModal } from '@/hooks/use-booking-modal';
+import { useRouter } from 'next/navigation';
 
 const CalendarCode = ({ params }) => {
+    const router = useRouter();
+
     const [visibleTimeStart, setVisibleTimeStart] = useState();
     const [visibleTimeEnd, setVisibleTimeEnd] = useState();
-
 
     const bookingModel = useBookingModal();
 
@@ -24,13 +26,11 @@ const CalendarCode = ({ params }) => {
 
 
     const handleCanvasClick = (groupId, time) => {
-        console.log("Canvas single clicked", groupId, moment(time).format());
+        router.push(`/${params.storeId}/bookings/new`);
     };
 
     const handleCanvasDoubleClick = (groupId, time) => {
-        setTime(time);
-        setGroupId(groupId);
-        setOpen(true);
+        console.log("Canvas double clicked", groupId, moment(time).format());
     };
 
     const handleCanvasContextMenu = (group, time) => {
@@ -45,8 +45,23 @@ const CalendarCode = ({ params }) => {
         console.log("Selected: " + itemId, moment(time).format());
     };
 
+    const findUUIDById = async (itemId) => {
+        try {
+            const response = await fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings/booked/${itemId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            
+            router.push(`/${params.storeId}/bookings/${data.uuid}`);
+        } catch (error) {
+            console.error('Error fetching UUID:', error);
+            return null;
+        }
+    };
+
     const handleItemDoubleClick = (itemId, _, time) => {
-        console.log("Double Click: " + itemId, moment(time).format());
+        findUUIDById(itemId);
     };
 
     const handleItemContextMenu = (itemId, _, time) => {
