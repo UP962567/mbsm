@@ -159,17 +159,33 @@ export const BookingModel: React.FC<FormProps> = ({
 
         const roomIdExists = isRoomIdInRooms(groupB || 0); // Assuming groupB is defined
 
-        if (!roomIdExists) {
-            toast.error('Cannot submit: Room ID does not exist in the rooms list.');
+
+        if (!titleB) {
+            toast.error('Cannot submit: Title is required.');
+            return;
+        } else if (!groupB) {
+            toast.error('Cannot submit: Room is required.');
+            return;
+        } else if (!start) {
+            toast.error('Cannot submit: Start date is required.');
+            return;
+        } else if (!end) {
+            toast.error('Cannot submit: End date is required.');
+            return;
+        } else if (!dailyB) {
+            toast.error('Cannot submit: Daily Packets is required.');
+            return;
+        } else if (!clientsB) {
+            toast.error('Cannot submit: Number of People is required.');
             return;
         }
 
 
-        if (!start || !end) {
-            console.log('Cannot submit: Start and end dates are required.');
-            toast.error('Cannot submit: Start and end dates are required.');
-            return;
-        }
+        // if (!start || !end) {
+        //     console.log('Cannot submit: Start and end dates are required.');
+        //     toast.error('Cannot submit: Start and end dates are required.');
+        //     return;
+        // }
 
         if (start > end) {
             console.log('Cannot submit: The end date cannot be before the start date.');
@@ -180,6 +196,11 @@ export const BookingModel: React.FC<FormProps> = ({
         if (start === end) {
             console.log('Cannot submit: The end date cannot be the same as the start date.');
             toast.error('Cannot submit: The end date cannot be the same as the start date.');
+            return;
+        }
+
+        if (!roomIdExists) {
+            toast.error('Cannot submit: Room ID does not exist in the rooms list.');
             return;
         }
 
@@ -269,7 +290,7 @@ export const BookingModel: React.FC<FormProps> = ({
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Number of Room"
+                                                placeholder="Rooms Number"
                                                 type="number"
                                                 value={field.value || ''}
                                                 onChange={(event) => {
