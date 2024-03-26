@@ -317,7 +317,7 @@ export const BookingModel: React.FC<FormProps> = ({
                                 )}
                             /> */}
 
-<FormField
+                            <FormField
                                 name="start_time"
                                 render={({ field }) => (
                                     <FormItem>
@@ -427,11 +427,11 @@ export const BookingModel: React.FC<FormProps> = ({
                                 name="clients"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Number of People +8</FormLabel>
+                                        <FormLabel>Number of People</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Number of People"
+                                                placeholder="Number of People above 11"
                                                 type="number"
                                                 value={field.value || ''}
                                                 onChange={(event) => {
