@@ -265,11 +265,11 @@ export const BookingModel: React.FC<FormProps> = ({
                                 name="group"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Number of room</FormLabel>
+                                        <FormLabel>Room</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={loading}
-                                                placeholder="Number of People"
+                                                placeholder="Number of Room"
                                                 type="number"
                                                 value={field.value || ''}
                                                 onChange={(event) => {
