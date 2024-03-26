@@ -75,18 +75,18 @@ export const BookingModel: React.FC<FormProps> = ({
             const bookings = await fetchBookings(); // Fetch bookings data
             const groupBookings = bookings.filter(booking => booking.group === group);
             const disabledDates: Date[] = [];
-    
+
             groupBookings.forEach(booking => {
                 const startDate = new Date(booking.start_time);
                 const endDate = new Date(booking.end_time);
-    
+
                 // Loop through each date between start and end date and add them to disabledDates
                 // Start the loop from the day after the start date
                 for (let date = new Date(startDate); date < endDate; date.setDate(date.getDate() + 1)) {
                     disabledDates.push(new Date(date));
                 }
             });
-    
+
             return disabledDates;
 
         } catch (error) {
@@ -136,6 +136,10 @@ export const BookingModel: React.FC<FormProps> = ({
         return 0;
     };
 
+    const isRoomIdInRooms = (roomId: number): boolean => {
+        return rooms.some(room => room.id === roomId);
+    };
+
     const data = {
         title: titleB,
         group: groupB,
@@ -150,48 +154,56 @@ export const BookingModel: React.FC<FormProps> = ({
     const onSubmit = async () => {
         // Check if there are any disabled dates between start and end time
         const disabledDates = await getDisabledDatesForGroup(groupB || 0); // Assuming groupB is defined
-    
+
         console.log(disabledDates);
-    
+
+        const roomIdExists = isRoomIdInRooms(groupB || 0); // Assuming groupB is defined
+
+        if (!roomIdExists) {
+            toast.error('Cannot submit: Room ID does not exist in the rooms list.');
+            return;
+        }
+
+
         if (!start || !end) {
             console.log('Cannot submit: Start and end dates are required.');
             toast.error('Cannot submit: Start and end dates are required.');
             return;
         }
-    
-        if (start > end){
+
+        if (start > end) {
             console.log('Cannot submit: The end date cannot be before the start date.');
             toast.error('Cannot submit: The end date cannot be before the start date.');
             return;
         }
-        
-        if (start === end){
+
+        if (start === end) {
             console.log('Cannot submit: The end date cannot be the same as the start date.');
             toast.error('Cannot submit: The end date cannot be the same as the start date.');
             return;
         }
-    
+
         // Check if start or end date is disabled
         const isStartDisabled = disabledDates.some(date => date.getTime() === start.getTime());
         // const isEndDisabled = disabledDates.some(date => date.getTime() === end.getTime());
-    
+
         if (isStartDisabled) {
             // Handle disabled dates scenario
             console.log('Cannot submit: The start or end date is disabled.');
             toast.error('Cannot submit: The start or end date is disabled.');
             return;
         }
-    
+
         // Check if any date between start and end is disabled
         const isDisabled = disabledDates.some(date => date > start && date < end);
-    
+
         if (isDisabled) {
             // Handle disabled dates scenario
             console.log('Cannot submit: There are disabled dates within the selected range.');
             toast.error('Cannot submit: There are disabled dates within the selected range.');
             return;
         }
-    
+
         // Submit the form if validation passes
         try {
             setLoading(true);
@@ -210,11 +222,11 @@ export const BookingModel: React.FC<FormProps> = ({
             initialData = null;
             bookingModal.onClose();
             window.location.reload();
-    
+
             setLoading(false);
         }
     };
-    
+
 
     return (
         <Modal
@@ -253,6 +265,28 @@ export const BookingModel: React.FC<FormProps> = ({
                                 name="group"
                                 render={({ field }) => (
                                     <FormItem>
+                                        <FormLabel>Number of room</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading}
+                                                placeholder="Number of People"
+                                                type="number"
+                                                value={field.value || ''}
+                                                onChange={(event) => {
+                                                    field.onChange(event);
+                                                    setGroupB(parseInt(event.target.value));
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* <FormField
+                                name="group"
+                                render={({ field }) => (
+                                    <FormItem>
                                         <FormLabel>Room</FormLabel>
                                         <Select
                                             disabled={loading}
@@ -281,65 +315,9 @@ export const BookingModel: React.FC<FormProps> = ({
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
 
-                            <FormField
-                                name="addonId"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Select Daily Packets</FormLabel>
-                                        <Select
-                                            disabled={loading}
-                                            onValueChange={(value) => {
-                                                const stringValue = typeof value === 'string' ? value : undefined;
-                                                field.onChange(stringValue);
-                                                setDailyB(stringValue);
-                                            }}
-                                            value={field.value ?? undefined}
-                                            defaultValue={field.value ?? undefined}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue defaultValue={field.value ?? undefined} placeholder="Select a Packets">
-
-                                                    </SelectValue>
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {(addons ?? []).map((data) => (
-                                                    <SelectItem key={data.id} value={data.uuid}>
-                                                        {data.title + " - $" + data.price + " per person"}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                name="clients"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Number of People +8</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={loading}
-                                                placeholder="Number of People"
-                                                type="number"
-                                                value={field.value || ''}
-                                                onChange={(event) => {
-                                                    field.onChange(event);
-                                                    setClietsB(parseInt(event.target.value));
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
+<FormField
                                 name="start_time"
                                 render={({ field }) => (
                                     <FormItem>
@@ -406,6 +384,62 @@ export const BookingModel: React.FC<FormProps> = ({
                                                 />
                                             </PopoverContent>
                                         </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                name="addonId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Select Daily Packets</FormLabel>
+                                        <Select
+                                            disabled={loading}
+                                            onValueChange={(value) => {
+                                                const stringValue = typeof value === 'string' ? value : undefined;
+                                                field.onChange(stringValue);
+                                                setDailyB(stringValue);
+                                            }}
+                                            value={field.value ?? undefined}
+                                            defaultValue={field.value ?? undefined}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue defaultValue={field.value ?? undefined} placeholder="Select a Packets">
+
+                                                    </SelectValue>
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {(addons ?? []).map((data) => (
+                                                    <SelectItem key={data.id} value={data.uuid}>
+                                                        {data.title + " - $" + data.price + " per person"}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                name="clients"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Number of People +8</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading}
+                                                placeholder="Number of People"
+                                                type="number"
+                                                value={field.value || ''}
+                                                onChange={(event) => {
+                                                    field.onChange(event);
+                                                    setClietsB(parseInt(event.target.value));
+                                                }}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}

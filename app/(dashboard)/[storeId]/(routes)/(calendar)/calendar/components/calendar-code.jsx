@@ -7,6 +7,7 @@ import Timeline from 'react-calendar-timeline';
 import { Button as ButtonUI } from '@/components/ui/button';
 import { useBookingModal } from '@/hooks/use-booking-modal';
 import { useRouter } from 'next/navigation';
+import { set } from 'date-fns';
 
 const CalendarCode = ({ params }) => {
     const router = useRouter();
@@ -17,20 +18,26 @@ const CalendarCode = ({ params }) => {
     const bookingModel = useBookingModal();
 
     useEffect(() => {
-        const visibleTimeStart1 = moment().startOf("months").valueOf();
-        const visibleTimeEnd1 = moment().startOf("months").add(1, "months").valueOf();
+        // const visibleTimeStart1 = moment().startOf("months").valueOf();
+        // const visibleTimeEnd1 = moment().startOf("months").add(1, "months").valueOf();
 
-        setVisibleTimeStart(visibleTimeStart1);
-        setVisibleTimeEnd(visibleTimeEnd1);
+        // setVisibleTimeStart(visibleTimeStart1);
+        // setVisibleTimeEnd(visibleTimeEnd1);
+
+        const startOfMonth = moment().month(5).startOf('month').valueOf();
+        const endOfMonth = moment().month(7).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
     }, [])
 
 
     const handleCanvasClick = (groupId, time) => {
-        router.push(`/${params.storeId}/bookings/new`);
+        console.log("Canvas double clicked", groupId, moment(time).format());
     };
 
     const handleCanvasDoubleClick = (groupId, time) => {
-        console.log("Canvas double clicked", groupId, moment(time).format());
+        router.push(`/${params.storeId}/bookings/new`);
     };
 
     const handleCanvasContextMenu = (group, time) => {
@@ -147,6 +154,77 @@ const CalendarCode = ({ params }) => {
         setVisibleTimeEnd(visibleTimeEnd1);
     };
 
+    const on5 = () => {
+        const startOfMonth = moment().month(4).startOf('month').valueOf();
+        const endOfMonth = moment().month(4).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on6 = () => {
+        const startOfMonth = moment().month(5).startOf('month').valueOf();
+        const endOfMonth = moment().month(5).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on7 = () => {
+        const startOfMonth = moment().month(6).startOf('month').valueOf();
+        const endOfMonth = moment().month(6).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on8 = () => {
+        const startOfMonth = moment().month(7).startOf('month').valueOf();
+        const endOfMonth = moment().month(7).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on9 = () => {
+        const startOfMonth = moment().month(8).startOf('month').valueOf();
+        const endOfMonth = moment().month(8).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on56 = () => {
+        const startOfMonth = moment().month(4).startOf('month').valueOf();
+        const endOfMonth = moment().month(5).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on67 = () => {
+        const startOfMonth = moment().month(5).startOf('month').valueOf();
+        const endOfMonth = moment().month(6).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on78 = () => {
+        const startOfMonth = moment().month(6).startOf('month').valueOf();
+        const endOfMonth = moment().month(7).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const on89 = () => {
+        const startOfMonth = moment().month(7).startOf('month').valueOf();
+        const endOfMonth = moment().month(8).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+    const onMain = () => {
+        const startOfMonth = moment().month(5).startOf('month').valueOf();
+        const endOfMonth = moment().month(7).startOf('month').add(1, "months").valueOf();
+
+        setVisibleTimeStart(startOfMonth);
+        setVisibleTimeEnd(endOfMonth);
+    };
+
 
     return (
         <div className="col-span-2">
@@ -155,6 +233,22 @@ const CalendarCode = ({ params }) => {
                     <ButtonUI variant="default" onClick={onPrevClick}>{"<< Month"}</ButtonUI>
                     <ButtonUI onClick={onTodayClick}>{"| Present |"}</ButtonUI>
                     <ButtonUI variant="default" onClick={onNextClick}>{"Month >>"}</ButtonUI>
+                </div>
+                <div className="space-x-2">
+                    <ButtonUI variant="yellow" onClick={on5}>{"5 Maj"}</ButtonUI>
+                    <ButtonUI variant="yellow" onClick={on6}>{"6 Qeshor"}</ButtonUI>
+                    <ButtonUI variant="yellow" onClick={on7}>{"7 Korrik"}</ButtonUI>
+                    <ButtonUI variant="yellow" onClick={on8}>{"8 Gusht"}</ButtonUI>
+                    <ButtonUI variant="yellow" onClick={on9}>{"9 Shtator"}</ButtonUI>
+                </div>
+                <div className="space-x-2">
+                    <ButtonUI variant="orange" onClick={on56}>{"5-6"}</ButtonUI>
+                    <ButtonUI variant="orange" onClick={on67}>{"6-7"}</ButtonUI>
+                    <ButtonUI variant="orange" onClick={on78}>{"7-8"}</ButtonUI>
+                    <ButtonUI variant="orange" onClick={on89}>{"8-9"}</ButtonUI>
+                </div>
+                <div className="space-x-2">
+                    <ButtonUI variant="red" onClick={onMain}>{"6-7-8"}</ButtonUI>
                 </div>
                 <div>
                     {/* <ButtonUI variant="green" onClick={handleOpenCreateClick}>{"Create"}</ButtonUI> */}
