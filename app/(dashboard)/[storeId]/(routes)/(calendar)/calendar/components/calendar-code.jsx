@@ -107,6 +107,7 @@ const CalendarCode = ({ params }) => {
         fetchData()
         fetchGroup()
         fetchAddons()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     //////////////////////////////////////////////////////////////////////////////////////////////// Modify Data
