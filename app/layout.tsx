@@ -5,6 +5,7 @@ import { ToastProvider } from '@/providers/toast-providers'
 import './globals.css'
 import { BookingProvider } from '@/providers/booking-provider'
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,6 +29,7 @@ export default async function RootLayout({
           <ToastProvider />
           {children}
           <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
