@@ -83,7 +83,7 @@ const CalendarCode = ({ params }) => {
     const [addons, setAddons] = useState([]);
 
     const fetchData = () => {
-        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings`)
+        fetch(`/${process.env.NEXT_PUBLIC_API_URL}/${params.storeId}/bookings/year`)
             .then(res => res.json())
             .then(data => setItems(data))
             .catch(err => console.log(err));
