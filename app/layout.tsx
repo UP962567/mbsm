@@ -4,6 +4,7 @@ import { ModalProvider } from '@/providers/modal-provider'
 import { ToastProvider } from '@/providers/toast-providers'
 import './globals.css'
 import { BookingProvider } from '@/providers/booking-provider'
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default async function RootLayout({
           <ModalProvider />
           <ToastProvider />
           {children}
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

@@ -29,6 +29,7 @@
     "@tanstack/react-table": "^8.10.7",
     "@types/next": "^9.0.0",
     "@types/react-calendar-timeline": "^0.28.6",
+    "@vercel/analytics": "^1.2.2",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
